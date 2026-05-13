@@ -1,9 +1,4 @@
-export type ConverterId =
-  | "typescript"
-  | "zod"
-  | "csv"
-  | "yaml"
-  | "json-schema";
+export type ConverterId = "typescript" | "zod" | "csv" | "yaml" | "json-schema";
 
 export const plannedConverters: Record<ConverterId, string> = {
   typescript: "Generate TypeScript interfaces from JSON samples.",

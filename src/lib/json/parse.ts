@@ -7,8 +7,7 @@ export function parseJsonSafe(input: string): JsonParseResult {
       data: JSON.parse(input) as JsonValue,
     };
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Unable to parse JSON input.";
+    const message = error instanceof Error ? error.message : "Unable to parse JSON input.";
     const positionMatch = message.match(/position (\d+)/i);
     const position = positionMatch ? Number(positionMatch[1]) : undefined;
 
