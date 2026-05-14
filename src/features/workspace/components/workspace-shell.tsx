@@ -4,8 +4,8 @@ import { WorkspaceContent } from "@/features/workspace/components/workspace-cont
 
 export function WorkspaceShell() {
   return (
-    <div className="min-h-screen bg-[linear-gradient(180deg,_var(--background),_color-mix(in_srgb,var(--background),white_14%))] dark:bg-[linear-gradient(180deg,_var(--background),_color-mix(in_srgb,var(--background),white_4%))]">
-      <div className="flex min-h-screen w-full flex-col px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#080808] text-[#f5f1ea]">
+      <div className="flex min-h-screen w-full flex-col">
         <AppHeader />
         <WorkspaceContent />
         <AppFooter />

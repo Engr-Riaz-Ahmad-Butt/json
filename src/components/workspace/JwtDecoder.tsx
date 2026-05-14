@@ -3,7 +3,7 @@
 import { useState, useCallback, useMemo } from "react";
 import { decodeJwtToken } from "@/lib/jwt/decode";
 import { copyToClipboard } from "@/lib/clipboard";
-import type { DecodedJwt, JwtDecodeResult } from "@/types/jwt";
+import type { JwtDecodeResult } from "@/types/jwt";
 
 // ── Sample token (the classic jwt.io demo token) ──────────────────────────────
 const SAMPLE_TOKEN =

@@ -2,129 +2,123 @@ import {
   Braces,
   Bug,
   CheckCircle2,
-  Copy,
   Database,
   FileCode2,
   FileStack,
   FolderGit2,
   KeyRound,
   Lock,
-  PanelsTopLeft,
-  Search,
   Server,
   Sparkles,
   WandSparkles,
   Workflow,
 } from "lucide-react";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { LiveJsonWorkspace } from "@/features/workspace/components/live-json-workspace";
 
 const featureCards = [
   {
-    icon: PanelsTopLeft,
+    icon: Braces,
     title: "Format & minify",
-    description: "Beautify or compress payloads instantly without leaving the workspace.",
-    example: "Pretty-print a webhook body, then minify it for transport.",
+    description: "Beautify payloads, compress responses, and keep raw and formatted views close.",
+    example: "Pretty-print a webhook body, then minify it before sending it onward.",
   },
   {
-    icon: Search,
+    icon: CheckCircle2,
     title: "Validate & fix errors",
-    description:
-      "Catch syntax issues with friendlier explanations, suggestions, and highlight actions.",
-    example: "Explain trailing commas, missing quotes, and invalid comments.",
+    description: "Catch malformed JSON with clearer explanations and quick repair actions.",
+    example: "Flag trailing commas, missing quotes, and beginner mistakes without guesswork.",
   },
   {
     icon: FileCode2,
     title: "Explore tree & JSONPath",
-    description: "Inspect nested objects visually, copy exact paths, and search values faster.",
-    example: "Jump straight to `$.users[0].profile.email`.",
+    description: "Inspect deeply nested objects, search paths, and copy exact nodes confidently.",
+    example: "Jump straight to `$.users[0].profile.email` and copy the path in one click.",
   },
   {
     icon: Bug,
     title: "Compare JSON",
-    description:
-      "Compare expected and actual payloads with human-readable summaries instead of raw diffs.",
-    example: "See type mismatches, changed fields, and removed keys at a glance.",
+    description: "Read payload changes in human terms instead of deciphering raw diffs.",
+    example: "See changed values, removed keys, and type mismatches at a glance.",
   },
   {
     icon: FileStack,
     title: "Generate types & schemas",
-    description:
-      "Move from raw payloads to TypeScript, Zod, JSON Schema, Prisma, and Mongoose output in one place.",
-    example: "Turn API responses into implementation-ready contracts.",
+    description: "Turn API responses into TypeScript, Zod, Schema, Prisma, or Mongoose output.",
+    example: "Move from sample JSON to implementation-ready contracts in the same workspace.",
   },
   {
     icon: Database,
-    title: "Convert to CSV / YAML / XML",
-    description:
-      "Switch formats inside the output panel instead of bouncing across separate converter pages.",
-    example: "Export array responses to CSV or turn nested JSON into YAML.",
+    title: "Convert outputs",
+    description: "Switch between CSV, YAML, XML, and code output without leaving the screen.",
+    example: "Export array payloads to CSV or transform nested objects into YAML instantly.",
   },
 ] as const;
 
 const workflowSteps = [
   {
-    title: "Paste or import JSON",
-    description: "Start with API responses, config files, webhook payloads, or saved fixtures.",
-  },
-  {
-    title: "Format and validate",
+    title: "Paste JSON",
     description:
-      "Instantly beautify the payload, catch syntax issues, and highlight parsing problems.",
+      "Start with API responses, fixtures, config files, webhook bodies, or copied logs.",
   },
   {
-    title: "Inspect and extract",
-    description: "Use search, tree exploration, and JSONPath to find the exact node you need.",
+    title: "Validate",
+    description: "Format the payload, check syntax, and surface issues before you keep working.",
   },
   {
-    title: "Generate or export",
-    description: "Move into code generation, schema creation, downloads, or team-ready handoff.",
+    title: "Explore",
+    description: "Use tree view, search, and JSONPath to find exactly the node you need.",
+  },
+  {
+    title: "Convert",
+    description: "Generate TypeScript, Schema, Zod, CSV, YAML, or XML from the same input.",
+  },
+  {
+    title: "Download",
+    description: "Copy results, export files, or pass the cleaned payload into your next step.",
   },
 ] as const;
 
 const privacyPoints = [
   "Local processing for formatting, validation, tree view, diff, and conversion.",
-  "Sensitive field scanner to detect secrets before sharing or exporting.",
-  "Clear local data flow so the workspace can be reset quickly when needed.",
+  "Sensitive field scanner to catch secrets before export or sharing.",
+  "Clear local reset flow so the workspace can be cleaned quickly.",
   "No signup required for the core developer workflow.",
 ] as const;
 
 const useCases = [
   {
     icon: FolderGit2,
-    title: "Frontend developers",
-    description: "Inspect API payloads, generate TypeScript types, and map nested data faster.",
+    title: "Frontend Developers",
+    description: "Inspect API payloads, generate TypeScript interfaces, and map nested UI data.",
   },
   {
     icon: Server,
-    title: "Backend developers",
-    description:
-      "Validate contracts, explore webhooks, compare payload changes, and document responses.",
+    title: "Backend Developers",
+    description: "Validate contracts, compare response versions, and explore webhook bodies fast.",
   },
   {
     icon: CheckCircle2,
-    title: "QA testers",
-    description:
-      "Search through large responses, verify shape changes, and isolate breaking fields quickly.",
+    title: "QA Testers",
+    description: "Compare expected and actual responses, search paths, and isolate breakages.",
   },
   {
     icon: KeyRound,
     title: "Students",
     description:
-      "Learn JSON structure, fix common mistakes, and understand APIs without a heavy setup.",
+      "Learn JSON structure, understand syntax errors, and inspect sample payloads safely.",
   },
   {
     icon: Workflow,
-    title: "DevOps engineers",
+    title: "DevOps Engineers",
     description:
-      "Inspect config payloads, validate deployment metadata, and compare environment responses safely.",
+      "Review deployment payloads, config blobs, and environment metadata with confidence.",
   },
   {
     icon: Database,
-    title: "Data analysts",
+    title: "Data Analysts",
     description:
-      "Convert arrays to CSV, inspect schemas quickly, and understand deeply nested export files.",
+      "Convert arrays to CSV, understand large exports, and inspect nested data sources.",
   },
 ] as const;
 
@@ -141,314 +135,316 @@ const seoLinks = [
 
 const faqs = [
   {
-    question: "What makes JSONLens different from older JSON formatter tools?",
+    question: "Is JSONLens only a formatter?",
     answer:
-      "JSONLens is designed as a developer workspace, not just a beautifier. The goal is to combine formatting, validation, exploration, search, privacy messaging, and generators in one modern flow.",
+      "No. It is designed as a JSON workspace that combines formatting, validation, tree exploration, diffing, searching, and conversion in one flow.",
   },
   {
-    question: "Will the main JSON tool stay visible on the homepage?",
+    question: "Is my JSON uploaded anywhere?",
     answer:
-      "Yes. The homepage is intended to include the real tool above the fold so people can start immediately instead of navigating through a marketing-only landing page first.",
+      "The core workflow is local-first. Formatting, validation, inspection, and conversion happen in the browser unless you explicitly choose a future sharing feature.",
   },
   {
-    question: "Is JSONLens built for sensitive API payloads?",
+    question: "Can I convert JSON to TypeScript or Zod?",
     answer:
-      "The product direction is privacy-first and local-first, which is especially important when developers need to inspect tokens, webhook payloads, and internal business data.",
+      "Yes. JSONLens includes integrated TypeScript, Zod, Schema, Prisma, Mongoose, CSV, YAML, and XML generation inside the workspace.",
   },
   {
-    question: "Can I convert JSON to TypeScript?",
+    question: "Can I compare two JSON payloads?",
     answer:
-      "Yes. JSONLens includes integrated converter output for TypeScript, Zod, JSON Schema, Prisma, Mongoose, CSV, YAML, and XML without forcing you into a separate disconnected page.",
+      "Yes. The diff mode is built into the workspace and focuses on human-readable change summaries instead of raw-only output.",
   },
   {
-    question: "Can I compare two JSON files?",
+    question: "Is it useful for beginners too?",
     answer:
-      "Yes. The diff workspace is built into the tool and focuses on human-readable summaries like changed values, added fields, removed fields, and type mismatches.",
+      "Yes. Friendly validation messaging, guided empty states, and sample payloads make it approachable for students and less experienced developers.",
   },
   {
-    question: "Can I upload large JSON files?",
+    question: "Why keep the tool on the homepage?",
     answer:
-      "Yes. The UI is designed to show meaningful loading states and prepare users for larger payload handling instead of failing silently.",
-  },
-  {
-    question: "Who is the product mainly for?",
-    answer:
-      "The primary audience is frontend developers, backend developers, QA engineers, students, DevOps engineers, and data-focused technical users who need a clearer JSON workflow every day.",
+      "Because the product should start working immediately. The homepage is meant to be a real entry point into the tool, not just a marketing wrapper.",
   },
 ] as const;
 
+function SectionFrame({
+  eyebrow,
+  title,
+  description,
+  children,
+}: {
+  eyebrow?: string;
+  title: string;
+  description?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="rounded-sm border border-[#262626] bg-[#121212]">
+      <div className="border-b border-[#262626] px-5 py-5 sm:px-6">
+        {eyebrow ? (
+          <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-[#b8a69a]">
+            {eyebrow}
+          </p>
+        ) : null}
+        <h2 className="text-[28px] leading-tight font-semibold tracking-tight text-[#f5f1ea] sm:text-[32px]">
+          {title}
+        </h2>
+        {description ? (
+          <p className="mt-3 max-w-3xl text-[15px] leading-7 text-[#b8a69a]">{description}</p>
+        ) : null}
+      </div>
+      <div className="px-5 py-5 sm:px-6 sm:py-6">{children}</div>
+    </section>
+  );
+}
+
 export function WorkspaceContent() {
   return (
-    <main className="flex-1 py-6">
-      <div className="space-y-8">
-        <section className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(340px,0.82fr)]">
-          <Card className="overflow-hidden rounded-[var(--radius-xl)] border-0 bg-card py-0 shadow-[var(--shadow-workspace)] ring-1 ring-border">
-            <CardContent className="px-0 py-0">
-              <div className="grid gap-0 lg:grid-cols-[minmax(0,1fr)_280px]">
-                <div className="space-y-8 px-6 py-8 lg:px-8 lg:py-10">
-                  <div className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary px-3 py-1.5 text-[13px] font-medium text-muted-foreground">
-                    <Sparkles className="size-3.5 text-primary" />
-                    Local-first JSON workspace
-                  </div>
+    <main className="flex-1">
+      <div className="space-y-8 px-4 py-6 sm:px-6 lg:px-10 lg:py-8">
+        <section className="rounded-sm border border-[#262626] bg-[#121212]">
+          <div className="grid gap-0 xl:grid-cols-[minmax(0,1.15fr)_360px]">
+            <div className="space-y-8 px-5 py-8 sm:px-6 lg:px-8 lg:py-10">
+              <div className="inline-flex items-center gap-2 rounded-sm border border-[#2a2a2a] bg-[#0f0f0f] px-3 py-1.5 text-[12px] font-semibold uppercase tracking-[0.08em] text-[#d6c3b5]">
+                <Sparkles className="size-3.5 text-[#c07040]" />
+                Local-first JSON workspace
+              </div>
 
-                  <div className="space-y-5">
-                    <div className="space-y-3">
-                      <h2 className="max-w-2xl text-[34px] leading-[1.02] font-semibold tracking-tight sm:text-[42px] lg:text-[56px]">
-                        Format, validate, explore, and convert JSON faster.
-                      </h2>
-                      <p className="max-w-2xl text-[15px] leading-7 text-[var(--text-secondary)] md:text-base">
-                        Paste JSON, upload a file, or fetch an API response. View it as a tree, fix
-                        errors, compare versions, and generate TypeScript, Zod, CSV, YAML, and XML
-                        outputs.
-                      </p>
-                    </div>
-
-                    <div className="flex flex-wrap gap-3">
-                      <div className="inline-flex items-center gap-2 rounded-[var(--radius-input)] bg-[image:var(--primary-gradient)] px-4 py-2.5 text-sm font-medium text-white shadow-[var(--shadow-floating)]">
-                        <WandSparkles className="size-4" />
-                        Try JSON Tool
-                      </div>
-                      <div className="inline-flex items-center gap-2 rounded-[var(--radius-input)] border border-border bg-background px-4 py-2.5 text-sm font-medium text-foreground">
-                        <Braces className="size-4 text-primary" />
-                        Use Sample JSON
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-wrap gap-x-5 gap-y-3 text-sm text-muted-foreground">
-                    {["Local processing", "No signup", "Dark mode", "Developer shortcuts"].map(
-                      (item) => (
-                        <div key={item} className="flex items-center gap-2">
-                          <span className="size-1.5 rounded-full bg-primary" />
-                          <span>{item}</span>
-                        </div>
-                      ),
-                    )}
-                  </div>
+              <div className="space-y-5">
+                <div className="space-y-3">
+                  <h1 className="max-w-4xl text-[36px] leading-[1.02] font-semibold tracking-[-0.03em] text-[#f5f1ea] sm:text-[44px] lg:text-[56px]">
+                    Format, validate, explore, and convert JSON faster.
+                  </h1>
+                  <p className="max-w-3xl text-[15px] leading-7 text-[#b8a69a] sm:text-base">
+                    Paste JSON, upload a file, or fetch an API response. View it as a tree, fix
+                    errors, compare versions, and generate TypeScript, Zod, CSV, YAML, and XML
+                    outputs.
+                  </p>
                 </div>
 
-                <div className="border-t border-border bg-secondary/70 px-6 py-8 lg:border-l lg:border-t-0">
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-2 text-[13px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
-                      <PanelsTopLeft className="size-3.5 text-primary" />
-                      Mini UI preview
+                <div className="flex flex-wrap gap-3">
+                  <button className="inline-flex items-center gap-2 rounded-sm bg-[#c77742] px-4 py-2.5 text-sm font-semibold text-black transition-colors hover:bg-[#d28550]">
+                    <WandSparkles className="size-4" />
+                    Try JSON Tool
+                  </button>
+                  <button className="inline-flex items-center gap-2 rounded-sm border border-[#2a2a2a] bg-[#0f0f0f] px-4 py-2.5 text-sm font-semibold text-[#f5f1ea] transition-colors hover:border-[#c07040]">
+                    <Braces className="size-4 text-[#c07040]" />
+                    Use Sample JSON
+                  </button>
+                </div>
+              </div>
+
+              <div className="flex flex-wrap gap-x-5 gap-y-3 text-[13px] font-medium text-[#d6c3b5]">
+                {["Local processing", "No signup", "Dark mode", "Developer shortcuts"].map(
+                  (item) => (
+                    <div key={item} className="flex items-center gap-2">
+                      <span className="size-1.5 rounded-full bg-[#c07040]" />
+                      <span>{item}</span>
                     </div>
+                  ),
+                )}
+              </div>
+            </div>
 
-                    <div className="rounded-[var(--radius-card)] border border-border bg-card p-4 shadow-[var(--shadow-workspace)]">
-                      <div className="space-y-4">
-                        <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_150px]">
-                          <div className="rounded-[var(--radius-card)] border border-border bg-[var(--editor-background)] p-3">
-                            <div className="space-y-2 font-mono text-[13px] leading-6 text-[var(--text-secondary)]">
-                              <p>{`{`}</p>
-                              <p className="pl-3">{`"users": [{ "email": "aisha@jsonlens.dev" }],`}</p>
-                              <p className="pl-3">{`"meta": { "count": 1, "status": "ok" }`}</p>
-                              <p>{`}`}</p>
-                            </div>
-                          </div>
-                          <div className="rounded-[var(--radius-card)] border border-border bg-background p-3">
-                            <p className="text-[12px] uppercase tracking-[0.16em] text-muted-foreground">
-                              Tree viewer
-                            </p>
-                            <div className="mt-3 space-y-2 text-sm text-[var(--text-secondary)]">
-                              <p>users</p>
-                              <p className="pl-3">0</p>
-                              <p className="pl-6 text-foreground">email</p>
-                              <p>meta</p>
-                            </div>
-                          </div>
-                        </div>
+            <div className="border-t border-[#262626] bg-[#0d0d0d] px-5 py-8 sm:px-6 xl:border-t-0 xl:border-l">
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-[#b8a69a]">
+                  <Sparkles className="size-3.5 text-[#c07040]" />
+                  Mini UI preview
+                </div>
 
-                        <div className="flex flex-wrap gap-2">
-                          <div className="rounded-full bg-[#DCFCE7] px-3 py-1.5 text-[13px] font-medium text-[#166534] dark:bg-[#052e24] dark:text-[#6ee7b7]">
-                            Valid JSON
-                          </div>
-                          <div className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary px-3 py-1.5 text-[13px] font-medium text-foreground">
-                            <Copy className="size-3.5 text-primary" />
-                            Copy JSONPath
-                          </div>
-                        </div>
+                <div className="rounded-sm border border-[#262626] bg-[#080808]">
+                  <div className="flex items-center justify-between border-b border-[#262626] px-4 py-3">
+                    <p className="font-mono text-[12px] text-[#d6c3b5]">preview.json</p>
+                    <span className="rounded-sm border border-[#32593a] bg-[#0d1510] px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.08em] text-[#8ed08e]">
+                      Valid JSON
+                    </span>
+                  </div>
+
+                  <div className="grid gap-0 lg:grid-cols-[minmax(0,1fr)_152px]">
+                    <div className="border-b border-[#262626] p-4 lg:border-r lg:border-b-0">
+                      <pre className="overflow-hidden font-mono text-[12px] leading-6 text-[#f5f1ea]">
+                        <span>{`{`}</span>
+                        {"\n"}
+                        <span className="text-[#d6c3b5]">{`  "users": [`}</span>
+                        {"\n"}
+                        <span className="text-[#7db87d]">{`    { "email": "aisha@jsonlens.dev" }`}</span>
+                        {"\n"}
+                        <span className="text-[#d6c3b5]">{`  ],`}</span>
+                        {"\n"}
+                        <span className="text-[#d6c3b5]">{`  "meta": { "count": 1 }`}</span>
+                        {"\n"}
+                        <span>{`}`}</span>
+                      </pre>
+                    </div>
+                    <div className="p-4">
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#b8a69a]">
+                        Tree viewer
+                      </p>
+                      <div className="mt-3 space-y-2 font-mono text-[12px] text-[#d6c3b5]">
+                        <p>users</p>
+                        <p className="pl-3">[0]</p>
+                        <p className="pl-6 text-[#f5f1ea]">email</p>
+                        <p>meta</p>
                       </div>
                     </div>
+                  </div>
+
+                  <div className="border-t border-[#262626] px-4 py-3">
+                    <button className="inline-flex items-center gap-2 rounded-sm border border-[#2a2a2a] bg-[#0f0f0f] px-3 py-2 text-[12px] font-semibold uppercase tracking-[0.06em] text-[#d6c3b5] transition-colors hover:border-[#c07040]">
+                      <FileCode2 className="size-3.5 text-[#c07040]" />
+                      Copy JSONPath
+                    </button>
                   </div>
                 </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </section>
 
         <LiveJsonWorkspace />
 
-        <section className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-          {featureCards.map(({ icon: Icon, title, description, example }) => (
-            <Card
-              key={title}
-              className="rounded-[var(--radius-lg)] border-0 bg-card py-0 shadow-[var(--shadow-workspace)] ring-1 ring-border"
-            >
-              <CardContent className="space-y-4 px-6 py-6">
-                <div className="flex size-11 items-center justify-center rounded-[var(--radius-card)] bg-[image:var(--primary-gradient)] text-white">
+        <SectionFrame
+          eyebrow="Features"
+          title="A serious JSON workflow, not a one-button formatter"
+          description="The best experience is not about cramming every action on screen. Keep the common path obvious, then let deeper tooling unfold naturally."
+        >
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            {featureCards.map(({ icon: Icon, title, description, example }) => (
+              <div
+                key={title}
+                className="rounded-sm border border-[#262626] bg-[#0d0d0d] p-5 transition-colors hover:border-[#3a2c24]"
+              >
+                <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-sm bg-[#1f1f1f] text-[#c07040]">
                   <Icon className="size-5" />
                 </div>
-                <div className="space-y-2">
-                  <h3 className="text-[20px] font-semibold text-foreground">{title}</h3>
-                  <p className="text-[15px] leading-6 text-muted-foreground">{description}</p>
-                  <p className="text-[13px] leading-6 text-[var(--text-secondary)]">{example}</p>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </section>
-
-        <section className="grid gap-6 xl:grid-cols-[minmax(0,1.2fr)_minmax(340px,0.8fr)]">
-          <Card className="rounded-[var(--radius-xl)] border-0 bg-card py-0 shadow-[var(--shadow-workspace)] ring-1 ring-border">
-            <CardHeader className="border-b border-border px-6 py-6">
-              <CardTitle className="text-[28px]">Workflow section</CardTitle>
-              <CardDescription>
-                A cleaner flow from raw payload to insight, repair, and output.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="px-6 py-6">
-              <div className="grid gap-4 md:grid-cols-2">
-                {workflowSteps.map((step, index) => (
-                  <div
-                    key={step.title}
-                    className="rounded-[var(--radius-card)] border border-border bg-secondary p-5"
-                  >
-                    <div className="mb-3 inline-flex size-9 items-center justify-center rounded-full bg-[image:var(--primary-gradient)] text-sm font-semibold text-white">
-                      {index + 1}
-                    </div>
-                    <h3 className="text-lg font-semibold text-foreground">{step.title}</h3>
-                    <p className="mt-2 text-[15px] leading-6 text-muted-foreground">
-                      {step.description}
-                    </p>
-                  </div>
-                ))}
+                <h3 className="text-[19px] font-semibold text-[#f5f1ea]">{title}</h3>
+                <p className="mt-2 text-[15px] leading-6 text-[#b8a69a]">{description}</p>
+                <p className="mt-4 border-t border-[#262626] pt-4 text-[13px] leading-6 text-[#d6c3b5]">
+                  {example}
+                </p>
               </div>
-            </CardContent>
-          </Card>
+            ))}
+          </div>
+        </SectionFrame>
 
-          <Card className="rounded-[var(--radius-xl)] border-0 bg-card py-0 shadow-[var(--shadow-workspace)] ring-1 ring-border">
-            <CardHeader className="border-b border-border px-6 py-6">
-              <CardTitle className="text-[28px]">Privacy section</CardTitle>
-              <CardDescription>Your JSON stays in your browser.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-3 px-6 py-6">
-              <p className="text-[15px] leading-7 text-muted-foreground">
-                Formatting, validation, tree view, diff, and conversions run locally. We do not
-                upload or store your JSON unless you explicitly choose future sharing or AI
-                features.
-              </p>
+        <div className="grid gap-8 xl:grid-cols-[minmax(0,1.2fr)_minmax(360px,0.8fr)]">
+          <SectionFrame
+            eyebrow="Workflow"
+            title="Paste → Validate → Explore → Convert → Download"
+            description="JSONLens should feel like a compact control room for developer payload work."
+          >
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
+              {workflowSteps.map((step, index) => (
+                <div
+                  key={step.title}
+                  className="rounded-sm border border-[#262626] bg-[#0d0d0d] p-5"
+                >
+                  <div className="mb-4 inline-flex h-9 w-9 items-center justify-center rounded-sm bg-[#c77742] text-sm font-semibold text-black">
+                    {index + 1}
+                  </div>
+                  <h3 className="text-base font-semibold text-[#f5f1ea]">{step.title}</h3>
+                  <p className="mt-2 text-[14px] leading-6 text-[#b8a69a]">{step.description}</p>
+                </div>
+              ))}
+            </div>
+          </SectionFrame>
+
+          <SectionFrame
+            eyebrow="Privacy"
+            title="Your JSON stays in your browser."
+            description="Privacy is a product feature here, not a tiny disclaimer buried in a footer."
+          >
+            <div className="space-y-3">
               {privacyPoints.map((point) => (
                 <div
                   key={point}
-                  className="flex items-start gap-3 rounded-[var(--radius-card)] border border-border bg-secondary p-4"
+                  className="flex items-start gap-3 rounded-sm border border-[#262626] bg-[#0d0d0d] p-4"
                 >
-                  <Lock className="mt-0.5 size-4 text-primary" />
-                  <p className="text-[15px] leading-6 text-foreground">{point}</p>
+                  <Lock className="mt-0.5 size-4 text-[#c07040]" />
+                  <p className="text-[14px] leading-6 text-[#d6c3b5]">{point}</p>
                 </div>
               ))}
-            </CardContent>
-          </Card>
-        </section>
+            </div>
+          </SectionFrame>
+        </div>
 
-        <section className="space-y-6">
-          <div className="space-y-2">
-            <p className="text-[13px] uppercase tracking-[0.16em] text-muted-foreground">
-              Use cases
-            </p>
-            <h2 className="text-[32px] font-semibold tracking-tight text-foreground">
-              Built for real day-to-day JSON work
-            </h2>
-          </div>
-
-          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+        <SectionFrame
+          eyebrow="Use Cases"
+          title="Built for real day-to-day JSON work"
+          description="Different roles care about different outputs. The workspace adapts without turning into a cluttered tool farm."
+        >
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
             {useCases.map(({ icon: Icon, title, description }) => (
-              <Card
+              <div
                 key={title}
-                className="rounded-[var(--radius-lg)] border-0 bg-card py-0 shadow-[var(--shadow-workspace)] ring-1 ring-border"
+                className="rounded-sm border border-[#262626] bg-[#0d0d0d] p-5 transition-colors hover:border-[#3a2c24]"
               >
-                <CardContent className="space-y-4 px-6 py-6">
-                  <div className="flex size-11 items-center justify-center rounded-[var(--radius-card)] bg-secondary text-primary">
-                    <Icon className="size-5" />
-                  </div>
-                  <div className="space-y-2">
-                    <h3 className="text-lg font-semibold text-foreground">{title}</h3>
-                    <p className="text-[15px] leading-6 text-muted-foreground">{description}</p>
-                  </div>
-                </CardContent>
-              </Card>
+                <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-sm bg-[#1f1f1f] text-[#c07040]">
+                  <Icon className="size-5" />
+                </div>
+                <h3 className="text-[18px] font-semibold text-[#f5f1ea]">{title}</h3>
+                <p className="mt-2 text-[15px] leading-6 text-[#b8a69a]">{description}</p>
+              </div>
             ))}
           </div>
-        </section>
+        </SectionFrame>
 
-        <section className="grid gap-6 xl:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
-          <Card className="rounded-[var(--radius-xl)] border-0 bg-card py-0 shadow-[var(--shadow-workspace)] ring-1 ring-border">
-            <CardHeader className="border-b border-border px-6 py-6">
-              <CardTitle className="text-[28px]">SEO content section</CardTitle>
-              <CardDescription>
-                The homepage should still help search engines understand tool coverage and product
-                scope.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4 px-6 py-6">
-              <p className="text-[15px] leading-7 text-muted-foreground">
-                JSONLens is positioned as a modern developer workspace for formatting, validating,
-                exploring, comparing, converting, and understanding JSON faster. Instead of forcing
-                users into separate disconnected pages too early, the homepage introduces the real
-                tool experience first and then supports it with clear internal pathways.
+        <div className="grid gap-8 xl:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
+          <SectionFrame
+            eyebrow="What Is JSONLens?"
+            title="A homepage that works like a product entry point"
+            description="This should read like a trustworthy developer workspace, not a generic formatter landing page."
+          >
+            <div className="space-y-4 text-[15px] leading-7 text-[#b8a69a]">
+              <p>
+                JSONLens is a modern developer workspace for formatting, validating, exploring,
+                comparing, converting, and understanding JSON faster. The homepage keeps the live
+                tool above the fold so people can start working immediately.
               </p>
-              <p className="text-[15px] leading-7 text-muted-foreground">
-                The strongest homepage structure mixes product usability with search clarity:
-                formatters, validators, tree viewers, diff tools, generators, JSONPath utilities,
-                JWT debugging, privacy-first messaging, and educational resources around JSON syntax
-                and schema concepts.
+              <p>
+                Instead of pushing users through a maze of disconnected pages too early, the product
+                introduces the real workspace first, then supports it with tool discovery,
+                role-based guidance, privacy positioning, and educational content around JSON syntax
+                and structure.
               </p>
-            </CardContent>
-          </Card>
+            </div>
+          </SectionFrame>
 
-          <Card className="rounded-[var(--radius-xl)] border-0 bg-card py-0 shadow-[var(--shadow-workspace)] ring-1 ring-border">
-            <CardHeader className="border-b border-border px-6 py-6">
-              <CardTitle className="text-[28px]">Internal tool map</CardTitle>
-              <CardDescription>
-                Important keyword pathways and future route structure.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="px-6 py-6">
-              <div className="grid gap-3 sm:grid-cols-2">
-                {seoLinks.map((link) => (
-                  <div
-                    key={link}
-                    className="rounded-[var(--radius-card)] border border-border bg-secondary px-4 py-3 text-sm font-medium text-foreground"
-                  >
-                    {link}
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </section>
+          <SectionFrame
+            eyebrow="Internal Tool Map"
+            title="Important SEO and route pathways"
+            description="These routes help users and search engines understand the product surface area."
+          >
+            <div className="grid gap-3 sm:grid-cols-2">
+              {seoLinks.map((link) => (
+                <div
+                  key={link}
+                  className="rounded-sm border border-[#262626] bg-[#0d0d0d] px-4 py-3 text-sm font-medium text-[#d6c3b5]"
+                >
+                  {link}
+                </div>
+              ))}
+            </div>
+          </SectionFrame>
+        </div>
 
-        <section className="space-y-6">
-          <div className="space-y-2">
-            <p className="text-[13px] uppercase tracking-[0.16em] text-muted-foreground">FAQ</p>
-            <h2 className="text-[32px] font-semibold tracking-tight text-foreground">
-              Questions users will ask before trusting the tool
-            </h2>
-          </div>
-
+        <SectionFrame
+          eyebrow="FAQ"
+          title="Questions users ask before trusting a JSON tool"
+          description="Good answers here matter for both confidence and discoverability."
+        >
           <div className="grid gap-4">
             {faqs.map((faq) => (
-              <Card
+              <div
                 key={faq.question}
-                className="rounded-[var(--radius-lg)] border-0 bg-card py-0 shadow-[var(--shadow-workspace)] ring-1 ring-border"
+                className="rounded-sm border border-[#262626] bg-[#0d0d0d] p-5"
               >
-                <CardContent className="space-y-3 px-6 py-6">
-                  <h3 className="text-lg font-semibold text-foreground">{faq.question}</h3>
-                  <p className="text-[15px] leading-7 text-muted-foreground">{faq.answer}</p>
-                </CardContent>
-              </Card>
+                <h3 className="text-lg font-semibold text-[#f5f1ea]">{faq.question}</h3>
+                <p className="mt-3 text-[15px] leading-7 text-[#b8a69a]">{faq.answer}</p>
+              </div>
             ))}
           </div>
-        </section>
+        </SectionFrame>
       </div>
     </main>
   );

@@ -88,6 +88,62 @@ const CONVERTER_TABS = [
   "Mongoose",
 ] as const;
 
+const ROLE_MODE_INFO: Record<
+  RoleMode,
+  {
+    description: string;
+    actions: Array<{
+      label: string;
+      view: WorkspaceView;
+      inspector?: InspectorView;
+      converterTab?: ConverterTab;
+    }>;
+  }
+> = {
+  General: {
+    description: "Balanced workspace for formatting, validation, tree view, search, and downloads.",
+    actions: [
+      { label: "Validation status", view: "editor", inspector: "status" },
+      { label: "Tree explorer", view: "editor", inspector: "tree" },
+      { label: "Search results", view: "editor", inspector: "search" },
+    ],
+  },
+  Frontend: {
+    description:
+      "Focus on API responses, TypeScript, Zod, and frontend-friendly payload inspection.",
+    actions: [
+      { label: "TypeScript", view: "converters", converterTab: "TypeScript" },
+      { label: "Zod", view: "converters", converterTab: "Zod" },
+      { label: "Formatted JSON", view: "editor", inspector: "formatted" },
+    ],
+  },
+  Backend: {
+    description: "Focus on contracts, schema generation, storage models, and integration output.",
+    actions: [
+      { label: "JSON Schema", view: "converters", converterTab: "Schema" },
+      { label: "Prisma", view: "converters", converterTab: "Prisma" },
+      { label: "Mongoose", view: "converters", converterTab: "Mongoose" },
+    ],
+  },
+  QA: {
+    description:
+      "Focus on expected vs actual comparisons, path lookup, and test-friendly inspection.",
+    actions: [
+      { label: "Diff tool", view: "diff" },
+      { label: "JSONPath", view: "editor", inspector: "tree" },
+      { label: "Search paths", view: "editor", inspector: "search" },
+    ],
+  },
+  Student: {
+    description: "Focus on readable errors, examples, and guided exploration of JSON structure.",
+    actions: [
+      { label: "Validation status", view: "editor", inspector: "status" },
+      { label: "Tree explorer", view: "editor", inspector: "tree" },
+      { label: "Try sample", view: "editor", inspector: "formatted" },
+    ],
+  },
+};
+
 type WorkspaceView = "editor" | "jwt" | "diff" | "converters" | "history";
 type InspectorView = "status" | "formatted" | "tree" | "search";
 type ConverterTab = (typeof CONVERTER_TABS)[number];
@@ -133,6 +189,7 @@ export function LiveJsonWorkspace() {
   const commandInputRef = useRef<HTMLInputElement | null>(null);
 
   const [workspaceView, setWorkspaceView] = useState<WorkspaceView>("editor");
+  const [previousWorkspaceView, setPreviousWorkspaceView] = useState<WorkspaceView>("editor");
   const [roleMode, setRoleMode] = useState<RoleMode>("General");
   const [inspectorView, setInspectorView] = useState<InspectorView>("status");
   const [source, setSource] = useState(SAMPLE_JSON);
@@ -232,6 +289,8 @@ export function LiveJsonWorkspace() {
     );
   }, [commandItems, commandQuery]);
 
+  const roleModeInfo = ROLE_MODE_INFO[roleMode];
+
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "k") {
@@ -272,6 +331,45 @@ export function LiveJsonWorkspace() {
       },
       ...current,
     ]);
+  };
+
+  const openWorkspace = (view: WorkspaceView) => {
+    if (view === "converters") {
+      setPreviousWorkspaceView(
+        workspaceView === "converters" ? previousWorkspaceView : workspaceView,
+      );
+    }
+
+    setWorkspaceView(view);
+  };
+
+  const openConverterWorkspace = (tab?: ConverterTab) => {
+    if (tab) {
+      setConverterTab(tab);
+    }
+
+    setPreviousWorkspaceView(
+      workspaceView === "converters" ? previousWorkspaceView : workspaceView,
+    );
+    setWorkspaceView("converters");
+  };
+
+  const handleRoleAction = (action: {
+    label: string;
+    view: WorkspaceView;
+    inspector?: InspectorView;
+    converterTab?: ConverterTab;
+  }) => {
+    if (action.converterTab) {
+      openConverterWorkspace(action.converterTab);
+      return;
+    }
+
+    if (action.inspector) {
+      setInspectorView(action.inspector);
+    }
+
+    openWorkspace(action.view);
   };
 
   const handleCopy = async (value: string, message = "Copied") => {
@@ -415,16 +513,16 @@ export function LiveJsonWorkspace() {
         fileInputRef.current?.click();
         break;
       case "convert":
-        setWorkspaceView("converters");
+        openConverterWorkspace();
         break;
       case "diff":
-        setWorkspaceView("diff");
+        openWorkspace("diff");
         break;
       case "jwt":
-        setWorkspaceView("jwt");
+        openWorkspace("jwt");
         break;
       case "search":
-        setWorkspaceView("editor");
+        openWorkspace("editor");
         setInspectorView("search");
         break;
       case "mask":
@@ -442,20 +540,22 @@ export function LiveJsonWorkspace() {
   };
 
   return (
-    <section className="overflow-hidden rounded-[28px] border border-[#262626] bg-[#080808] text-[#f5f1ea] shadow-[0_32px_90px_rgba(0,0,0,0.45)]">
-      <div className="grid min-h-[980px] xl:grid-cols-[260px_minmax(0,1fr)]">
+    <section className="overflow-hidden border border-[#262626] bg-[#080808] text-[#f5f1ea] shadow-[0_20px_60px_rgba(0,0,0,0.28)]">
+      <div className="grid min-h-[920px] xl:grid-cols-[260px_minmax(0,1fr)]">
         <aside className="flex min-h-full flex-col border-r border-[#262626] bg-[#121212] px-5 py-6">
           <div className="mb-8 flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-md bg-[#1f1f1f]">
+            <div className="flex h-10 w-10 items-center justify-center rounded-sm bg-[#1f1f1f]">
               <Braces className="size-5 text-[#c07040]" />
             </div>
             <div>
               <h2 className="text-[17px] font-bold tracking-tight text-[#d3884e]">JSONLens</h2>
-              <p className="text-sm text-[#d6c3b5]">Pro Workspace</p>
+              <p className="text-[12px] font-medium uppercase tracking-[0.08em] text-[#d6c3b5]">
+                Pro Workspace
+              </p>
             </div>
           </div>
 
-          <button className="mb-7 rounded-md bg-[#c77742] px-4 py-3 text-sm font-semibold text-black transition-opacity hover:opacity-90">
+          <button className="mb-7 rounded-sm bg-[#c77742] px-4 py-3 text-sm font-semibold text-black transition-opacity hover:opacity-90">
             + New Document
           </button>
 
@@ -467,7 +567,7 @@ export function LiveJsonWorkspace() {
                 <button
                   key={id}
                   type="button"
-                  onClick={() => setWorkspaceView(id)}
+                  onClick={() => openWorkspace(id)}
                   className={cn(
                     "flex w-full items-center gap-4 rounded-sm px-4 py-3 text-left transition-colors",
                     active
@@ -500,7 +600,7 @@ export function LiveJsonWorkspace() {
         </aside>
 
         <div className="flex min-w-0 flex-col">
-          <header className="flex h-20 items-center justify-between border-b border-[#262626] bg-[#080808] px-10">
+          <header className="flex h-16 items-center justify-between border-b border-[#262626] bg-[#080808] px-5 sm:px-6 lg:px-10">
             <div className="flex min-w-[320px] items-center gap-4">
               <Search className="size-5 text-[#d6c3b5]" />
               <input
@@ -554,62 +654,87 @@ export function LiveJsonWorkspace() {
           </header>
 
           <div className="flex min-h-0 flex-1 flex-col bg-[#131313]">
-            <div className="flex items-center justify-between border-b border-[#262626] px-5 py-3">
-              <div className="flex gap-6 text-[15px] font-semibold">
-                {ROLE_MODES.map((item) => (
-                  <button
-                    key={item}
-                    type="button"
-                    onClick={() => setRoleMode(item)}
-                    className={cn(
-                      "border-b pb-1 transition-colors",
-                      roleMode === item
-                        ? "border-[#c07040] text-[#d69463]"
-                        : "border-transparent text-[#d6c3b5] hover:text-[#f5f1ea]",
-                    )}
-                  >
-                    {item}
-                  </button>
-                ))}
+            <div className="border-b border-[#262626] px-5 py-3">
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex gap-6 text-[15px] font-semibold">
+                  {ROLE_MODES.map((item) => (
+                    <button
+                      key={item}
+                      type="button"
+                      onClick={() => setRoleMode(item)}
+                      className={cn(
+                        "border-b pb-1 transition-colors",
+                        roleMode === item
+                          ? "border-[#c07040] text-[#d69463]"
+                          : "border-transparent text-[#d6c3b5] hover:text-[#f5f1ea]",
+                      )}
+                    >
+                      {item}
+                    </button>
+                  ))}
+                </div>
+
+                <div className="flex items-center gap-1 rounded-sm border border-[#2b2b2b] bg-[#0f0f0f] p-1">
+                  <IconButton
+                    active={inspectorView === "formatted"}
+                    icon={<List className="size-4" />}
+                    onClick={() => setInspectorView("formatted")}
+                    title="Formatted view"
+                  />
+                  <IconButton
+                    active={inspectorView === "status"}
+                    icon={<CheckCircle2 className="size-4" />}
+                    onClick={() => setInspectorView("status")}
+                    title="Validation status"
+                  />
+                  <IconButton
+                    active={inspectorView === "tree"}
+                    icon={<Braces className="size-4" />}
+                    onClick={() => setInspectorView("tree")}
+                    title="Tree explorer"
+                  />
+                  <div className="mx-1 h-4 w-px bg-[#2f2f2f]" />
+                  <IconButton
+                    active={inspectorView === "search"}
+                    icon={<Search className="size-4" />}
+                    onClick={() => setInspectorView("search")}
+                    title="Search inspector"
+                  />
+                  <IconButton
+                    active={false}
+                    icon={<Download className="size-4" />}
+                    onClick={() =>
+                      handleDownload(
+                        workspaceView === "converters"
+                          ? converterOutput
+                          : formattedOutput || source,
+                        "jsonlens-output.txt",
+                      )
+                    }
+                    title="Download"
+                  />
+                </div>
               </div>
 
-              <div className="flex items-center gap-1 rounded-sm border border-[#2b2b2b] bg-[#0f0f0f] p-1">
-                <IconButton
-                  active={inspectorView === "formatted"}
-                  icon={<List className="size-4" />}
-                  onClick={() => setInspectorView("formatted")}
-                  title="Formatted view"
-                />
-                <IconButton
-                  active={inspectorView === "status"}
-                  icon={<CheckCircle2 className="size-4" />}
-                  onClick={() => setInspectorView("status")}
-                  title="Validation status"
-                />
-                <IconButton
-                  active={inspectorView === "tree"}
-                  icon={<Braces className="size-4" />}
-                  onClick={() => setInspectorView("tree")}
-                  title="Tree explorer"
-                />
-                <div className="mx-1 h-4 w-px bg-[#2f2f2f]" />
-                <IconButton
-                  active={inspectorView === "search"}
-                  icon={<Search className="size-4" />}
-                  onClick={() => setInspectorView("search")}
-                  title="Search inspector"
-                />
-                <IconButton
-                  active={false}
-                  icon={<Download className="size-4" />}
-                  onClick={() =>
-                    handleDownload(
-                      workspaceView === "converters" ? converterOutput : formattedOutput || source,
-                      "jsonlens-output.txt",
-                    )
-                  }
-                  title="Download"
-                />
+              <div className="mt-3 flex flex-wrap items-center justify-between gap-3 rounded-sm border border-[#262626] bg-[#101010] px-4 py-3">
+                <div>
+                  <p className="text-[12px] font-semibold text-[#f5f1ea]">{roleMode} mode</p>
+                  <p className="mt-1 text-[13px] leading-6 text-[#a89589]">
+                    {roleModeInfo.description}
+                  </p>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {roleModeInfo.actions.map((action) => (
+                    <button
+                      key={`${roleMode}-${action.label}`}
+                      type="button"
+                      onClick={() => handleRoleAction(action)}
+                      className="rounded-sm border border-[#2a2a2a] bg-[#0a0a0a] px-3 py-1.5 text-xs font-semibold text-[#d6c3b5] transition-colors hover:border-[#c07040]"
+                    >
+                      {action.label}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
 
@@ -672,7 +797,7 @@ export function LiveJsonWorkspace() {
                 <span className="text-[#363636]">•</span>
                 <button
                   className="inline-flex items-center gap-1 text-[#d6c3b5] transition-colors hover:text-[#f5f1ea]"
-                  onClick={() => setWorkspaceView("converters")}
+                  onClick={() => openConverterWorkspace()}
                 >
                   Convert to
                   <ChevronDown className="size-4" />
@@ -681,7 +806,7 @@ export function LiveJsonWorkspace() {
                 <button
                   className="text-[#d6c3b5] transition-colors hover:text-[#f5f1ea]"
                   onClick={() => {
-                    setWorkspaceView("editor");
+                    openWorkspace("editor");
                     setInspectorView("tree");
                   }}
                 >
@@ -744,6 +869,8 @@ export function LiveJsonWorkspace() {
                   onDownload={handleDownload}
                   source={source}
                   setSource={setSource}
+                  onBack={() => openWorkspace(previousWorkspaceView)}
+                  onClose={() => openWorkspace(previousWorkspaceView)}
                 />
               ) : null}
 
@@ -1065,6 +1192,8 @@ function ConverterWorkspace({
   onDownload,
   source,
   setSource,
+  onBack,
+  onClose,
 }: {
   converterTab: ConverterTab;
   setConverterTab: React.Dispatch<React.SetStateAction<ConverterTab>>;
@@ -1074,12 +1203,23 @@ function ConverterWorkspace({
   onDownload: (content: string, filename: string) => void;
   source: string;
   setSource: React.Dispatch<React.SetStateAction<string>>;
+  onBack: () => void;
+  onClose: () => void;
 }) {
   return (
     <div className="grid h-full min-h-0 xl:grid-cols-[minmax(0,1fr)_minmax(360px,0.92fr)]">
       <div className="flex min-h-0 flex-col border-r border-[#262626]">
-        <div className="border-b border-[#262626] bg-[#171717] px-5 py-3 text-sm font-semibold text-[#d6c3b5]">
-          Input JSON
+        <div className="flex items-center justify-between border-b border-[#262626] bg-[#171717] px-5 py-3">
+          <div>
+            <p className="text-sm font-semibold text-[#f5f1ea]">Converter workspace</p>
+            <p className="mt-1 text-xs text-[#a89589]">
+              Input JSON on the left, generated output on the right.
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            <SmallAction label="Back" onClick={onBack} />
+            <SmallAction label="Close" onClick={onClose} />
+          </div>
         </div>
         <div className="min-h-0 flex-1 bg-[#050505]">
           <MonacoEditor
@@ -1104,6 +1244,10 @@ function ConverterWorkspace({
 
       <aside className="flex min-h-0 flex-col bg-[#121212]">
         <div className="border-b border-[#262626] px-5 py-4">
+          <div className="mb-3 flex items-center justify-between">
+            <p className="text-sm font-semibold text-[#d6c3b5]">Output</p>
+            <span className="text-xs text-[#7b7068]">Choose a target format</span>
+          </div>
           <div className="flex flex-wrap gap-2">
             {CONVERTER_TABS.map((tab) => (
               <button

@@ -1,13 +1,12 @@
 "use client";
 
-import { useState, useCallback, useEffect, useMemo } from "react";
+import { useState, useCallback, useMemo } from "react";
 import Editor, { OnChange } from "@monaco-editor/react";
 import type { editor as MonacoEditor } from "monaco-editor";
 import { computeEditorStats, formatBytes } from "@/lib/json/compute-stats";
 import { copyToClipboard } from "@/lib/clipboard";
 import { downloadFile } from "@/lib/download";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
-import type { EditorStats } from "@/types/workspace";
 import { SAMPLE_USER_JSON } from "@/constants/workspace";
 
 const DEFAULT_JSON = SAMPLE_USER_JSON;
