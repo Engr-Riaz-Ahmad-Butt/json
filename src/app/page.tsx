@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import FeaturesSection from "@/components/FeaturesSection";
@@ -46,7 +47,8 @@ export default function Home() {
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 mb-12">
-            <button
+            <Link
+              href="/routes/workspace"
               className="px-6 py-3 transition-all hover:brightness-110 active:scale-95 flex items-center justify-center gap-2"
               style={{
                 backgroundColor: "#C07040",
@@ -57,10 +59,11 @@ export default function Home() {
                 letterSpacing: "0.05em",
                 textTransform: "uppercase",
                 borderRadius: "0.125rem",
+                textDecoration: "none",
               }}
             >
               Get Started — It&apos;s Free
-            </button>
+            </Link>
             <button
               className="px-6 py-3 border transition-colors hover:bg-[#121212] active:scale-95 flex items-center justify-center gap-2"
               style={{

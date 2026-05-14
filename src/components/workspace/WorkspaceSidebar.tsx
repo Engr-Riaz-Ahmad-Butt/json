@@ -10,16 +10,16 @@ type NavItem = {
 };
 
 const mainNav: NavItem[] = [
-  { icon: "code", label: "Editor", href: "/workspace" },
-  { icon: "lock_open", label: "JWT Decoder", href: "/workspace/jwt" },
-  { icon: "difference", label: "JSON Diff", href: "/workspace/diff" },
-  { icon: "transform", label: "Converters", href: "/workspace/convert" },
-  { icon: "history", label: "History", href: "/workspace/history" },
+  { icon: "code", label: "Editor", href: "/routes/workspace" },
+  { icon: "lock_open", label: "JWT Decoder", href: "/routes/workspace/jwt" },
+  { icon: "difference", label: "JSON Diff", href: "/routes/workspace/diff" },
+  { icon: "transform", label: "Converters", href: "/routes/workspace/convert" },
+  { icon: "history", label: "History", href: "/routes/workspace/history" },
 ];
 
 const footerNav: NavItem[] = [
-  { icon: "settings", label: "Settings", href: "/workspace/settings" },
-  { icon: "help_outline", label: "Support", href: "/workspace/support" },
+  { icon: "settings", label: "Settings", href: "/routes/workspace/settings" },
+  { icon: "help_outline", label: "Support", href: "/routes/workspace/support" },
 ];
 
 type SidebarProps = {
