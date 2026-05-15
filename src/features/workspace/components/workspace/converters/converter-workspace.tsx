@@ -38,8 +38,8 @@ export function ConverterWorkspace({
 }) {
   return (
     <div className="grid h-full min-h-0 xl:grid-cols-[minmax(0,1fr)_minmax(360px,0.92fr)]">
-      <div className="flex min-h-0 flex-col border-r border-[#262626]">
-        <div className="flex items-center justify-between border-b border-[#262626] bg-[#171717] px-5 py-3">
+      <div className="flex min-h-0 flex-col border-b border-[#262626] xl:border-b-0 xl:border-r">
+        <div className="flex flex-col gap-3 border-b border-[#262626] bg-[#171717] px-4 py-3 sm:px-5 lg:flex-row lg:items-center lg:justify-between">
           <div>
             <p className="text-sm font-semibold text-[#f5f1ea]">Converter workspace</p>
             <p className="mt-1 text-xs text-[#a89589]">
@@ -51,7 +51,7 @@ export function ConverterWorkspace({
             <SmallAction label="Close" onClick={onClose} />
           </div>
         </div>
-        <div className="min-h-0 flex-1 bg-[#050505]">
+        <div className="min-h-[320px] flex-1 bg-[#050505] xl:min-h-0">
           <MonacoEditor
             height="100%"
             language="json"
@@ -73,7 +73,7 @@ export function ConverterWorkspace({
       </div>
 
       <aside className="flex min-h-0 flex-col bg-[#121212]">
-        <div className="border-b border-[#262626] px-5 py-4">
+        <div className="border-b border-[#262626] px-4 py-4 sm:px-5">
           <div className="mb-3 flex items-center justify-between">
             <p className="text-sm font-semibold text-[#d6c3b5]">Output</p>
             <span className="text-xs text-[#7b7068]">Choose a target format</span>
@@ -97,7 +97,7 @@ export function ConverterWorkspace({
           </div>
         </div>
 
-        <div className="flex items-center gap-2 border-b border-[#262626] px-5 py-3">
+        <div className="flex flex-wrap items-center gap-2 border-b border-[#262626] px-4 py-3 sm:px-5">
           <SmallAction
             label="Copy"
             onClick={() => onCopy(output, `Copied ${converterTab} output`)}
@@ -113,7 +113,7 @@ export function ConverterWorkspace({
           />
         </div>
 
-        <div className="min-h-0 flex-1 overflow-auto p-5">
+        <div className="min-h-0 flex-1 overflow-auto p-4 sm:p-5">
           {parsedValue ? (
             output ? (
               <CodePreview value={output} />

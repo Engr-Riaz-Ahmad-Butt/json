@@ -67,7 +67,7 @@ export function JwtWorkspace({
   return (
     <div className="grid h-full min-h-0 gap-px bg-[#262626] xl:grid-cols-2">
       <section className="flex min-h-0 flex-col bg-[#080808]">
-        <div className="flex items-center justify-between border-b border-[#262626] bg-[#171717]/60 px-5 py-4">
+        <div className="flex items-center justify-between border-b border-[#262626] bg-[#171717]/60 px-4 py-4 sm:px-5">
           <h2 className="flex items-center gap-2 text-[15px] font-semibold text-[#f5f1ea]">
             <LockKeyhole className="size-4 text-[#c07040]" />
             Encoded Token
@@ -81,7 +81,7 @@ export function JwtWorkspace({
           </button>
         </div>
 
-        <div className="min-h-0 flex-1 bg-[#080808] p-5">
+        <div className="min-h-[280px] flex-1 bg-[#080808] p-4 sm:min-h-[320px] sm:p-5">
           <textarea
             value={jwtInput}
             onChange={(event) => setJwtInput(event.target.value)}
@@ -91,7 +91,7 @@ export function JwtWorkspace({
           />
         </div>
 
-        <div className="border-t border-[#262626] bg-[#121212] p-6">
+        <div className="border-t border-[#262626] bg-[#121212] p-4 sm:p-6">
           <div className="mb-4 flex items-center justify-between">
             <h3 className="text-[15px] font-medium text-[#f5f1ea]">Verify Signature</h3>
             <button
@@ -152,14 +152,14 @@ export function JwtWorkspace({
       </section>
 
       <section className="flex min-h-0 flex-col overflow-y-auto bg-[#080808]">
-        <div className="sticky top-0 z-10 border-b border-[#262626] bg-[#171717]/60 px-5 py-4">
+        <div className="sticky top-0 z-10 border-b border-[#262626] bg-[#171717]/60 px-4 py-4 sm:px-5">
           <h2 className="flex items-center gap-2 text-[15px] font-semibold text-[#f5f1ea]">
             <Eye className="size-4 text-[#ffb68e]" />
             Decoded Payload
           </h2>
         </div>
 
-        <div className="space-y-5 p-6">
+        <div className="space-y-5 p-4 sm:p-6">
           {decodedJwt ? (
             <>
               <JwtCard

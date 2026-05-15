@@ -18,6 +18,10 @@ const MonacoDiffEditor = dynamic(
   },
 );
 
+const MonacoEditor = dynamic(() => import("@monaco-editor/react").then((mod) => mod.default), {
+  ssr: false,
+});
+
 export function DiffWorkspace({
   diffOld,
   diffNew,
@@ -182,64 +186,121 @@ export function DiffWorkspace({
 
       <div className="grid min-h-0 flex-1 2xl:grid-cols-[minmax(0,1fr)_300px]">
         <div className="min-h-0 2xl:border-r 2xl:border-ui-border">
-          <div
-            className={cn(
-              "border-b border-ui-border bg-surface-elevated font-mono text-[12px] text-on-surface-variant",
-              isDesktopDiff ? "grid grid-cols-2" : "grid grid-cols-1",
-            )}
-          >
-            <div
-              className={cn(
-                "px-4 py-3 sm:px-5",
-                isDesktopDiff ? "border-r border-ui-border" : "",
-              )}
-            >
-              Original JSON (prod-config-v1.json)
+          {isDesktopDiff ? (
+            <>
+              <div className="grid grid-cols-2 border-b border-ui-border bg-surface-elevated font-mono text-[12px] text-on-surface-variant">
+                <div className="border-r border-ui-border px-4 py-3 sm:px-5">
+                  Original JSON (prod-config-v1.json)
+                </div>
+                <div className="px-4 py-3 sm:px-5">Modified JSON (prod-config-v2.json)</div>
+              </div>
+
+              <div className="h-[460px] bg-[#050505] md:h-[560px] xl:h-155 2xl:h-[calc(100vh-240px)]">
+                <MonacoDiffEditor
+                  height="100%"
+                  language="json"
+                  original={diffOld}
+                  modified={diffNew}
+                  theme="vs-dark"
+                  onMount={(editor) => {
+                    diffEditorRef.current = editor as unknown as DiffEditorHandle;
+                    const originalModel = editor.getModel()?.original;
+                    const modifiedModel = editor.getModel()?.modified;
+
+                    originalModel?.onDidChangeContent(() => {
+                      const nextValue = originalModel.getValue();
+                      setDiffOld((current) => (current === nextValue ? current : nextValue));
+                    });
+
+                    modifiedModel?.onDidChangeContent(() => {
+                      const nextValue = modifiedModel.getValue();
+                      setDiffNew((current) => (current === nextValue ? current : nextValue));
+                    });
+                  }}
+                  options={{
+                    automaticLayout: true,
+                    renderSideBySide: true,
+                    minimap: { enabled: false },
+                    scrollBeyondLastLine: false,
+                    readOnly: false,
+                    originalEditable: true,
+                    renderIndicators: true,
+                    lineNumbers: "on",
+                    wordWrap: "off",
+                    padding: { top: 20, bottom: 20 },
+                    fontSize: 15,
+                    lineHeight: 28,
+                    fontFamily: "var(--font-mono)",
+                    ignoreTrimWhitespace: ignoreWhitespace,
+                    diffWordWrap: "off",
+                  }}
+                />
+              </div>
+            </>
+          ) : (
+            <div className="space-y-4 bg-[#050505] px-3 py-4 sm:px-4">
+              <div className="grid grid-cols-2 gap-3">
+                <StatTile label="Added" value={String(summary?.added.length ?? 0)} />
+                <StatTile label="Removed" value={String(summary?.removed.length ?? 0)} />
+                <StatTile label="Changed" value={String(summary?.changed.length ?? 0)} />
+                <StatTile label="Type changes" value={String(summary?.typeChanges.length ?? 0)} />
+              </div>
+
+              <div className="overflow-hidden rounded-sm border border-ui-border bg-obsidian-base">
+                <div className="border-b border-ui-border bg-surface-elevated px-4 py-3 font-mono text-[12px] text-on-surface-variant">
+                  Original JSON (prod-config-v1.json)
+                </div>
+                <div className="h-[260px]">
+                  <MonacoEditor
+                    height="100%"
+                    language="json"
+                    theme="vs-dark"
+                    value={diffOld}
+                    onChange={(value) => setDiffOld(value ?? "")}
+                    options={{
+                      automaticLayout: true,
+                      minimap: { enabled: false },
+                      scrollBeyondLastLine: false,
+                      lineNumbers: "on",
+                      wordWrap: "on",
+                      padding: { top: 14, bottom: 14 },
+                      fontSize: 14,
+                      lineHeight: 24,
+                      tabSize: 2,
+                      fontFamily: "var(--font-mono)",
+                    }}
+                  />
+                </div>
+              </div>
+
+              <div className="overflow-hidden rounded-sm border border-ui-border bg-obsidian-base">
+                <div className="border-b border-ui-border bg-surface-elevated px-4 py-3 font-mono text-[12px] text-on-surface-variant">
+                  Modified JSON (prod-config-v2.json)
+                </div>
+                <div className="h-[260px]">
+                  <MonacoEditor
+                    height="100%"
+                    language="json"
+                    theme="vs-dark"
+                    value={diffNew}
+                    onChange={(value) => setDiffNew(value ?? "")}
+                    options={{
+                      automaticLayout: true,
+                      minimap: { enabled: false },
+                      scrollBeyondLastLine: false,
+                      lineNumbers: "on",
+                      wordWrap: "on",
+                      padding: { top: 14, bottom: 14 },
+                      fontSize: 14,
+                      lineHeight: 24,
+                      tabSize: 2,
+                      fontFamily: "var(--font-mono)",
+                    }}
+                  />
+                </div>
+              </div>
             </div>
-            <div className="px-4 py-3 sm:px-5">Modified JSON (prod-config-v2.json)</div>
-          </div>
-
-          <div className="h-[460px] bg-[#050505] md:h-[560px] xl:h-155 2xl:h-[calc(100vh-240px)]">
-            <MonacoDiffEditor
-              height="100%"
-              language="json"
-              original={diffOld}
-              modified={diffNew}
-              theme="vs-dark"
-              onMount={(editor) => {
-                diffEditorRef.current = editor as unknown as DiffEditorHandle;
-                const originalModel = editor.getModel()?.original;
-                const modifiedModel = editor.getModel()?.modified;
-
-                originalModel?.onDidChangeContent(() => {
-                  const nextValue = originalModel.getValue();
-                  setDiffOld((current) => (current === nextValue ? current : nextValue));
-                });
-
-                modifiedModel?.onDidChangeContent(() => {
-                  const nextValue = modifiedModel.getValue();
-                  setDiffNew((current) => (current === nextValue ? current : nextValue));
-                });
-              }}
-              options={{
-                automaticLayout: true,
-                renderSideBySide: isDesktopDiff,
-                minimap: { enabled: false },
-                scrollBeyondLastLine: false,
-                readOnly: false,
-                originalEditable: true,
-                renderIndicators: true,
-                lineNumbers: "on",
-                wordWrap: "off",
-                padding: { top: 20, bottom: 20 },
-                fontSize: 15,
-                lineHeight: 28,
-                fontFamily: "var(--font-mono)",
-                ignoreTrimWhitespace: ignoreWhitespace,
-                diffWordWrap: "off",
-              }}
-            />
-          </div>
+          )}
         </div>
 
         <aside className="min-h-0 border-t border-ui-border bg-surface-elevated 2xl:border-t-0">

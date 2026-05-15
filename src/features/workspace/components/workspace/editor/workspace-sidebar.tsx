@@ -23,9 +23,7 @@ export function WorkspaceSidebar({
               <Braces className="size-5 text-[#c07040]" />
             </div>
             <div>
-              <h2 className="text-[17px] font-bold tracking-tight text-copper-accent">
-                jsonLines
-              </h2>
+              <h2 className="text-[17px] font-bold tracking-tight text-copper-accent">jsonLines</h2>
               <p className="text-[12px] font-medium uppercase tracking-[0.08em] text-[#d6c3b5]">
                 Pro Workspace
               </p>
@@ -42,7 +40,7 @@ export function WorkspaceSidebar({
         </button>
       </div>
 
-      <nav className="flex gap-2 overflow-x-auto px-4 pb-4 sm:px-5 xl:flex-1 xl:flex-col xl:gap-1.5 xl:overflow-visible xl:px-0 xl:pb-0">
+      <nav className="grid grid-cols-2 gap-2 px-4 pb-4 sm:flex sm:overflow-x-auto sm:px-5 sm:pb-4 xl:flex-1 xl:flex-col xl:gap-1.5 xl:overflow-visible xl:px-0 xl:pb-0">
         {NAV_ITEMS.map(({ id, label, icon: Icon }) => {
           const active = workspaceView === id;
 
@@ -52,14 +50,14 @@ export function WorkspaceSidebar({
               type="button"
               onClick={() => onOpenWorkspace(id)}
               className={cn(
-                "flex shrink-0 items-center gap-3 rounded-sm px-3 py-2.5 text-left transition-colors xl:w-full xl:gap-4 xl:px-4 xl:py-3",
+                "flex min-w-0 items-center gap-3 rounded-sm px-3 py-2.5 text-left transition-colors sm:shrink-0 xl:w-full xl:gap-4 xl:px-4 xl:py-3",
                 active
                   ? "border-r-2 border-copper-accent bg-surface-container-high text-copper-accent"
                   : "text-on-surface-variant hover:bg-surface-container-low hover:text-text-primary",
               )}
             >
               <Icon className="size-4 xl:size-5" />
-              <span className="whitespace-nowrap text-sm font-medium xl:text-[15px]">{label}</span>
+              <span className="truncate text-sm font-medium xl:text-[15px]">{label}</span>
             </button>
           );
         })}

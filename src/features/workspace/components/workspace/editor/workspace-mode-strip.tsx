@@ -41,7 +41,7 @@ export function WorkspaceModeStrip({
   return (
     <div className="border-b border-[#262626] px-4 py-3 sm:px-5">
       <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between xl:gap-4">
-        <div className="flex gap-4 overflow-x-auto pb-1 text-[14px] font-semibold sm:gap-6 sm:text-[15px]">
+        <div className="flex flex-wrap gap-4 text-[14px] font-semibold sm:gap-6 sm:text-[15px]">
           {ROLE_MODES.map((item) => (
             <button
               key={item}

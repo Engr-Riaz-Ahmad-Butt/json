@@ -17,7 +17,7 @@ export function ToolbarButton({
     <button
       type="button"
       onClick={onClick}
-      className="inline-flex items-center gap-2 rounded-sm border border-[#2a2a2a] bg-[#111111] px-4 py-2 text-sm font-medium text-[#f5f1ea] transition-colors hover:border-[#c07040]"
+      className="inline-flex min-h-10 items-center gap-2 rounded-sm border border-[#2a2a2a] bg-[#111111] px-3 py-2 text-sm font-medium text-[#f5f1ea] transition-colors hover:border-[#c07040] sm:px-4"
     >
       {icon}
       {label}
