@@ -64,7 +64,7 @@ export default function Home() {
               color: "#F5F1EA",
             }}
           >
-            The JSON workspace for <span style={{ color: "#C07040" }}>serious developers.</span>
+            The modern JSON workspace for <span style={{ color: "#C07040" }}>developers.</span>
           </h1>
 
           <p
@@ -76,8 +76,8 @@ export default function Home() {
               color: "#d9c2b6",
             }}
           >
-            Experience unparalleled speed and precision in a terminal-inspired environment.
-            jsonLines provides the tools you need to build, decode, and diff with absolute control.
+            Format JSON, decode JWTs, compare payloads, and generate developer-ready outputs in a
+            fast, privacy-first workspace.
           </p>
 
           <div className="mb-10 grid w-full max-w-sm grid-cols-1 gap-3 sm:mb-12">
@@ -90,13 +90,12 @@ export default function Home() {
                 fontFamily: "Inter, sans-serif",
                 fontSize: "12px",
                 fontWeight: 600,
-                letterSpacing: "0.05em",
-                textTransform: "uppercase",
+                letterSpacing: "0.01em",
                 borderRadius: "0.125rem",
                 textDecoration: "none",
               }}
             >
-              Get Started - It&apos;s Free
+              Get started - it&apos;s free
             </Link>
           </div>
 
@@ -112,7 +111,7 @@ export default function Home() {
               style={{ borderColor: "#262626", backgroundColor: "#121212" }}
             >
               <p
-                className="mb-3 text-xs font-semibold uppercase tracking-[0.14em]"
+                className="mb-3 text-xs font-semibold tracking-[0.02em]"
                 style={{ color: "#d9c2b6" }}
               >
                 Privacy-first
@@ -133,7 +132,7 @@ export default function Home() {
               >
                 jsonLines is designed for payloads that developers actually care about. Formatting,
                 validation, tree exploration, JWT decoding, diffing, and generation all happen in a
-                privacy-first workspace without forcing you through signup first.
+                privacy-first workspace without forcing you through signup.
               </p>
             </div>
 
@@ -158,10 +157,10 @@ export default function Home() {
         <section className="w-full max-w-300 px-4 py-12 sm:px-6 md:px-8 md:py-14">
           <div className="mb-8">
             <p
-              className="mb-2 text-xs font-semibold uppercase tracking-[0.14em]"
+              className="mb-2 text-xs font-semibold tracking-[0.02em]"
               style={{ color: "#d9c2b6" }}
             >
-              Use Cases
+              Use cases
             </p>
             <h2
               style={{
@@ -171,7 +170,7 @@ export default function Home() {
                 letterSpacing: "-0.02em",
               }}
             >
-              Built for real developer workflows.
+              Built for the JSON work teams do every day.
             </h2>
           </div>
 
@@ -210,7 +209,7 @@ export default function Home() {
               style={{ borderColor: "#262626", backgroundColor: "#121212" }}
             >
               <p
-                className="mb-3 text-xs font-semibold uppercase tracking-[0.14em]"
+                className="mb-3 text-xs font-semibold tracking-[0.02em]"
                 style={{ color: "#d9c2b6" }}
               >
                 Comparison
@@ -223,7 +222,7 @@ export default function Home() {
                   letterSpacing: "-0.02em",
                 }}
               >
-                More than a formatter tab in a random tools site.
+                More than a one-off formatter on a generic tools page.
               </h2>
 
               <div className="mt-6 space-y-3">
@@ -251,10 +250,10 @@ export default function Home() {
               style={{ borderColor: "#262626", backgroundColor: "#121212" }}
             >
               <p
-                className="mb-3 text-xs font-semibold uppercase tracking-[0.14em]"
+                className="mb-3 text-xs font-semibold tracking-[0.02em]"
                 style={{ color: "#d9c2b6" }}
               >
-                SEO Content
+                Search-friendly content
               </p>
               <h2
                 style={{
@@ -264,23 +263,22 @@ export default function Home() {
                   letterSpacing: "-0.02em",
                 }}
               >
-                A homepage that explains the product and helps discovery.
+                A homepage that shows the product clearly and supports discovery.
               </h2>
               <p
                 className="mt-4"
                 style={{ color: "#d9c2b6", fontSize: "15px", lineHeight: "28px" }}
               >
                 jsonLines combines JSON formatting, JWT decoding, JSON diffing, type generation,
-                search, and safety checks in one modern workspace. That makes it useful for users
-                and clearer for search engines too.
+                search, and safety checks in one modern workspace. That makes it easier to
+                understand for users and clearer for search engines too.
               </p>
               <p
                 className="mt-4"
                 style={{ color: "#d9c2b6", fontSize: "15px", lineHeight: "28px" }}
               >
-                Instead of looking like a thin marketing wrapper, the homepage should show the
-                actual product, explain why it matters, and surface the workflows developers want to
-                use most.
+                Instead of feeling like a thin marketing wrapper, the homepage should show the real
+                product, explain why it matters, and surface the workflows people want to use most.
               </p>
             </div>
           </div>
@@ -289,10 +287,10 @@ export default function Home() {
         <section className="w-full max-w-300 px-4 py-12 sm:px-6 md:px-8 md:py-14">
           <div className="mb-8">
             <p
-              className="mb-2 text-sm font-semibold uppercase tracking-[0.14em]"
+              className="mb-2 text-sm font-semibold tracking-[0.02em]"
               style={{ color: "#d9c2b6" }}
             >
-              FAQ
+              Questions
             </p>
             <h2
               style={{
@@ -302,7 +300,7 @@ export default function Home() {
                 letterSpacing: "-0.02em",
               }}
             >
-              Questions users ask before they trust a JSON tool.
+              Questions people ask before they trust a JSON tool.
             </h2>
           </div>
 

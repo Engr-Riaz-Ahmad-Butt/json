@@ -37,7 +37,7 @@ export function StatTile({
 }) {
   return (
     <div className="rounded-sm border border-[#262626] bg-[#0a0a0a] px-4 py-4">
-      <p className="text-[11px] uppercase tracking-[0.08em] text-[#6d655f]">{label}</p>
+      <p className="text-[11px] tracking-[0.02em] text-[#6d655f]">{label}</p>
       <p
         className={cn(
           "mt-2 font-mono text-[24px] leading-none",

@@ -9,8 +9,7 @@ export function HistoryWorkspace({ items }: { items: HistoryItem[] }) {
         <div className="rounded-sm border border-ui-border bg-surface p-5">
           <h3 className="text-lg font-semibold text-text-primary">Workspace history</h3>
           <p className="mt-2 text-sm text-[#a89589]">
-            Track recent actions like formatting, downloads, masking, and converter output
-            generation.
+            Review recent actions like formatting, downloads, masking, and converter generation.
           </p>
         </div>
       </div>

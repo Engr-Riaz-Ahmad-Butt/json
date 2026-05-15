@@ -52,7 +52,7 @@ export default function FeaturesSection() {
     <section className="w-full max-w-300 px-4 py-12 sm:px-6 md:px-8 md:py-14">
       <div className="mb-8 flex flex-col gap-3 md:mb-10">
         <p
-          className="text-xs font-semibold uppercase tracking-[0.14em]"
+          className="text-xs font-semibold tracking-[0.02em]"
           style={{ color: "#d9c2b6", fontFamily: "Inter, sans-serif" }}
         >
           Core Features
@@ -67,7 +67,7 @@ export default function FeaturesSection() {
             letterSpacing: "-0.02em",
           }}
         >
-          Built for the JSON work developers actually do every day.
+          Built for the JSON work people actually do every day.
         </h2>
         <p
           className="max-w-3xl"
@@ -79,7 +79,7 @@ export default function FeaturesSection() {
           }}
         >
           jsonLines is more than a beautifier. It brings formatting, decoding, diffing, searching,
-          generation, and safety checks into one terminal-inspired workflow.
+          generation, and safety checks into one focused workflow.
         </p>
       </div>
 

@@ -11,7 +11,7 @@ const footerGroups = [
   },
   {
     title: "Resources",
-    links: ["What is JSON?", "Common JSON Errors", "JWT Guide", "JSONPath Guide", "FAQ"],
+    links: ["What is JSON?", "Common JSON Errors", "JWT Guide", "JSONPath Guide", "Questions"],
   },
   {
     title: "Company",
@@ -91,7 +91,7 @@ export default function Footer() {
           {footerGroups.map((group) => (
             <div key={group.title}>
               <h3
-                className="mb-4 text-xs font-semibold uppercase tracking-[0.12em]"
+                className="mb-4 text-xs font-semibold tracking-[0.02em]"
                 style={{ color: "#b8a69a", fontFamily: "Inter, sans-serif" }}
               >
                 {group.title}

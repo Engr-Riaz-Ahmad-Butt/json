@@ -62,7 +62,7 @@ export function WorkspaceActionToolbar({
       </div>
 
       <div className="flex flex-wrap items-center gap-2 text-[13px] font-semibold sm:gap-3 sm:text-[14px] xl:shrink-0">
-        <span className="text-[#4f4743]">TRANSFORM:</span>
+        <span className="text-[#4f4743]">Transform:</span>
         <button
           className="text-[#d69463] transition-colors hover:text-[#f5f1ea]"
           onClick={onFormat}

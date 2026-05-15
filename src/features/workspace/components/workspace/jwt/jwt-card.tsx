@@ -35,9 +35,7 @@ export function JwtCard({
     <div className="group overflow-hidden rounded-lg border border-[#262626] bg-[#121212]">
       <div className="flex items-center justify-between border-b border-[#262626] bg-[#0e0e0e] px-4 py-3">
         <div>
-          <span
-            className={cn("text-[12px] font-semibold uppercase tracking-[0.1em]", headingClass)}
-          >
+          <span className={cn("text-[12px] font-semibold tracking-[0.02em]", headingClass)}>
             {title}
           </span>
         </div>

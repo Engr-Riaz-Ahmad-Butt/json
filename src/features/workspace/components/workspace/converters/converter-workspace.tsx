@@ -43,7 +43,7 @@ export function ConverterWorkspace({
           <div>
             <p className="text-sm font-semibold text-[#f5f1ea]">Converter workspace</p>
             <p className="mt-1 text-xs text-[#a89589]">
-              Input JSON on the left, generated output on the right.
+              Keep your JSON on the left and generated output on the right.
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -76,7 +76,7 @@ export function ConverterWorkspace({
         <div className="border-b border-[#262626] px-4 py-4 sm:px-5">
           <div className="mb-3 flex items-center justify-between">
             <p className="text-sm font-semibold text-[#d6c3b5]">Output</p>
-            <span className="text-xs text-[#7b7068]">Choose a target format</span>
+            <span className="text-xs text-[#7b7068]">Choose an output format</span>
           </div>
           <div className="flex flex-wrap gap-2">
             {CONVERTER_TABS.map((tab) => (
@@ -106,7 +106,7 @@ export function ConverterWorkspace({
             label="Download"
             onClick={() => onDownload(output, `jsonlines-${converterTab}.txt`)}
           />
-          <SmallAction label="Regenerate" onClick={() => toast.success("Regenerated output")} />
+          <SmallAction label="Regenerate" onClick={() => toast.success("Output regenerated")} />
           <SmallAction
             label="Format Output"
             onClick={() => toast.success("Output is already formatted")}
@@ -122,7 +122,7 @@ export function ConverterWorkspace({
             )
           ) : (
             <SidebarEmpty
-              text={`Cannot generate ${converterTab} because JSON is invalid. Fix JSON first.`}
+              text={`JSON needs to be valid before ${converterTab} output can be generated.`}
             />
           )}
         </div>

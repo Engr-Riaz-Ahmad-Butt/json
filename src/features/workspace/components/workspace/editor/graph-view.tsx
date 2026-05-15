@@ -99,7 +99,7 @@ function JsonGraphNode({ data }: { data: GraphNodeData }) {
         style={{ background: "#262626", border: "none" }}
       />
       <p
-        className="font-mono text-[12px] font-semibold uppercase tracking-[0.06em]"
+        className="font-mono text-[12px] font-semibold tracking-[0.02em]"
         style={{ color: toneStyles.title }}
       >
         {data.title}

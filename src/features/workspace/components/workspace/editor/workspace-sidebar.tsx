@@ -24,7 +24,7 @@ export function WorkspaceSidebar({
             </div>
             <div>
               <h2 className="text-[17px] font-bold tracking-tight text-copper-accent">jsonLines</h2>
-              <p className="text-[12px] font-medium uppercase tracking-[0.08em] text-[#d6c3b5]">
+              <p className="text-[12px] font-medium tracking-[0.02em] text-[#d6c3b5]">
                 Pro Workspace
               </p>
             </div>

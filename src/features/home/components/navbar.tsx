@@ -30,13 +30,12 @@ export default function Navbar() {
               <Link
                 key={link.label}
                 href={link.href}
-                className="text-xs font-semibold uppercase tracking-widest transition-colors"
+                className="text-xs font-semibold tracking-[0.04em] transition-colors"
                 style={{
                   color: link.active ? "#ffb68e" : "#d9c2b6",
                   borderBottom: link.active ? "2px solid #C07040" : "none",
                   paddingBottom: link.active ? "4px" : "0",
                   fontFamily: "Inter, sans-serif",
-                  letterSpacing: "0.05em",
                 }}
               >
                 {link.label}
@@ -47,11 +46,10 @@ export default function Navbar() {
 
         <div className="hidden items-center gap-3 sm:flex lg:gap-4">
           <button
-            className="rounded px-3 py-2 text-xs font-semibold uppercase tracking-widest transition-all hover:brightness-110 active:scale-90 sm:px-4"
+            className="rounded px-3 py-2 text-xs font-semibold tracking-[0.04em] transition-all hover:brightness-110 active:scale-90 sm:px-4"
             style={{
               backgroundColor: "#C07040",
               color: "#F5F1EA",
-              letterSpacing: "0.05em",
             }}
             type="button"
           >
@@ -82,7 +80,7 @@ export default function Navbar() {
                 key={link.label}
                 href={link.href}
                 onClick={() => setMobileMenuOpen(false)}
-                className="rounded-sm border border-ui-border bg-surface-elevated px-4 py-3 text-sm font-semibold uppercase tracking-[0.08em] text-on-surface-variant transition-colors hover:text-text-primary"
+                className="rounded-sm border border-ui-border bg-surface-elevated px-4 py-3 text-sm font-semibold tracking-[0.02em] text-on-surface-variant transition-colors hover:text-text-primary"
               >
                 {link.label}
               </Link>
@@ -90,7 +88,7 @@ export default function Navbar() {
 
             <div className="mt-2 grid grid-cols-1 gap-3 sm:grid-cols-[1fr_auto_auto] sm:items-center">
               <button
-                className="rounded-sm px-4 py-3 text-sm font-semibold uppercase tracking-[0.08em] text-[#F5F1EA] transition-all hover:brightness-110"
+                className="rounded-sm px-4 py-3 text-sm font-semibold tracking-[0.02em] text-[#F5F1EA] transition-all hover:brightness-110"
                 type="button"
                 style={{ backgroundColor: "#C07040" }}
               >

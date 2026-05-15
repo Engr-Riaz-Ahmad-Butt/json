@@ -52,7 +52,7 @@ export const CONVERTER_TABS: ConverterTab[] = [
 
 export const ROLE_MODE_INFO: RoleModeInfo = {
   General: {
-    description: "Balanced workspace for formatting, validation, tree view, search, and downloads.",
+    description: "A balanced setup for formatting, validation, tree view, search, and downloads.",
     actions: [
       { label: "Validation status", view: "editor", inspector: "status" },
       { label: "Tree explorer", view: "editor", inspector: "tree" },
@@ -62,7 +62,7 @@ export const ROLE_MODE_INFO: RoleModeInfo = {
   },
   Frontend: {
     description:
-      "Focus on API responses, TypeScript, Zod, and frontend-friendly payload inspection.",
+      "Made for API responses, TypeScript, Zod, and frontend-friendly payload inspection.",
     actions: [
       { label: "TypeScript", view: "converters", converterTab: "TypeScript" },
       { label: "Zod", view: "converters", converterTab: "Zod" },
@@ -70,7 +70,7 @@ export const ROLE_MODE_INFO: RoleModeInfo = {
     ],
   },
   Backend: {
-    description: "Focus on contracts, schema generation, storage models, and integration output.",
+    description: "Made for contracts, schema generation, storage models, and integration output.",
     actions: [
       { label: "JSON Schema", view: "converters", converterTab: "Schema" },
       { label: "Prisma", view: "converters", converterTab: "Prisma" },
@@ -80,7 +80,7 @@ export const ROLE_MODE_INFO: RoleModeInfo = {
   },
   QA: {
     description:
-      "Focus on expected vs actual comparisons, path lookup, and test-friendly inspection.",
+      "Made for expected-vs-actual comparisons, path lookup, and test-friendly inspection.",
     actions: [
       { label: "Diff tool", view: "diff" },
       { label: "JSONPath", view: "editor", inspector: "tree" },
@@ -88,7 +88,7 @@ export const ROLE_MODE_INFO: RoleModeInfo = {
     ],
   },
   Student: {
-    description: "Focus on readable errors, examples, and guided exploration of JSON structure.",
+    description: "Made for readable errors, examples, and guided exploration of JSON structure.",
     actions: [
       { label: "Validation status", view: "editor", inspector: "status" },
       { label: "Tree explorer", view: "editor", inspector: "tree" },

@@ -294,7 +294,7 @@ export default function WorkspaceMockup() {
             style={{ backgroundColor: "#080808", borderColor: "#262626" }}
           >
             <div className="flex items-center gap-2">
-              <span style={{ color: "#d9c2b6", fontSize: 11 }}>TREE</span>
+              <span style={{ color: "#d9c2b6", fontSize: 11 }}>Tree</span>
               <span style={{ color: "#F5F1EA", fontSize: 12 }}>Viewer</span>
             </div>
 
@@ -312,7 +312,7 @@ export default function WorkspaceMockup() {
                 }}
               >
                 {isValid ? <span style={{ fontSize: 9 }}>OK</span> : null}
-                {isValid ? "VALID JSON" : "INVALID"}
+                {isValid ? "Valid JSON" : "Invalid"}
               </div>
 
               <div
@@ -325,7 +325,7 @@ export default function WorkspaceMockup() {
                   letterSpacing: "0.04em",
                 }}
               >
-                LOCAL-ONLY
+                Local-only
               </div>
             </div>
           </div>
@@ -368,7 +368,7 @@ export default function WorkspaceMockup() {
           Ln {lineCount}, Col {currentColumn}
         </span>
         <span style={{ color: isValid ? "#7DB87D" : "#3a3a3a", transition: "color 0.3s" }}>
-          {isValid ? "JSON READY" : "JSON WAITING"}
+          {isValid ? "JSON ready" : "JSON waiting"}
         </span>
       </div>
     </div>

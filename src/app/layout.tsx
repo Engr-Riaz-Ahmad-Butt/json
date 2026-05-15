@@ -15,15 +15,14 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "jsonLines — The JSON workspace for serious developers",
+  title: "jsonLines - The modern JSON workspace for developers",
   description:
-    "Experience unparalleled speed and precision in a terminal-inspired environment. jsonLines provides the tools you need to build, decode, and diff with absolute control.",
+    "Format JSON, decode JWTs, compare payloads, and generate developer-ready outputs in a fast, privacy-first workspace.",
   keywords: ["JSON", "editor", "formatter", "JWT decoder", "JSON diff", "developer tools"],
   authors: [{ name: "Riaz Ahmad Butt" }],
   openGraph: {
-    title: "jsonLines — The JSON workspace for serious developers",
-    description:
-      "Build, decode, and diff JSON with absolute control. Terminal-inspired, developer-focused.",
+    title: "jsonLines - The modern JSON workspace for developers",
+    description: "Format, validate, decode, and compare JSON in a fast, privacy-first workspace.",
     type: "website",
   },
 };

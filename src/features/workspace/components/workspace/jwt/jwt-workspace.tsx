@@ -75,7 +75,7 @@ export function JwtWorkspace({
           <button
             type="button"
             onClick={() => setJwtInput("")}
-            className="text-[12px] font-semibold uppercase tracking-[0.08em] text-[#d6c3b5] transition-colors hover:text-[#f5f1ea]"
+            className="text-[12px] font-semibold tracking-[0.02em] text-[#d6c3b5] transition-colors hover:text-[#f5f1ea]"
           >
             Clear
           </button>
@@ -93,7 +93,7 @@ export function JwtWorkspace({
 
         <div className="border-t border-[#262626] bg-[#121212] p-4 sm:p-6">
           <div className="mb-4 flex items-center justify-between">
-            <h3 className="text-[15px] font-medium text-[#f5f1ea]">Verify Signature</h3>
+            <h3 className="text-[15px] font-medium text-[#f5f1ea]">Verify signature</h3>
             <button
               type="button"
               role="switch"
@@ -164,7 +164,7 @@ export function JwtWorkspace({
             <>
               <JwtCard
                 title="Header"
-                subtitle="Algorithm & Token Type"
+                subtitle="Algorithm and token type"
                 accent="copper"
                 actions={
                   <SmallAction
@@ -208,12 +208,12 @@ export function JwtWorkspace({
                     <CheckCircle2 className="size-3.5" />
                     <span className="font-mono text-xs">
                       {signatureState === "verified"
-                        ? "Signature Verified"
+                        ? "Signature verified"
                         : signatureState === "invalid"
-                        ? "Signature Invalid"
+                        ? "Signature invalid"
                         : signatureState === "unsupported"
-                        ? "Verification Limited"
-                        : "Verification Idle"}
+                        ? "Verification limited"
+                        : "Verification idle"}
                     </span>
                   </div>
                 }
@@ -285,7 +285,7 @@ export function JwtWorkspace({
             <div className="rounded-sm border border-[#262626] bg-[#121212] p-6">
               <p className="text-lg font-semibold text-[#f5f1ea]">Paste a valid JWT token</p>
               <p className="mt-2 text-sm leading-6 text-[#a89589]">
-                Header, payload, and signature details will appear here once the token can be
+                Header, payload, and signature details will appear here as soon as the token can be
                 decoded.
               </p>
             </div>

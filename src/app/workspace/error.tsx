@@ -18,7 +18,7 @@ export default function WorkspaceError({
     <div className="flex h-screen w-full flex-col items-center justify-center bg-[#080808] text-[#ffb4ab]">
       <div className="max-w-md space-y-6 text-center">
         <TerminalSquare className="mx-auto size-16" />
-        <h2 className="text-2xl font-bold uppercase tracking-tight">Workspace Failure</h2>
+        <h2 className="text-2xl font-bold tracking-tight">Workspace failure</h2>
         <p className="text-sm leading-relaxed text-[#d9c2b6]">
           A critical error occurred in the terminal environment.
           <br />
@@ -27,9 +27,9 @@ export default function WorkspaceError({
         </p>
         <button
           onClick={() => reset()}
-          className="rounded bg-[#C07040] px-6 py-2 text-sm font-bold uppercase text-white shadow-lg transition-transform hover:scale-105 active:scale-95"
+          className="rounded bg-[#C07040] px-6 py-2 text-sm font-bold text-white shadow-lg transition-transform hover:scale-105 active:scale-95"
         >
-          Reset Terminal
+          Reset terminal
         </button>
       </div>
     </div>

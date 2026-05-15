@@ -56,9 +56,7 @@ export function IconButton({
 export function SidebarSection({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="border-b border-[#262626] p-5">
-      <h3 className="mb-4 text-[12px] font-semibold uppercase tracking-[0.08em] text-[#b8a69a]">
-        {title}
-      </h3>
+      <h3 className="mb-4 text-[12px] font-semibold tracking-[0.02em] text-[#b8a69a]">{title}</h3>
       {children}
     </div>
   );

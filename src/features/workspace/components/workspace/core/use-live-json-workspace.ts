@@ -210,7 +210,7 @@ export function useLiveJsonWorkspace() {
 
   const handleCopy = async (value: string, message = "Copied") => {
     if (!value) {
-      toast.error("Nothing to copy yet");
+      toast.error("There is nothing to copy yet");
       return;
     }
 
@@ -219,13 +219,13 @@ export function useLiveJsonWorkspace() {
       toast.success(message);
       addHistory("Copied content", message);
     } catch {
-      toast.error("Clipboard permission is blocked");
+      toast.error("Clipboard access is blocked right now");
     }
   };
 
   const handleDownload = (content: string, filename: string) => {
     if (!content) {
-      toast.error("There is no content to download yet");
+      toast.error("There is no content ready to download yet");
       return;
     }
 
@@ -236,7 +236,7 @@ export function useLiveJsonWorkspace() {
     anchor.download = filename;
     anchor.click();
     URL.revokeObjectURL(url);
-    toast.success("Downloaded output");
+    toast.success("Downloaded successfully");
     addHistory("Downloaded file", filename);
   };
 
@@ -244,7 +244,7 @@ export function useLiveJsonWorkspace() {
     try {
       const text = await navigator.clipboard.readText();
       if (!text) {
-        toast.error("Clipboard is empty");
+        toast.error("Your clipboard is empty");
         return;
       }
 
@@ -252,7 +252,7 @@ export function useLiveJsonWorkspace() {
       toast.success("Pasted from clipboard");
       addHistory("Pasted clipboard", "Editor input updated");
     } catch {
-      toast.error("Clipboard permission is blocked");
+      toast.error("Clipboard access is blocked right now");
     }
   };
 
@@ -271,7 +271,7 @@ export function useLiveJsonWorkspace() {
 
   const handleFormat = () => {
     if (!parsedValue) {
-      toast.error("Cannot format invalid JSON");
+      toast.error("Please fix the JSON before formatting it");
       return;
     }
 
@@ -282,7 +282,7 @@ export function useLiveJsonWorkspace() {
 
   const handleMinify = () => {
     if (!parsedValue) {
-      toast.error("Cannot minify invalid JSON");
+      toast.error("Please fix the JSON before minifying it");
       return;
     }
 
@@ -293,12 +293,12 @@ export function useLiveJsonWorkspace() {
 
   const handleRepair = () => {
     if (parseResult?.valid) {
-      toast.success("JSON is already valid");
+      toast.success("JSON already looks good");
       return;
     }
 
     setSource(repairJsonInput(source));
-    toast.success("Applied safe repair pass");
+    toast.success("Applied a safe repair pass");
     addHistory("Repaired JSON", "Trailing commas removed");
   };
 
@@ -324,10 +324,10 @@ export function useLiveJsonWorkspace() {
       const json = await response.json();
       setSource(JSON.stringify(json, null, 2));
       setShowUrlInput(false);
-      toast.success("Fetched JSON");
+      toast.success("JSON loaded from URL");
       addHistory("Loaded URL", urlValue);
     } catch {
-      toast.error("Unable to fetch JSON from that URL");
+      toast.error("Unable to load JSON from that URL");
     }
   };
 

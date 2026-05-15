@@ -134,7 +134,7 @@ export function DiffWorkspace({
         <div className="flex flex-wrap items-center gap-3">
           <div className="flex items-center gap-2 text-[15px] font-semibold text-text-primary">
             <FileDiff className="size-4 text-[#c07040]" />
-            JSON Diff Mode
+            JSON diff
           </div>
           <div className="hidden h-5 w-px bg-[#262626] lg:block" />
           <div className="flex flex-wrap items-center gap-2">
@@ -304,7 +304,7 @@ export function DiffWorkspace({
         </div>
 
         <aside className="min-h-0 border-t border-ui-border bg-surface-elevated 2xl:border-t-0">
-          <SidebarSection title="Diff Summary">
+          <SidebarSection title="Diff summary">
             {summary ? (
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-3">
@@ -345,7 +345,7 @@ export function DiffWorkspace({
                 </div>
               </div>
             ) : (
-              <SidebarEmpty text="Paste old and new JSON to compare changes." />
+              <SidebarEmpty text="Add original and updated JSON to compare changes." />
             )}
           </SidebarSection>
         </aside>

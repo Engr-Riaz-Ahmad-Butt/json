@@ -13,19 +13,19 @@ const WORKSPACE_TITLES: Record<
 > = {
   editor: {
     title: "Workspace",
-    description: "Format, validate, explore, and convert JSON in one place.",
+    description: "Format, validate, explore, and convert JSON in one focused workspace.",
   },
   jwt: {
     title: "JWT Decoder",
-    description: "Decode token headers, payload claims, and verify supported signatures.",
+    description: "Decode token headers, review payload claims, and verify supported signatures.",
   },
   diff: {
     title: "JSON Diff",
-    description: "Compare original and modified payloads with a readable summary.",
+    description: "Compare original and updated payloads with a clear, readable summary.",
   },
   converters: {
     title: "Converters",
-    description: "Generate TypeScript, Zod, YAML, CSV, XML, and schema output from JSON.",
+    description: "Generate TypeScript, Zod, YAML, CSV, XML, and schema output from valid JSON.",
   },
   history: {
     title: "History",

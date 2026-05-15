@@ -149,7 +149,7 @@ export function EditorWorkspace({
       {selectedNode ? (
         <div className="flex flex-col gap-3 border-t border-ui-border bg-[#171717] px-4 py-3 sm:px-5 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <p className="text-[11px] uppercase tracking-[0.12em] text-[#7b7068]">Selected</p>
+            <p className="text-[11px] tracking-[0.02em] text-[#7b7068]">Selected</p>
             <p className="mt-1 font-mono text-sm text-text-primary">{selectedNode.path}</p>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -177,7 +177,7 @@ export function EditorWorkspace({
     inspectorView !== "none" ? (
       <aside className="flex min-h-[320px] flex-col overflow-y-auto border-t border-ui-border bg-[#121212] xl:min-h-0 xl:border-t-0">
         <div className="flex items-center justify-between border-b border-ui-border bg-[#171717] px-4 py-3">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#a89589]">
+          <p className="text-[11px] font-semibold tracking-[0.02em] text-[#a89589]">
             {inspectorView === "status"
               ? "Status"
               : inspectorView === "formatted"
