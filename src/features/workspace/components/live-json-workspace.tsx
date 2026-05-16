@@ -19,7 +19,6 @@ export function LiveJsonWorkspace() {
   const { editorRef, fileInputRef, commandInputRef } = refs;
   const {
     workspaceView,
-    previousWorkspaceView,
     isSidebarCollapsed,
     roleMode,
     inspectorView,
@@ -188,8 +187,6 @@ export function LiveJsonWorkspace() {
                   onDownload={handleDownload}
                   source={source}
                   setSource={setSource}
-                  onBack={() => openWorkspace(previousWorkspaceView)}
-                  onClose={() => openWorkspace(previousWorkspaceView)}
                 />
               ) : null}
 
