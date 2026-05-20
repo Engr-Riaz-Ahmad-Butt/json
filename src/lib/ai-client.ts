@@ -1,28 +1,68 @@
-export async function callGemini({ prompt, maxTokens = 1500 }: { prompt: string; maxTokens?: number }) {
+const MODEL = "gemini-1.5-flash";
+const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`;
+const TIMEOUT_MS = 30_000;
+
+type GeminiResponse = {
+  candidates?: Array<{
+    content?: {
+      parts?: Array<{ text: string }>;
+    };
+  }>;
+  usageMetadata?: {
+    totalTokenCount?: number;
+  };
+  error?: {
+    message: string;
+    status: string;
+  };
+};
+
+export async function callGemini({
+  system,
+  prompt,
+  maxTokens = 1500,
+}: {
+  system: string;
+  prompt: string;
+  maxTokens?: number;
+}) {
   const key = process.env.GEMINI_API_KEY;
-  const url = process.env.GEMINI_API_URL || "https://api.gemini.example/v1/generate";
+  if (!key) throw new Error("GEMINI_API_KEY is not configured");
 
-  if (!key) {
-    throw new Error("GEMINI_API_KEY not configured in environment");
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), TIMEOUT_MS);
+
+  try {
+    const res = await fetch(`${API_URL}?key=${key}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        systemInstruction: {
+          parts: [{ text: system }],
+        },
+        contents: [
+          {
+            role: "user",
+            parts: [{ text: prompt }],
+          },
+        ],
+        generationConfig: {
+          maxOutputTokens: maxTokens,
+        },
+      }),
+      signal: controller.signal,
+    });
+
+    const data = (await res.json()) as GeminiResponse;
+
+    if (!res.ok) {
+      throw new Error(`Gemini API error ${res.status}: ${data.error?.message ?? res.statusText}`);
+    }
+
+    const result = data.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
+    const tokensUsed = data.usageMetadata?.totalTokenCount ?? 0;
+    return { result, tokensUsed };
+  } finally {
+    clearTimeout(timeoutId);
   }
-
-  const res = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${key}`,
-    },
-    body: JSON.stringify({ prompt, max_tokens: maxTokens }),
-  });
-
-  if (!res.ok) {
-    const text = await res.text();
-    throw new Error(`Gemini API error: ${res.status} ${text}`);
-  }
-
-  const data = await res.json();
-  // NOTE: adapt these fields for the real Gemini response shape
-  const result = data.output_text || data.output || data.result || JSON.stringify(data);
-  const tokensUsed = data.usage?.total_tokens || data.usage?.total || 0;
-  return { result, tokensUsed };
 }

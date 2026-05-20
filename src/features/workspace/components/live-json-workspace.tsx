@@ -226,7 +226,7 @@ export function LiveJsonWorkspace() {
               ) : null}
 
               {workspaceView === "ai" ? (
-                <AiWorkspace source={source} setSource={setSource} onCopy={handleCopy} />
+                <AiWorkspace source={source} onSendToEditor={setSource} onCopy={handleCopy} />
               ) : null}
 
               {workspaceView === "history" ? <HistoryWorkspace items={historyItems} /> : null}
