@@ -271,7 +271,7 @@ function generateGoStructs(name: string, value: JsonValue): string {
   const structNamesUsed = new Set<string>();
 
   function makeUniqueName(base: string): string {
-    let clean = toPascalCase(base);
+    const clean = toPascalCase(base);
     if (!structNamesUsed.has(clean)) {
       structNamesUsed.add(clean);
       return clean;
@@ -340,7 +340,7 @@ function generatePythonDataclasses(name: string, value: JsonValue): string {
   const classNamesUsed = new Set<string>();
 
   function makeUniqueName(base: string): string {
-    let clean = toPascalCase(base);
+    const clean = toPascalCase(base);
     if (!classNamesUsed.has(clean)) {
       classNamesUsed.add(clean);
       return clean;

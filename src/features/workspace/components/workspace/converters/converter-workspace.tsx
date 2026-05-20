@@ -14,12 +14,14 @@ const MonacoEditor = dynamic(() => import("@monaco-editor/react"), {
   ssr: false,
 });
 
-const TYPE_SYSTEM_TABS: ConverterTab[] = ["TypeScript", "Zod", "Prisma", "Mongoose"];
+const TYPE_SYSTEM_TABS: ConverterTab[] = ["TypeScript", "Zod", "Go", "Python", "Prisma", "Mongoose"];
 const DATA_FORMAT_TABS: ConverterTab[] = ["CSV", "YAML", "XML", "Schema"];
 
 const FORMAT_META: Record<ConverterTab, string> = {
   TypeScript: "TypeScript interfaces — generated from your JSON",
   Zod: "Zod schema — runtime-safe validation code",
+  Go: "Go structs — structured typing definitions",
+  Python: "Python dataclasses — native modern data models",
   CSV: "CSV export — flattened from JSON array",
   YAML: "YAML format — human-readable data serialization",
   XML: "XML export — structured markup from JSON",
