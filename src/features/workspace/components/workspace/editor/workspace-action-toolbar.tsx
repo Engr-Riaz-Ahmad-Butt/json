@@ -14,6 +14,7 @@ export function WorkspaceActionToolbar({
   onFormat,
   onMinify,
   onRepair,
+  onSort,
   onOpenConverters,
   onJsonPath,
 }: {
@@ -26,6 +27,7 @@ export function WorkspaceActionToolbar({
   onFormat: () => void;
   onMinify: () => void;
   onRepair: () => void;
+  onSort: () => void;
   onOpenConverters: () => void;
   onJsonPath: () => void;
 }) {
@@ -82,6 +84,13 @@ export function WorkspaceActionToolbar({
           onClick={onRepair}
         >
           Repair
+        </button>
+        <span className="text-[#363636]">•</span>
+        <button
+          className="text-[#d6c3b5] transition-colors hover:text-[#f5f1ea]"
+          onClick={onSort}
+        >
+          Sort
         </button>
         <span className="text-[#363636]">•</span>
         <button

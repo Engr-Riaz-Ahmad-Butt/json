@@ -80,6 +80,7 @@ export function LiveJsonWorkspace() {
     handleFormat,
     handleMinify,
     handleRepair,
+    handleSortKeys,
     handleLoadUrl,
     handleRunCommand,
     clearEditor,
@@ -139,6 +140,7 @@ export function LiveJsonWorkspace() {
                 onFormat={handleFormat}
                 onMinify={handleMinify}
                 onRepair={handleRepair}
+                onSort={handleSortKeys}
                 onOpenConverters={() => openConverterWorkspace()}
                 onJsonPath={activateTreeInspector}
               />
