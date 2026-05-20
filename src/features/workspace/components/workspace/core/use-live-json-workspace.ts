@@ -653,6 +653,7 @@ export function useLiveJsonWorkspace() {
       handleMinify,
       handleRepair,
       handleMaskSensitive,
+      handleSortKeys,
       handleLoadUrl,
       handleRunCommand,
       clearEditor,
