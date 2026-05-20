@@ -50,7 +50,7 @@ export async function decompressString(base64UrlStr: string): Promise<string> {
   const writer = ds.writable.getWriter();
 
   // Write the compressed data and close
-  void writer.write(compressed);
+  void writer.write(compressed as BufferSource);
   void writer.close();
 
   // Read the decompressed chunks

@@ -138,7 +138,6 @@ export function ColumnView({ value, onSelectNode }: ColumnViewProps) {
     >
       {columns.map((col, colIdx) => {
         const colVal = col.value;
-        const isLastColumn = colIdx === columns.length - 1;
 
         // If it's a primitive or null, render a beautiful Details Inspector Panel
         if (colVal === null || typeof colVal !== "object") {

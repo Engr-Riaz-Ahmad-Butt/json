@@ -631,7 +631,7 @@ export function EditorWorkspace({
                 <div className="h-[480px] min-h-[380px]">
                   <ColumnView
                     value={parseResult.data}
-                    onSelectNode={(path, val) => setSelectedPath(path)}
+                    onSelectNode={(path) => setSelectedPath(path)}
                   />
                 </div>
               </div>

@@ -19,7 +19,7 @@ import { toast } from "sonner";
 
 import { cn } from "@/lib/utils";
 
-import type { GraphNodeData, JsonValue } from "../core/types";
+import type { GraphNodeData } from "../core/types";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -58,76 +58,6 @@ type FlowEdge = {
   style?: React.CSSProperties;
 };
 
-// ---------------------------------------------------------------------------
-// Build full node tree (all nodes, before collapse filtering)
-// ---------------------------------------------------------------------------
-
-function previewValue(value: JsonValue): string {
-  if (value === null) return "null";
-  if (typeof value === "boolean") return value ? "true" : "false";
-  if (typeof value === "string") return value.length > 24 ? `"${value.slice(0, 24)}…"` : `"${value}"`;
-  if (typeof value === "number") return String(value);
-  return "";
-}
-
-function buildFullTree(value: JsonValue): RawNode[] {
-  const rawNodes: RawNode[] = [];
-  const levelY = new Map<number, number>();
-
-  const nextY = (depth: number) => {
-    const cur = levelY.get(depth) ?? 0;
-    levelY.set(depth, cur + 110);
-    return cur;
-  };
-
-  const visit = (
-    current: JsonValue,
-    label: string,
-    depth: number,
-    id: string,
-    parentId: string | null,
-  ) => {
-    const isArray = Array.isArray(current);
-    const isObject = current !== null && typeof current === "object" && !isArray;
-    const hasChildren = isArray || isObject;
-    const childCount = isArray
-      ? current.length
-      : isObject
-      ? Object.keys(current).length
-      : 0;
-    const subtitle = isArray
-      ? `Array(${current.length})`
-      : isObject
-      ? `Object(${childCount} keys)`
-      : previewValue(current);
-
-    rawNodes.push({
-      id,
-      parentId,
-      depth,
-      label,
-      subtitle,
-      tone: depth === 0 ? "root" : hasChildren ? "container" : "leaf",
-      hasChildren,
-      childCount,
-      x: depth * 240,
-      y: nextY(depth),
-    });
-
-    if (isArray) {
-      current.forEach((item, index) => {
-        visit(item, `[${index}]`, depth + 1, `${id}::${index}`, id);
-      });
-    } else if (isObject) {
-      Object.entries(current).forEach(([key, child], index) => {
-        visit(child, key, depth + 1, `${id}::${index}`, id);
-      });
-    }
-  };
-
-  visit(value, "root", 0, "root", null);
-  return rawNodes;
-}
 
 // ---------------------------------------------------------------------------
 // Filter tree by collapsed set
