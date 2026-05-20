@@ -106,15 +106,12 @@ export function useLiveJsonWorkspace() {
 
   useEffect(() => {
     if (!source.trim()) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setParseResult(null);
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setIsParsing(false);
       return;
     }
 
     if (source.length >= 100_000) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setIsParsing(true);
       const id = `${Date.now()}-${Math.random()}`;
       activeRequestIdRef.current = id;
@@ -122,9 +119,7 @@ export function useLiveJsonWorkspace() {
     } else {
       activeRequestIdRef.current = null;
       const res = parseJsonSafe(source);
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setParseResult(res);
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setIsParsing(false);
     }
   }, [source]);
