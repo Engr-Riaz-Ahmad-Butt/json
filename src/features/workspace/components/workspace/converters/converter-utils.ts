@@ -31,6 +31,22 @@ export function getConverterOutput(tab: ConverterTab, value: JsonValue | null) {
   }
 }
 
+// BUG-004: keys that aren't valid JS identifiers must be quoted in TS/Zod output
+const JS_RESERVED = new Set([
+  "break", "case", "catch", "class", "const", "continue", "debugger", "default",
+  "delete", "do", "else", "export", "extends", "false", "finally", "for",
+  "function", "if", "import", "in", "instanceof", "let", "new", "null",
+  "return", "static", "super", "switch", "this", "throw", "true", "try",
+  "typeof", "var", "void", "while", "with", "yield",
+]);
+
+function quoteKeyIfNeeded(key: string): string {
+  if (/^[A-Za-z_$][A-Za-z0-9_$]*$/.test(key) && !JS_RESERVED.has(key)) {
+    return key;
+  }
+  return `"${key.replace(/\\/g, "\\\\").replace(/"/g, '\\"')}"`;
+}
+
 function generateTypeScript(name: string, value: JsonValue) {
   return `export interface ${name} ${toTypeScriptShape(value, 0)}\n`;
 }
@@ -60,7 +76,7 @@ function toTypeScriptShape(value: JsonValue, depth: number): string {
       return "boolean";
     case "object":
       return `{\n${Object.entries(value)
-        .map(([key, child]) => `${nextIndent}${key}: ${toTypeScriptShape(child, depth + 1)};`)
+        .map(([key, child]) => `${nextIndent}${quoteKeyIfNeeded(key)}: ${toTypeScriptShape(child, depth + 1)};`)
         .join("\n")}\n${indent}}`;
     default:
       return "unknown";
@@ -92,7 +108,7 @@ function toZodShape(value: JsonValue, depth: number): string {
       return "z.boolean()";
     case "object":
       return `z.object({\n${Object.entries(value)
-        .map(([key, child]) => `${nextIndent}${key}: ${toZodShape(child, depth + 1)},`)
+        .map(([key, child]) => `${nextIndent}${quoteKeyIfNeeded(key)}: ${toZodShape(child, depth + 1)},`)
         .join("\n")}\n${indent}})`;
     default:
       return "z.unknown()";
@@ -124,9 +140,13 @@ function generateJsonSchema(value: JsonValue): Record<string, unknown> {
   return { type: typeof value };
 }
 
+// BUG-005: sentinel prefix so the converter UI can render this as an info notice
+export const CSV_ERROR_PREFIX = "// CSV_ERROR: ";
+
 function generateCsvOutput(value: JsonValue) {
   if (!Array.isArray(value)) {
-    return "";
+    const actualType = value === null ? "null" : typeof value;
+    return `${CSV_ERROR_PREFIX}CSV requires an array of objects as input, but got ${actualType}.\nWrap your data in an array: [{ ... }]`;
   }
 
   const rows = value.filter(
@@ -134,7 +154,15 @@ function generateCsvOutput(value: JsonValue) {
       item !== null && typeof item === "object" && !Array.isArray(item),
   );
 
-  return rows.length === value.length ? Papa.unparse(rows) : "";
+  if (rows.length === 0) {
+    return `${CSV_ERROR_PREFIX}CSV requires an array of objects, but this array contains no plain objects (found ${value.length} item${value.length === 1 ? "" : "s"}).`;
+  }
+
+  if (rows.length !== value.length) {
+    return `${CSV_ERROR_PREFIX}CSV requires every item to be a plain object. Some items in this array are primitives or nested arrays — remove them first.`;
+  }
+
+  return Papa.unparse(rows);
 }
 
 function generateXmlOutput(value: JsonValue) {

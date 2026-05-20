@@ -4,6 +4,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 
 import { getJsonStats, parseJsonSafe } from "@/lib/json";
+import { useLocalStorage } from "@/hooks/use-local-storage";
 
 import {
   ROLE_MODE_INFO,
