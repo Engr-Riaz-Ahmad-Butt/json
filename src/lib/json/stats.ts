@@ -1,4 +1,5 @@
 import type { JsonStats, JsonValue } from "@/types/json";
+import { SENSITIVE_FIELDS_REGEX } from "@/constants/app";
 
 export function getJsonStats(value: JsonValue, source: string): JsonStats {
   const stats: JsonStats = {
@@ -65,5 +66,5 @@ function walk(value: JsonValue, depth: number, stats: JsonStats) {
 }
 
 function isSensitiveKey(key: string) {
-  return /(password|token|secret|api[_-]?key|authorization|session|cookie)/i.test(key);
+  return SENSITIVE_FIELDS_REGEX.test(key);
 }
