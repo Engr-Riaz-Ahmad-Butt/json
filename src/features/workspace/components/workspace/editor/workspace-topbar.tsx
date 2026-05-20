@@ -27,6 +27,10 @@ const WORKSPACE_TITLES: Record<
     title: "Converters",
     description: "Generate TypeScript, Zod, YAML, CSV, XML, and schema output from valid JSON.",
   },
+  ai: {
+    title: "AI Assistant",
+    description: "Ask questions about the current JSON, generate samples, or request fixes.",
+  },
   history: {
     title: "History",
     description: "Review recent formatting, downloads, diff checks, and conversion activity.",

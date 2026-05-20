@@ -94,7 +94,7 @@ export function LiveJsonWorkspace() {
   return (
     <section className="overflow-hidden border-[0.5px] border-ui-border bg-obsidian-base text-text-primary">
       <div
-        className="grid min-h-screen xl:min-h-230 xl:[grid-template-columns:var(--sidebar-columns)] xl:transition-[grid-template-columns] xl:duration-500 xl:ease-[cubic-bezier(0.77,0,0.18,1)]"
+        className="grid min-h-screen xl:min-h-230 xl:grid-cols-(--sidebar-columns) xl:transition-[grid-template-columns] xl:duration-500 xl:ease-[cubic-bezier(0.77,0,0.18,1)]"
         style={
           {
             "--sidebar-columns": isSidebarCollapsed ? "88px minmax(0,1fr)" : "260px minmax(0,1fr)",
