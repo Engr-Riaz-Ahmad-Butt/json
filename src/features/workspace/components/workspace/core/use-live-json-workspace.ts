@@ -106,21 +106,27 @@ export function useLiveJsonWorkspace() {
 
   useEffect(() => {
     if (!source.trim()) {
-      setParseResult(null);
-      setIsParsing(false);
+      Promise.resolve().then(() => {
+        setParseResult(null);
+        setIsParsing(false);
+      });
       return;
     }
 
     if (source.length >= 100_000) {
-      setIsParsing(true);
+      Promise.resolve().then(() => {
+        setIsParsing(true);
+      });
       const id = `${Date.now()}-${Math.random()}`;
       activeRequestIdRef.current = id;
       workerRef.current?.postMessage({ id, source });
     } else {
       activeRequestIdRef.current = null;
       const res = parseJsonSafe(source);
-      setParseResult(res);
-      setIsParsing(false);
+      Promise.resolve().then(() => {
+        setParseResult(res);
+        setIsParsing(false);
+      });
     }
   }, [source]);
 
@@ -496,7 +502,7 @@ export function useLiveJsonWorkspace() {
       case "download":
         handleDownload(
           workspaceView === "converters" ? converterOutput : formattedOutput || source,
-          "jsonlines-output.txt",
+          "jsonova-output.txt",
         );
         break;
       default:

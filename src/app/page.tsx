@@ -126,7 +126,7 @@ export default function Home() {
                 className="mt-4"
                 style={{ color: "#8B92A8", fontSize: "15px", lineHeight: "28px" }}
               >
-                jsonLines is designed for payloads that developers actually care about. Formatting,
+                JSONova is designed for payloads that developers actually care about. Formatting,
                 validation, tree exploration, JWT decoding, diffing, and generation all happen in a
                 privacy-first workspace without forcing you through signup.
               </p>

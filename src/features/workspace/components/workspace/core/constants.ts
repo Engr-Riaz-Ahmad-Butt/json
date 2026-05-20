@@ -43,6 +43,8 @@ export const ROLE_MODES: RoleMode[] = ["General", "Frontend", "Backend", "QA", "
 export const CONVERTER_TABS: ConverterTab[] = [
   "TypeScript",
   "Zod",
+  "Go",
+  "Python",
   "CSV",
   "YAML",
   "XML",

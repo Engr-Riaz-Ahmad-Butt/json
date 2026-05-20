@@ -14,6 +14,8 @@ export type InspectorView =
 export type ConverterTab =
   | "TypeScript"
   | "Zod"
+  | "Go"
+  | "Python"
   | "CSV"
   | "YAML"
   | "XML"

@@ -227,7 +227,7 @@ export function DiffWorkspace({
             />
             <SmallAction
               label="Download report"
-              onClick={() => onDownload(diffReport, "jsonlines-diff-report.txt")}
+              onClick={() => onDownload(diffReport, "jsonova-diff-report.txt")}
             />
             <button
               type="button"
@@ -552,7 +552,7 @@ function buildDiffReport(summary: DiffSummary) {
   }
 
   const lines = [
-    "jsonLines diff report",
+    "JSONova diff report",
     "",
     `Added fields: ${summary.added.length}`,
     `Removed fields: ${summary.removed.length}`,

@@ -105,7 +105,7 @@ export function ConverterWorkspace({
           />
           <SmallAction
             label="Download"
-            onClick={() => onDownload(output, `jsonlines-${converterTab}.txt`)}
+            onClick={() => onDownload(output, `jsonova-${converterTab}.txt`)}
           />
           <SmallAction label="Regenerate" onClick={() => toast.success("Output regenerated")} />
           <SmallAction

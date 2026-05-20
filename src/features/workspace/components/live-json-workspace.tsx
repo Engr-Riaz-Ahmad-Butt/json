@@ -124,7 +124,7 @@ export function LiveJsonWorkspace() {
                 setRoleMode={setRoleMode}
                 inspectorView={inspectorView}
                 setInspectorView={setInspectorView}
-                onDownload={() => handleDownload(formattedOutput || source, "jsonlines-output.txt")}
+                onDownload={() => handleDownload(formattedOutput || source, "jsonova-output.txt")}
               />
             ) : null}
 

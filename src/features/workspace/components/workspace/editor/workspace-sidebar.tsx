@@ -58,7 +58,7 @@ export function WorkspaceSidebar({
             {!isCollapsed ? (
               <div>
                 <h2 className="text-[17px] font-bold tracking-tight text-copper-accent">
-                  jsonLines
+                  JSONova
                 </h2>
                 <p className="text-[12px] font-medium tracking-[0.02em] text-[#d6c3b5]">
                   Pro Workspace
