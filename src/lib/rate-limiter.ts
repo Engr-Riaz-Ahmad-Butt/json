@@ -11,6 +11,11 @@ function nextMidnightUTC() {
 const inMemory = new Map<string, { count: number; resetAt: number }>();
 
 export async function consumeRequest(ip: string): Promise<Result> {
+  // Dev mode: bypass rate limiting entirely
+  if (process.env.NODE_ENV === 'development') {
+    return { allowed: true, remaining: 999, resetAt: nextMidnightUTC() };
+  }
+
   const today = new Date().toISOString().slice(0, 10);
   const key = `ai:rate:${ip}:${today}`;
   const resetAt = nextMidnightUTC();
