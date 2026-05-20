@@ -250,6 +250,10 @@ function highlightLine(tab: ConverterTab, line: string) {
     case "Mongoose":
     case "Schema":
       return highlightTypeSystemLine(line);
+    case "Go":
+      return highlightGoLine(line);
+    case "Python":
+      return highlightPythonLine(line);
     case "Zod":
       return highlightZodLine(line);
     case "YAML":

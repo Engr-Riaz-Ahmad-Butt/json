@@ -14,6 +14,10 @@ export function getConverterOutput(tab: ConverterTab, value: JsonValue | null) {
       return generateTypeScript("RootPayload", value);
     case "Zod":
       return generateZodSchema("rootPayloadSchema", value);
+    case "Go":
+      return generateGoStructs("RootPayload", value);
+    case "Python":
+      return generatePythonDataclasses("RootPayload", value);
     case "CSV":
       return generateCsvOutput(value);
     case "YAML":
@@ -246,4 +250,158 @@ function toMongooseShape(value: JsonValue, depth: number): string {
 
 function sanitizeFieldName(key: string) {
   return key.replace(/[^A-Za-z0-9_]/g, "_");
+}
+
+function toPascalCase(str: string): string {
+  const parts = str.split(/[^A-Za-z0-9]+/);
+  return parts
+    .map((p) => p.charAt(0).toUpperCase() + p.slice(1))
+    .join("") || "Field";
+}
+
+function toSnakeCase(str: string): string {
+  return str
+    .replace(/([a-z0-9])([A-Z])/g, "$1_$2")
+    .replace(/[^A-Za-z0-9_]+/g, "_")
+    .toLowerCase() || "field";
+}
+
+function generateGoStructs(name: string, value: JsonValue): string {
+  const structs: string[] = [];
+  const structNamesUsed = new Set<string>();
+
+  function makeUniqueName(base: string): string {
+    let clean = toPascalCase(base);
+    if (!structNamesUsed.has(clean)) {
+      structNamesUsed.add(clean);
+      return clean;
+    }
+    let suffix = 2;
+    while (structNamesUsed.has(clean + suffix)) {
+      suffix++;
+    }
+    const finalName = clean + suffix;
+    structNamesUsed.add(finalName);
+    return finalName;
+  }
+
+  function walk(currentName: string, val: JsonValue): string {
+    if (Array.isArray(val)) {
+      if (val.length === 0) {
+        return "[]interface{}";
+      }
+      return `[]${walk(currentName, val[0])}`;
+    }
+
+    if (val === null) {
+      return "interface{}";
+    }
+
+    switch (typeof val) {
+      case "string":
+        return "string";
+      case "number":
+        return Number.isInteger(val) ? "int64" : "float64";
+      case "boolean":
+        return "bool";
+      case "object": {
+        const uniqueName = makeUniqueName(currentName);
+        const entries = Object.entries(val);
+        const fields = entries
+          .map(([key, child]) => {
+            const pascalKey = toPascalCase(key);
+            const childGoType = walk(pascalKey, child);
+            return `\t${pascalKey} ${childGoType} \`json:"${key}"\``;
+          })
+          .join("\n");
+
+        structs.push(`type ${uniqueName} struct {\n${fields}\n}`);
+        return uniqueName;
+      }
+      default:
+        return "interface{}";
+    }
+  }
+
+  const rootTypeName = walk(name, value);
+  if (Array.isArray(value)) {
+    return [
+      `type ${name} ${rootTypeName}`,
+      "",
+      ...structs.reverse(),
+    ].join("\n\n").trim() + "\n";
+  }
+
+  return structs.reverse().join("\n\n").trim() + "\n";
+}
+
+function generatePythonDataclasses(name: string, value: JsonValue): string {
+  const classes: string[] = [];
+  const classNamesUsed = new Set<string>();
+
+  function makeUniqueName(base: string): string {
+    let clean = toPascalCase(base);
+    if (!classNamesUsed.has(clean)) {
+      classNamesUsed.add(clean);
+      return clean;
+    }
+    let suffix = 2;
+    while (classNamesUsed.has(clean + suffix)) {
+      suffix++;
+    }
+    const finalName = clean + suffix;
+    classNamesUsed.add(finalName);
+    return finalName;
+  }
+
+  function walk(currentName: string, val: JsonValue): string {
+    if (Array.isArray(val)) {
+      if (val.length === 0) {
+        return "List[Any]";
+      }
+      return `List[${walk(currentName, val[0])}]`;
+    }
+
+    if (val === null) {
+      return "Optional[Any]";
+    }
+
+    switch (typeof val) {
+      case "string":
+        return "str";
+      case "number":
+        return Number.isInteger(val) ? "int" : "float";
+      case "boolean":
+        return "bool";
+      case "object": {
+        const uniqueName = makeUniqueName(currentName);
+        const entries = Object.entries(val);
+        const fields = entries
+          .map(([key, child]) => {
+            const snakeKey = toSnakeCase(key);
+            const childPyType = walk(toPascalCase(key), child);
+            return `    ${snakeKey}: ${childPyType}`;
+          })
+          .join("\n");
+
+        classes.push(`@dataclass\nclass ${uniqueName}:\n${fields || "    pass"}`);
+        return uniqueName;
+      }
+      default:
+        return "Any";
+    }
+  }
+
+  const rootTypeName = walk(name, value);
+  const header = "from dataclasses import dataclass\nfrom typing import List, Optional, Any\n\n";
+
+  if (Array.isArray(value)) {
+    return (
+      header +
+      classes.join("\n\n").trim() +
+      `\n\n# Root payload type alias\n${name} = ${rootTypeName}\n`
+    );
+  }
+
+  return header + classes.join("\n\n").trim() + "\n";
 }
