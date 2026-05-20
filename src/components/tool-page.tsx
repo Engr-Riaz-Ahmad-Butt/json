@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import Link from "next/link";
 
 type FaqItem = {
@@ -8,9 +9,9 @@ type FaqItem = {
 type ToolPageProps = {
   title: string;
   subtitle: string;
-  description: string[];
-  faqs: FaqItem[];
-  children: React.ReactNode;
+  description: readonly string[];
+  faqs: readonly FaqItem[];
+  children: ReactNode;
 };
 
 export function ToolPage({ title, subtitle, description, faqs, children }: ToolPageProps) {
