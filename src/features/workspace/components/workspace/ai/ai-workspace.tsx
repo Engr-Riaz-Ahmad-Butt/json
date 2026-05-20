@@ -160,6 +160,7 @@ export function AiWorkspace({
 
   const doneResult = aiState.status === "done" ? aiState.result : null;
   const extractedJson = doneResult ? extractFirstJsonBlock(doneResult) : null;
+  const extractedJsonPath = doneResult ? extractJsonPath(doneResult) : null;
 
   return (
     <div className="flex h-full min-h-0 flex-col bg-obsidian-base">
@@ -223,8 +224,13 @@ export function AiWorkspace({
             activeTab={activeTab}
             onReset={resetPanel}
             onCopy={() => void onCopy(aiState.result, "Copied AI response")}
+            onCopyJsonPath={
+              extractedJsonPath && activeTab === "query"
+                ? () => void onCopy(extractedJsonPath, "Copied JSONPath")
+                : undefined
+            }
             onSendToEditor={
-              extractedJson && activeTab === "fix"
+              extractedJson && (activeTab === "fix" || activeTab === "generate")
                 ? () => {
                     onSendToEditor(extractedJson);
                     resetPanel();
@@ -403,14 +409,18 @@ function ResultState({
   activeTab,
   onReset,
   onCopy,
+  onCopyJsonPath,
   onSendToEditor,
 }: {
   result: string;
   activeTab: AiTask;
   onReset: () => void;
   onCopy: () => void;
+  onCopyJsonPath?: () => void;
   onSendToEditor?: () => void;
 }) {
+  const sendButtonLabel = activeTab === "generate" ? "Use in editor" : "Send to editor";
+
   return (
     <div className="flex flex-1 flex-col gap-3 p-4 sm:p-5">
       <div className="flex items-center justify-between">
@@ -425,7 +435,27 @@ function ResultState({
               className="flex items-center gap-1.5 rounded-md border-[0.5px] border-[#3DD68C]/30 bg-[#0D2E23] px-2.5 py-1.5 text-[11px] font-medium text-[#3DD68C] transition-colors hover:opacity-80"
             >
               <ArrowDownToLine className="size-3" />
-              Send to editor
+              {sendButtonLabel}
+            </button>
+          ) : null}
+          {onSendToEditor && activeTab === "generate" ? (
+            <button
+              type="button"
+              onClick={onSendToEditor}
+              className="flex items-center gap-1.5 rounded-md border-[0.5px] border-[#3DD68C]/30 bg-[#0D2E23] px-2.5 py-1.5 text-[11px] font-medium text-[#3DD68C] transition-colors hover:opacity-80"
+            >
+              <ArrowDownToLine className="size-3" />
+              {sendButtonLabel}
+            </button>
+          ) : null}
+          {onCopyJsonPath ? (
+            <button
+              type="button"
+              onClick={onCopyJsonPath}
+              className="flex items-center gap-1.5 rounded-md border-[0.5px] border-[#C07040]/30 bg-[#1F140C] px-2.5 py-1.5 text-[11px] font-medium text-[#C07040] transition-colors hover:opacity-80"
+            >
+              <Copy className="size-3" />
+              Copy JSONPath
             </button>
           ) : null}
           <button
@@ -479,20 +509,63 @@ function InlineText({ text }: { text: string }) {
   return (
     <div className="space-y-1.5">
       {text.split("\n").map((line, index) => {
-        if (!line.trim()) {
+        const trimmedLine = line.trim();
+
+        if (!trimmedLine) {
           return null;
         }
 
-        if (/^[-*]\s/.test(line)) {
+        if (/^\*\*JSONPath:\*\*/.test(trimmedLine)) {
           return (
-            <div key={index} className="flex gap-2">
-              <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#C07040]" />
-              <span>{renderInlineMarkup(line.replace(/^[-*]\s/, ""))}</span>
+            <div
+              key={index}
+              className="rounded-md border-[0.5px] border-[#2A2F42] bg-[#0F1117] px-3 py-2 font-mono text-[11px] text-[#C07040]"
+            >
+              {renderInlineMarkup(trimmedLine)}
             </div>
           );
         }
 
-        return <p key={index}>{renderInlineMarkup(line)}</p>;
+        if (isSectionHeading(trimmedLine)) {
+          const tone = getHeadingTone(trimmedLine);
+          return (
+            <p
+              key={index}
+              className={cn(
+                "pt-2 text-[12px] font-semibold",
+                tone === "alert"
+                  ? "text-[#F5A623]"
+                  : tone === "success"
+                    ? "text-[#3DD68C]"
+                    : "text-[#E8EAF0]",
+              )}
+            >
+              {renderInlineMarkup(trimmedLine)}
+            </p>
+          );
+        }
+
+        if (/^[-*]\s/.test(trimmedLine)) {
+          return (
+            <div key={index} className="flex gap-2">
+              <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#C07040]" />
+              <span>{renderInlineMarkup(trimmedLine.replace(/^[-*]\s/, ""))}</span>
+            </div>
+          );
+        }
+
+        if (/^\d+\.\s/.test(trimmedLine)) {
+          return (
+            <div key={index} className="flex gap-2">
+              <span className="min-w-5 font-mono text-[11px] text-[#5A6070]">
+                {trimmedLine.match(/^\d+\./)?.[0]}
+              </span>
+              <span>{renderInlineMarkup(trimmedLine.replace(/^\d+\.\s/, ""))}</span>
+            </div>
+          );
+        }
+
+        return <p key={index}>{renderInlineMarkup(trimmedLine)}</p>;
       })}
     </div>
   );
@@ -556,4 +629,28 @@ function extractFirstJsonBlock(text: string): string | null {
   } catch {
     return null;
   }
+}
+
+function extractJsonPath(text: string): string | null {
+  const match = /\*\*JSONPath:\*\*\s*`([^`]+)`/.exec(text);
+  return match?.[1] ?? null;
+}
+
+function isSectionHeading(line: string) {
+  return (
+    /^\*\*[^*]+\*\*$/.test(line) ||
+    /^(Key fields|Watchouts|What changed|Issues found)$/i.test(line)
+  );
+}
+
+function getHeadingTone(line: string) {
+  if (/^(Watchouts|Issues found)$/i.test(line.replace(/\*/g, ""))) {
+    return "alert" as const;
+  }
+
+  if (/^What changed$/i.test(line.replace(/\*/g, ""))) {
+    return "success" as const;
+  }
+
+  return "default" as const;
 }
