@@ -66,12 +66,60 @@ export function useLiveJsonWorkspace() {
   const [converterTab, setConverterTab] = useState<ConverterTab>("TypeScript");
   const [jwtInput, setJwtInput] = useState(SAMPLE_JWT);
 
-  const parseResult = useMemo(() => {
+  const [parseResult, setParseResult] = useState<JsonParseResult | null>(() => {
+    return parseJsonSafe(SAMPLE_JSON);
+  });
+  const [isParsing, setIsParsing] = useState(false);
+  const workerRef = useRef<Worker | null>(null);
+  const activeRequestIdRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    const worker = new Worker(
+      new URL("../../../../../workers/json-worker.ts", import.meta.url)
+    );
+
+    worker.onmessage = (event: MessageEvent<JsonWorkerResponse>) => {
+      const { id, valid, data, error, line, column } = event.data;
+      if (id === activeRequestIdRef.current) {
+        if (valid) {
+          setParseResult({ valid: true, data });
+        } else {
+          setParseResult({
+            valid: false,
+            error: error || "Unable to parse JSON input.",
+            line,
+            column,
+          });
+        }
+        setIsParsing(false);
+      }
+    };
+
+    workerRef.current = worker;
+
+    return () => {
+      worker.terminate();
+    };
+  }, []);
+
+  useEffect(() => {
     if (!source.trim()) {
-      return null;
+      setParseResult(null);
+      setIsParsing(false);
+      return;
     }
 
-    return parseJsonSafe(source);
+    if (source.length >= 100_000) {
+      setIsParsing(true);
+      const id = `${Date.now()}-${Math.random()}`;
+      activeRequestIdRef.current = id;
+      workerRef.current?.postMessage({ id, source });
+    } else {
+      activeRequestIdRef.current = null;
+      const res = parseJsonSafe(source);
+      setParseResult(res);
+      setIsParsing(false);
+    }
   }, [source]);
 
   const parsedValue = parseResult?.valid ? parseResult.data : null;
@@ -520,6 +568,7 @@ export function useLiveJsonWorkspace() {
       diffNew,
       converterTab,
       jwtInput,
+      isParsing,
     },
     derived: {
       parseResult,
