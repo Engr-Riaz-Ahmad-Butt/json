@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { AlertTriangle, Link2, Shield, X } from "lucide-react";
 
 // BUG-001: Practical URL length limit for cross-browser safety (~8 KB encoded)
@@ -15,6 +15,12 @@ export function ShareModal({
   onClose: () => void;
   onCopy: (value: string, message?: string) => Promise<void>;
 }) {
+  const [workspaceOrigin, setWorkspaceOrigin] = useState("/workspace");
+
+  useEffect(() => {
+    setWorkspaceOrigin(`${window.location.origin}/workspace`);
+  }, []);
+
   const previewText = useMemo(() => {
     const lines = source.split("\n").slice(0, 3);
     return lines.map((line) => (line.length > 84 ? `${line.slice(0, 84)}...` : line)).join("\n");
@@ -22,16 +28,14 @@ export function ShareModal({
 
   // BUG-001 Fix B: encode without silent truncation; warn when payload is too large
   const { generatedUrl, isTooLarge } = useMemo(() => {
-    const base =
-      typeof window !== "undefined" ? `${window.location.origin}/workspace` : "/workspace";
     const encoded = encodeURIComponent(source);
 
     if (encoded.length > URL_SAFE_DATA_LIMIT) {
       return { generatedUrl: "", isTooLarge: true };
     }
 
-    return { generatedUrl: `${base}?share=public&data=${encoded}`, isTooLarge: false };
-  }, [source]);
+    return { generatedUrl: `${workspaceOrigin}?share=public&data=${encoded}`, isTooLarge: false };
+  }, [source, workspaceOrigin]);
 
   return (
     <div
