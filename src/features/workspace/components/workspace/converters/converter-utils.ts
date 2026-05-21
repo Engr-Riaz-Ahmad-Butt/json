@@ -24,10 +24,16 @@ export function getConverterOutput(tab: ConverterTab, value: JsonValue | null) {
       return generateCSharpClasses("RootPayload", value);
     case "Java":
       return generateJavaClasses("RootPayload", value);
+    case "Kotlin":
+      return generateKotlinClasses("RootPayload", value);
+    case "Swift":
+      return generateSwiftStructs("RootPayload", value);
     case "CSV":
       return generateCsvOutput(value);
     case "YAML":
       return toYaml(value);
+    case "TOML":
+      return generateTomlOutput(value);
     case "XML":
       return generateXmlOutput(value);
     case "Schema":
@@ -630,4 +636,247 @@ function generateJavaClasses(name: string, value: JsonValue): string {
   }
 
   return header + classes.reverse().join("\n\n").trim() + "\n";
+}
+
+function generateKotlinClasses(name: string, value: JsonValue): string {
+  const classes: string[] = [];
+  const classNamesUsed = new Set<string>();
+
+  function makeUniqueName(base: string): string {
+    const clean = toPascalCase(base);
+    if (!classNamesUsed.has(clean)) {
+      classNamesUsed.add(clean);
+      return clean;
+    }
+    let suffix = 2;
+    while (classNamesUsed.has(clean + suffix)) {
+      suffix++;
+    }
+    const finalName = clean + suffix;
+    classNamesUsed.add(finalName);
+    return finalName;
+  }
+
+  function walk(currentName: string, val: JsonValue): string {
+    if (Array.isArray(val)) {
+      if (val.length === 0) {
+        return "List<Any>";
+      }
+      return `List<${walk(currentName, val[0])}>`;
+    }
+
+    if (val === null) {
+      return "Any?";
+    }
+
+    switch (typeof val) {
+      case "string":
+        return "String";
+      case "number":
+        return Number.isInteger(val) ? "Int" : "Double";
+      case "boolean":
+        return "Boolean";
+      case "object": {
+        const uniqueName = makeUniqueName(currentName);
+        const entries = Object.entries(val);
+        const fields = entries
+          .map(([key, child]) => {
+            const camelKey = toCamelCase(key);
+            const pascalKey = toPascalCase(key);
+            const childKotlinType = walk(pascalKey, child);
+            const annotation = camelKey !== key ? `@SerialName("${key}")\n    ` : "";
+            return `    ${annotation}val ${camelKey}: ${childKotlinType}`;
+          })
+          .join(",\n");
+
+        classes.push(`@Serializable\ndata class ${uniqueName}(\n${fields}\n)`);
+        return uniqueName;
+      }
+      default:
+        return "Any";
+    }
+  }
+
+  const rootTypeName = walk(name, value);
+  const header = "import kotlinx.serialization.Serializable\nimport kotlinx.serialization.SerialName\n\n";
+
+  if (Array.isArray(value)) {
+    return (
+      header +
+      classes.reverse().join("\n\n").trim() +
+      `\n\ntypealias ${name} = ${rootTypeName}\n`
+    );
+  }
+
+  return header + classes.reverse().join("\n\n").trim() + "\n";
+}
+
+function generateSwiftStructs(name: string, value: JsonValue): string {
+  const structs: string[] = [];
+  const structNamesUsed = new Set<string>();
+
+  function makeUniqueName(base: string): string {
+    const clean = toPascalCase(base);
+    if (!structNamesUsed.has(clean)) {
+      structNamesUsed.add(clean);
+      return clean;
+    }
+    let suffix = 2;
+    while (structNamesUsed.has(clean + suffix)) {
+      suffix++;
+    }
+    const finalName = clean + suffix;
+    structNamesUsed.add(finalName);
+    return finalName;
+  }
+
+  function walk(currentName: string, val: JsonValue): string {
+    if (Array.isArray(val)) {
+      if (val.length === 0) {
+        return "[AnyCodable]";
+      }
+      return `[${walk(currentName, val[0])}]`;
+    }
+
+    if (val === null) {
+      return "AnyCodable?";
+    }
+
+    switch (typeof val) {
+      case "string":
+        return "String";
+      case "number":
+        return Number.isInteger(val) ? "Int" : "Double";
+      case "boolean":
+        return "Bool";
+      case "object": {
+        const uniqueName = makeUniqueName(currentName);
+        const entries = Object.entries(val);
+        const fields = entries
+          .map(([key, child]) => {
+            const camelKey = toCamelCase(key);
+            const pascalKey = toPascalCase(key);
+            const childSwiftType = walk(pascalKey, child);
+            return `    let ${camelKey}: ${childSwiftType}`;
+          })
+          .join("\n");
+
+        const needsCodingKeys = entries.some(([key]) => toCamelCase(key) !== key);
+        let codingKeysStr = "";
+        if (needsCodingKeys) {
+          const caseStatements = entries
+            .map(([key]) => {
+              const camelKey = toCamelCase(key);
+              if (camelKey === key) {
+                return `        case ${camelKey}`;
+              }
+              return `        case ${camelKey} = "${key}"`;
+            })
+            .join("\n");
+          codingKeysStr = `\n\n    enum CodingKeys: String, CodingKey {\n${caseStatements}\n    }`;
+        }
+
+        structs.push(`struct ${uniqueName}: Codable {\n${fields}${codingKeysStr}\n}`);
+        return uniqueName;
+      }
+      default:
+        return "AnyCodable";
+    }
+  }
+
+  const rootTypeName = walk(name, value);
+  const header = "import Foundation\n\n";
+
+  if (Array.isArray(value)) {
+    return (
+      header +
+      structs.reverse().join("\n\n").trim() +
+      `\n\ntypealias ${name} = ${rootTypeName}\n`
+    );
+  }
+
+  return header + structs.reverse().join("\n\n").trim() + "\n";
+}
+
+function generateTomlOutput(value: JsonValue): string {
+  if (value === null || typeof value !== "object") {
+    return "# TOML requires a root object or array of objects.\n";
+  }
+
+  let output = "";
+
+  function formatValue(val: JsonValue): string {
+    if (val === null) return '""';
+    if (typeof val === "boolean") return val ? "true" : "false";
+    if (typeof val === "number") return val.toString();
+    if (typeof val === "string") return `"${val.replace(/"/g, '\\"')}"`;
+    if (Array.isArray(val)) {
+      if (val.length === 0) return "[]";
+      if (typeof val[0] === "object" && val[0] !== null) {
+        return "[]";
+      }
+      return `[ ${val.map(formatValue).join(", ")} ]`;
+    }
+    const entries = Object.entries(val);
+    return `{ ${entries.map(([k, v]) => `${k} = ${formatValue(v)}`).join(", ")} }`;
+  }
+
+  function walk(obj: Record<string, JsonValue>, prefix = ""): void {
+    const primitives: [string, JsonValue][] = [];
+    const objects: [string, JsonValue][] = [];
+    const arraysOfObjects: [string, JsonValue[]][] = [];
+
+    for (const [key, val] of Object.entries(obj)) {
+      if (val === null) continue;
+      if (Array.isArray(val)) {
+        if (val.length > 0 && typeof val[0] === "object" && val[0] !== null) {
+          arraysOfObjects.push([key, val as JsonValue[]]);
+        } else {
+          primitives.push([key, val]);
+        }
+      } else if (typeof val === "object") {
+        objects.push([key, val]);
+      } else {
+        primitives.push([key, val]);
+      }
+    }
+
+    for (const [key, val] of primitives) {
+      output += `${key} = ${formatValue(val)}\n`;
+    }
+
+    if (primitives.length > 0 && (objects.length > 0 || arraysOfObjects.length > 0)) {
+      output += "\n";
+    }
+
+    for (const [key, val] of objects) {
+      const fullPath = prefix ? `${prefix}.${key}` : key;
+      output += `[${fullPath}]\n`;
+      walk(val as Record<string, JsonValue>, fullPath);
+      output += "\n";
+    }
+
+    for (const [key, val] of arraysOfObjects) {
+      const fullPath = prefix ? `${prefix}.${key}` : key;
+      for (const item of val) {
+        output += `[[${fullPath}]]\n`;
+        walk(item as Record<string, JsonValue>, fullPath);
+        output += "\n";
+      }
+    }
+  }
+
+  if (Array.isArray(value)) {
+    for (const item of value) {
+      if (item !== null && typeof item === "object" && !Array.isArray(item)) {
+        output += `[[root]]\n`;
+        walk(item as Record<string, JsonValue>, "root");
+        output += "\n";
+      }
+    }
+  } else {
+    walk(value as Record<string, JsonValue>);
+  }
+
+  return output.trim() + "\n";
 }

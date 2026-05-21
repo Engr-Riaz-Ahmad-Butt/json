@@ -10,13 +10,14 @@ import { cn } from "@/lib/utils";
 import type { ConverterTab, JsonValue } from "../core/types";
 import { SidebarEmpty, SmallAction } from "../shared";
 import { CSV_ERROR_PREFIX } from "./converter-utils";
+import { XMLParser } from "fast-xml-parser";
 
 const MonacoEditor = dynamic(() => import("@monaco-editor/react"), {
   ssr: false,
 });
 
-const TYPE_SYSTEM_TABS: ConverterTab[] = ["TypeScript", "Zod", "Go", "Python", "Rust", "C#", "Java", "Prisma", "Mongoose"];
-const DATA_FORMAT_TABS: ConverterTab[] = ["CSV", "YAML", "XML", "Schema"];
+const TYPE_SYSTEM_TABS: ConverterTab[] = ["TypeScript", "Zod", "Go", "Python", "Rust", "C#", "Java", "Kotlin", "Swift", "Prisma", "Mongoose"];
+const DATA_FORMAT_TABS: ConverterTab[] = ["CSV", "YAML", "TOML", "XML", "Schema"];
 
 const FORMAT_META: Record<ConverterTab, string> = {
   TypeScript: "TypeScript interfaces — generated from your JSON",
@@ -26,8 +27,11 @@ const FORMAT_META: Record<ConverterTab, string> = {
   Rust: "Rust structs — serde-supported data mapping definitions",
   "C#": "C# classes — System.Text.Json property model templates",
   Java: "Java classes — robust Jackson-annotated data transfer objects",
+  Kotlin: "Kotlin data classes — native modern data class templates with kotlinx.serialization support",
+  Swift: "Swift structs — premium Decodable and Codable structured models with CodingKeys",
   CSV: "CSV export — flattened from JSON array",
   YAML: "YAML format — human-readable data serialization",
+  TOML: "TOML format — standard configuration data representation",
   XML: "XML export — structured markup from JSON",
   Schema: "JSON Schema — Draft 7 schema definition",
   Prisma: "Prisma schema — database model definition",
@@ -54,7 +58,29 @@ export function ConverterWorkspace({
   setSource: React.Dispatch<React.SetStateAction<string>>;
 }) {
   const { monacoTheme } = useTheme();
+  const [xmlDirection, setXmlDirection] = React.useState<"json-to-xml" | "xml-to-json">("json-to-xml");
+
   const selectedDescription = converterTab ? FORMAT_META[converterTab] : "Choose a target format";
+  const isXmlToJson = converterTab === "XML" && xmlDirection === "xml-to-json";
+
+  let xmlToJsonOutput = "";
+  let xmlToJsonError = "";
+  if (isXmlToJson) {
+    if (!source.trim()) {
+      xmlToJsonOutput = "";
+    } else {
+      try {
+        const parser = new XMLParser({
+          ignoreAttributes: false,
+          attributeNamePrefix: "@_",
+        });
+        const parsed = parser.parse(source);
+        xmlToJsonOutput = JSON.stringify(parsed, null, 2);
+      } catch (err) {
+        xmlToJsonError = err instanceof Error ? err.message : "Invalid XML payload.";
+      }
+    }
+  }
 
   return (
     <div className="grid h-full min-h-0 xl:grid-cols-[minmax(0,1fr)_minmax(360px,0.92fr)]">
@@ -62,7 +88,7 @@ export function ConverterWorkspace({
         <div className="min-h-[320px] flex-1 bg-obsidian-base xl:min-h-0">
           <MonacoEditor
             height="100%"
-            language="json"
+            language={isXmlToJson ? "xml" : "json"}
             theme={monacoTheme}
             value={source}
             onChange={(value) => setSource(value ?? "")}
@@ -103,16 +129,45 @@ export function ConverterWorkspace({
               onSelect={setConverterTab}
             />
           </div>
+
+          {converterTab === "XML" && (
+            <div className="mt-3 flex gap-2">
+              <button
+                type="button"
+                onClick={() => setXmlDirection("json-to-xml")}
+                className={cn(
+                  "h-7 rounded-[6px] border-[0.5px] px-3 text-[11px] font-medium transition-colors",
+                  xmlDirection === "json-to-xml"
+                    ? "border-copper-accent bg-copper-accent/10 text-copper-accent"
+                    : "border-ui-border bg-surface-elevated text-text-secondary hover:border-ui-border-hover hover:text-text-primary"
+                )}
+              >
+                JSON to XML
+              </button>
+              <button
+                type="button"
+                onClick={() => setXmlDirection("xml-to-json")}
+                className={cn(
+                  "h-7 rounded-[6px] border-[0.5px] px-3 text-[11px] font-medium transition-colors",
+                  xmlDirection === "xml-to-json"
+                    ? "border-copper-accent bg-copper-accent/10 text-copper-accent"
+                    : "border-ui-border bg-surface-elevated text-text-secondary hover:border-ui-border-hover hover:text-text-primary"
+                )}
+              >
+                XML to JSON (Bidirectional)
+              </button>
+            </div>
+          )}
         </div>
 
         <div className="flex flex-wrap items-center gap-2 border-b-[0.5px] border-ui-border px-4 py-3 sm:px-5">
           <SmallAction
             label="Copy"
-            onClick={() => onCopy(output, `Copied ${converterTab} output`)}
+            onClick={() => onCopy(isXmlToJson ? xmlToJsonOutput : output, `Copied ${isXmlToJson ? "JSON" : converterTab} output`)}
           />
           <SmallAction
             label="Download"
-            onClick={() => onDownload(output, `payloada-${converterTab}.txt`)}
+            onClick={() => onDownload(isXmlToJson ? xmlToJsonOutput : output, isXmlToJson ? "payloada-xml-to-json.json" : `payloada-${converterTab}.txt`)}
           />
           <SmallAction label="Regenerate" onClick={() => toast.success("Output regenerated")} />
           <SmallAction
@@ -122,7 +177,20 @@ export function ConverterWorkspace({
         </div>
 
         <div className="min-h-0 flex-1 overflow-auto p-4 sm:p-5">
-          {parsedValue ? (
+          {isXmlToJson ? (
+            xmlToJsonOutput ? (
+              <ConverterOutputPreview tab="TypeScript" value={xmlToJsonOutput} />
+            ) : xmlToJsonError ? (
+              <div className="rounded-[10px] border-[0.5px] border-red-500/20 bg-red-50 dark:bg-red-950/20 px-4 py-4">
+                <p className="text-[13px] font-medium text-red-600 dark:text-red-400">Cannot Parse XML</p>
+                <p className="mt-1 text-[12px] leading-[1.6] text-text-secondary whitespace-pre-line">
+                  {xmlToJsonError}
+                </p>
+              </div>
+            ) : (
+              <SidebarEmpty text="Add valid XML to generate JSON output." />
+            )
+          ) : parsedValue ? (
             output ? (
               <ConverterOutputPreview tab={converterTab} value={output} />
             ) : (
@@ -267,10 +335,16 @@ function highlightLine(tab: ConverterTab, line: string) {
       return highlightCSharpLine(line);
     case "Java":
       return highlightJavaLine(line);
+    case "Kotlin":
+      return highlightKotlinLine(line);
+    case "Swift":
+      return highlightSwiftLine(line);
     case "Zod":
       return highlightZodLine(line);
     case "YAML":
       return highlightYamlLine(line);
+    case "TOML":
+      return highlightTomlLine(line);
     case "XML":
       return highlightXmlLine(line);
     default:
@@ -674,4 +748,130 @@ function highlightJavaLine(line: string) {
 
     return <span key={index}>{token}</span>;
   });
+}
+
+function highlightKotlinLine(line: string) {
+  const tokens = tokenizePreservingWhitespace(line);
+
+  return tokens.map((token, index) => {
+    if (/^\s+$/.test(token)) {
+      return token;
+    }
+
+    if (/^(data|class|val|var|import|package|typealias)$/.test(token)) {
+      return (
+        <span key={index} style={{ color: "#79C0FF" }}>
+          {token}
+        </span>
+      );
+    }
+
+    if (/^@(Serializable|SerialName)\(.*\)$/.test(token) || /^@.*$/.test(token)) {
+      return (
+        <span key={index} style={{ color: "#C77DFF" }}>
+          {token}
+        </span>
+      );
+    }
+
+    if (/^(String|Int|Double|Boolean|List|Any)$/.test(token)) {
+      return (
+        <span key={index} style={{ color: "#3DD68C" }}>
+          {token}
+        </span>
+      );
+    }
+
+    if (/^[A-Z][A-Za-z0-9_]*$/.test(token)) {
+      return (
+        <span key={index} style={{ color: "#C07040" }}>
+          {token}
+        </span>
+      );
+    }
+
+    if (/^".*"$/.test(token)) {
+      return (
+        <span key={index} style={{ color: "#d69463" }}>
+          {token}
+        </span>
+      );
+    }
+
+    return <span key={index}>{token}</span>;
+  });
+}
+
+function highlightSwiftLine(line: string) {
+  const tokens = tokenizePreservingWhitespace(line);
+
+  return tokens.map((token, index) => {
+    if (/^\s+$/.test(token)) {
+      return token;
+    }
+
+    if (/^(struct|let|var|import|enum|case|typealias)$/.test(token)) {
+      return (
+        <span key={index} style={{ color: "#79C0FF" }}>
+          {token}
+        </span>
+      );
+    }
+
+    if (/^(String|Int|Double|Bool|Codable|String\??|Int\??|Double\??|Bool\??|AnyCodable|AnyCodable\??)$/.test(token)) {
+      return (
+        <span key={index} style={{ color: "#3DD68C" }}>
+          {token}
+        </span>
+      );
+    }
+
+    if (/^[A-Z][A-Za-z0-9_]*$/.test(token)) {
+      return (
+        <span key={index} style={{ color: "#C07040" }}>
+          {token}
+        </span>
+      );
+    }
+
+    if (/^".*"$/.test(token)) {
+      return (
+        <span key={index} style={{ color: "#d69463" }}>
+          {token}
+        </span>
+      );
+    }
+
+    return <span key={index}>{token}</span>;
+  });
+}
+
+function highlightTomlLine(line: string) {
+  if (line.trim().startsWith("#")) {
+    return <span style={{ color: "#5A6070" }}>{line}</span>;
+  }
+
+  if (line.trim().startsWith("[[")) {
+    return <span style={{ color: "#C77DFF" }}>{line}</span>;
+  }
+
+  if (line.trim().startsWith("[")) {
+    return <span style={{ color: "#79C0FF" }}>{line}</span>;
+  }
+
+  const match = line.match(/^(\s*)([^=\s]+)\s*=\s*(.*)$/);
+  if (!match) {
+    return line;
+  }
+
+  const [, indent, key, value] = match;
+
+  return (
+    <>
+      {indent}
+      <span style={{ color: "#C07040" }}>{key}</span>
+      <span style={{ color: "#5A6070" }}> = </span>
+      <span style={{ color: getYamlValueColor(value) }}>{value}</span>
+    </>
+  );
 }
