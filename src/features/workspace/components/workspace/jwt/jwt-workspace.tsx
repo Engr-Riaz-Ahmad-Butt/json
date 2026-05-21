@@ -402,7 +402,7 @@ function isStandardJwtClaim(key: string) {
 }
 
 function formatJwtDate(value: number | null) {
-  if (!value) {
+  if (value === null) {
     return "Not set";
   }
 
@@ -421,7 +421,7 @@ function formatJwtDate(value: number | null) {
 }
 
 function getExpiryMeta(issuedAt: number | null, expiresAt: number | null) {
-  if (!expiresAt) {
+  if (expiresAt === null) {
     return {
       label: "No expiry set",
       color: "text-text-secondary",

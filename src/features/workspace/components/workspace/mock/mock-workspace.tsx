@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import dynamic from "next/dynamic";
 import { Plus, Trash2, Copy, Download, RefreshCw, Send, Check } from "lucide-react";
 import { toast } from "sonner";
@@ -102,6 +102,7 @@ export function MockWorkspace({
   const [count, setCount] = useState<number>(10);
   const [output, setOutput] = useState<string>("");
   const [copied, setCopied] = useState(false);
+  const fieldCounterRef = useRef(PRESET_TEMPLATES.users.fields.length);
 
   const handleGenerate = useCallback(() => {
     if (fields.length === 0) {
@@ -123,35 +124,38 @@ export function MockWorkspace({
     toast.success(`Successfully generated ${count} mock records!`);
   }, [fields, count]);
 
+  const handleGenerateRef = useRef(handleGenerate);
+  handleGenerateRef.current = handleGenerate;
+
   useEffect(() => {
-    const timer = setTimeout(() => {
-      handleGenerate();
-    }, 0);
-    return () => clearTimeout(timer);
-  }, [handleGenerate]);
+    handleGenerateRef.current();
+  }, []); // only on mount — user clicks Regenerate button to refresh after editing fields
 
   const loadPreset = (presetKey: keyof typeof PRESET_TEMPLATES) => {
-    setFields(PRESET_TEMPLATES[presetKey].fields);
+    const preset = PRESET_TEMPLATES[presetKey];
+    fieldCounterRef.current = preset.fields.length;
+    setFields(preset.fields.map((f) => ({ ...f })));
   };
 
   const addField = () => {
-    setFields([...fields, { key: `field_${fields.length + 1}`, type: "name" }]);
+    fieldCounterRef.current += 1;
+    setFields((current) => [...current, { key: `field_${fieldCounterRef.current}`, type: "name" }]);
   };
 
   const removeField = (index: number) => {
-    setFields(fields.filter((_, idx) => idx !== index));
+    setFields((current) => current.filter((_, idx) => idx !== index));
   };
 
   const updateFieldKey = (index: number, key: string) => {
-    const updated = [...fields];
-    updated[index].key = key;
-    setFields(updated);
+    setFields((current) =>
+      current.map((field, idx) => (idx === index ? { ...field, key } : field)),
+    );
   };
 
   const updateFieldType = (index: number, type: FieldType) => {
-    const updated = [...fields];
-    updated[index].type = type;
-    setFields(updated);
+    setFields((current) =>
+      current.map((field, idx) => (idx === index ? { ...field, type } : field)),
+    );
   };
 
   const handleSendToMainEditor = () => {
@@ -332,14 +336,16 @@ export function MockWorkspace({
         <div className="grid grid-cols-3 gap-2 border-t-[0.5px] border-ui-border p-4 bg-surface-container">
           <button
             onClick={triggerCopy}
-            className="flex h-10 items-center justify-center gap-2 rounded-[8px] border-[0.5px] border-ui-border bg-surface-elevated text-[13px] font-semibold text-text-primary transition-colors hover:border-ui-border-hover"
+            disabled={!output}
+            className="flex h-10 items-center justify-center gap-2 rounded-[8px] border-[0.5px] border-ui-border bg-surface-elevated text-[13px] font-semibold text-text-primary transition-colors hover:border-ui-border-hover disabled:cursor-not-allowed disabled:opacity-40"
           >
             {copied ? <Check className="size-4 text-[#3DD68C]" /> : <Copy className="size-4" />}
             {copied ? "Copied" : "Copy"}
           </button>
           <button
             onClick={handleDownload}
-            className="flex h-10 items-center justify-center gap-2 rounded-[8px] border-[0.5px] border-ui-border bg-surface-elevated text-[13px] font-semibold text-text-primary transition-colors hover:border-ui-border-hover"
+            disabled={!output}
+            className="flex h-10 items-center justify-center gap-2 rounded-[8px] border-[0.5px] border-ui-border bg-surface-elevated text-[13px] font-semibold text-text-primary transition-colors hover:border-ui-border-hover disabled:cursor-not-allowed disabled:opacity-40"
           >
             <Download className="size-4" /> Download
           </button>

@@ -231,13 +231,6 @@ export function DiffWorkspace({
               label="Download report"
               onClick={() => onDownload(diffReport, "payloada-diff-report.txt")}
             />
-            <button
-              type="button"
-              onClick={() => void onCopy(diffReport, "Copied shareable diff report")}
-              className="h-9 rounded-sm border-[0.5px] border-copper-accent bg-transparent px-3 text-xs font-semibold text-text-secondary transition-colors hover:border-copper-accent hover:text-text-primary focus-visible:border-copper-accent focus-visible:outline-none"
-            >
-              Share diff
-            </button>
           </div>
 
           <div className="flex items-center gap-4">

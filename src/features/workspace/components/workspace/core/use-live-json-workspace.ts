@@ -326,6 +326,16 @@ export function useLiveJsonWorkspace(options: UseLiveJsonWorkspaceOptions = {}) 
     toast.success("History cleared");
   };
 
+  const saveSnapshot = () => {
+    if (!source.trim()) {
+      toast.error("Nothing to save — editor is empty.");
+      return;
+    }
+    const preview = source.length > 60 ? source.slice(0, 60).replace(/\s+/g, " ") + "…" : source.replace(/\s+/g, " ");
+    addHistory("Saved JSON snapshot", preview);
+    toast.success("Snapshot saved to history");
+  };
+
   const openWorkspace = (view: WorkspaceView) => {
     if (view === "converters") {
       setPreviousWorkspaceView(
@@ -709,6 +719,7 @@ export function useLiveJsonWorkspace(options: UseLiveJsonWorkspaceOptions = {}) 
       setConverterTab,
       setJwtInput,
       clearHistory,
+      saveSnapshot,
       addHistory,
       openWorkspace,
       openConverterWorkspace,

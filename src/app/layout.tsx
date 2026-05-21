@@ -19,6 +19,9 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://payloada.dev"),
+  alternates: {
+    canonical: "./",
+  },
   title: "Payloada - The modern JSON workspace for developers",
   description:
     "Format JSON, decode JWTs, compare payloads, and generate developer-ready outputs in a fast, privacy-first workspace.",

@@ -7,9 +7,11 @@ import type { HistoryItem } from "../core/types";
 export function HistoryWorkspace({
   items,
   onClear,
+  onSaveSnapshot,
 }: {
   items: HistoryItem[];
   onClear: () => void;
+  onSaveSnapshot: () => void;
 }) {
   return (
     <div className="grid h-full min-h-0 xl:grid-cols-[minmax(0,1fr)_320px]">
@@ -43,6 +45,7 @@ export function HistoryWorkspace({
                 <p className="text-[16px] font-medium text-[#5A6070]">No saved snippets</p>
                 <button
                   type="button"
+                  onClick={onSaveSnapshot}
                   className="mt-3 h-10 rounded-[8px] bg-[#C07040] px-4 text-[14px] font-semibold text-white transition-colors hover:bg-[#D48050] focus-visible:outline-none"
                 >
                   Save current JSON

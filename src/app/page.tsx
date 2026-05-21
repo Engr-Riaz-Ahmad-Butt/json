@@ -44,8 +44,38 @@ const comparisons = [
 ] as const;
 
 export default function Home() {
+  const schemas = [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Payloada",
+      "url": "https://payloada.dev",
+      "description":
+        "Format JSON, decode JWTs, compare payloads, and generate developer-ready outputs in a fast, privacy-first workspace.",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "All",
+      "browserRequirements": "Requires JavaScript. Requires HTML5.",
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": faqs.map(([question, answer]) => ({
+        "@type": "Question",
+        "name": question,
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": answer,
+        },
+      })),
+    },
+  ];
+
   return (
     <div className="flex min-h-screen flex-col bg-obsidian-base font-sans text-text-primary">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schemas) }}
+      />
       <Navbar />
 
       <main className="flex flex-1 flex-col items-center overflow-x-hidden">

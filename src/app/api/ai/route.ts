@@ -32,9 +32,12 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Question is too long (max 500 chars)", code: "invalid_input" }, { status: 400 });
     }
 
-    const ip = (req.headers.get("x-forwarded-for") ?? req.headers.get("x-real-ip") ?? "unknown")
-      .split(",")[0]
-      .trim();
+    // x-real-ip is set by trusted reverse proxies (Vercel, nginx) and cannot be
+    // spoofed by the client. x-forwarded-for leftmost value is client-controlled.
+    const ip =
+      req.headers.get("x-real-ip")?.trim() ||
+      req.headers.get("x-forwarded-for")?.split(",").at(-1)?.trim() ||
+      "unknown";
 
     const rl = await consumeRequest(ip);
     if (!rl.allowed) {

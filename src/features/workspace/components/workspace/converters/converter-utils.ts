@@ -5,7 +5,7 @@ import { stringify as toYaml } from "yaml";
 import type { ConverterTab, JsonValue } from "../core/types";
 
 export function getConverterOutput(tab: ConverterTab, value: JsonValue | null) {
-  if (!value) {
+  if (value === null || value === undefined) {
     return "";
   }
 

@@ -94,6 +94,7 @@ export function LiveJsonWorkspace({
     openWorkspace,
     openConverterWorkspace,
     clearHistory,
+    saveSnapshot,
     handleCopy,
     handleDownload,
     handlePaste,
@@ -268,7 +269,7 @@ export function LiveJsonWorkspace({
               ) : null}
 
               {workspaceView === "history" ? (
-                <HistoryWorkspace items={historyItems} onClear={clearHistory} />
+                <HistoryWorkspace items={historyItems} onClear={clearHistory} onSaveSnapshot={saveSnapshot} />
               ) : null}
             </div>
           </div>

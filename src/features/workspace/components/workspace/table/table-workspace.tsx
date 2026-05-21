@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   ArrowDown,
   ArrowUp,
@@ -102,6 +102,12 @@ export function TableWorkspace({
     () => columns.filter((col) => !hiddenCols.has(col)),
     [columns, hiddenCols],
   );
+
+  // Reset selection when the underlying data or filters change so stale index
+  // doesn't silently point at a different row after a sort/search/data change.
+  useEffect(() => {
+    setSelectedRow(null);
+  }, [parsedValue, search, sort]);
 
   // Filter rows by global search
   const filteredRows = useMemo(() => {

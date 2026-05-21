@@ -15,6 +15,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "mock-json-generator",
   ];
 
+  const standardPages = ["contact", "privacy", "terms"];
+
   return [
     {
       url: baseUrl,
@@ -33,6 +35,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: new Date(),
       changeFrequency: "monthly" as const,
       priority: 0.8,
+    })),
+    ...standardPages.map((slug) => ({
+      url: `${baseUrl}/${slug}`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.5,
     })),
   ];
 }
