@@ -113,9 +113,9 @@ export function LiveJsonWorkspace({
   } = actions;
 
   return (
-    <section className="overflow-hidden border-[0.5px] border-ui-border bg-obsidian-base text-text-primary">
+    <section className="overflow-hidden border-[0.5px] border-ui-border bg-obsidian-base text-text-primary xl:h-screen">
       <div
-        className="grid min-h-screen xl:min-h-230 xl:grid-cols-(--sidebar-columns) xl:transition-[grid-template-columns] xl:duration-500 xl:ease-[cubic-bezier(0.77,0,0.18,1)]"
+        className="grid min-h-screen xl:h-full xl:grid-cols-(--sidebar-columns) xl:overflow-hidden xl:transition-[grid-template-columns] xl:duration-500 xl:ease-[cubic-bezier(0.77,0,0.18,1)]"
         style={
           {
             "--sidebar-columns": isSidebarCollapsed ? "88px minmax(0,1fr)" : "260px minmax(0,1fr)",
@@ -130,7 +130,7 @@ export function LiveJsonWorkspace({
           onToggleCollapse={() => setIsSidebarCollapsed((current) => !current)}
         />
 
-        <div className="flex min-w-0 flex-col pb-16 xl:pb-0">
+        <div className="flex min-w-0 flex-col pb-16 xl:h-full xl:overflow-y-auto xl:pb-0">
           <WorkspaceTopbar
             workspaceView={workspaceView}
             searchTerm={searchTerm}

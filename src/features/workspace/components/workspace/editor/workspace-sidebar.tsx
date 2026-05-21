@@ -23,7 +23,7 @@ export function WorkspaceSidebar({
   return (
     <aside
       className={cn(
-        "relative hidden xl:flex xl:min-h-full xl:flex-col xl:border-b-0 xl:border-r-[0.5px] xl:border-ui-border xl:bg-surface-elevated xl:py-6 xl:transition-[padding] xl:duration-300 xl:ease-out",
+        "relative hidden xl:flex xl:h-full xl:flex-col xl:overflow-y-auto xl:border-b-0 xl:border-r-[0.5px] xl:border-ui-border xl:bg-surface-elevated xl:py-6 xl:transition-[padding] xl:duration-300 xl:ease-out",
         isCollapsed ? "xl:px-3" : "xl:px-5",
       )}
     >
