@@ -2,7 +2,7 @@
 @import "tw-animate-css";
 @import "@xyflow/react/dist/style.css";
 
-@custom-variant dark (&:is(.dark *));
+@custom-variant dark (&:where(.dark, .dark *));
 
 /* ── JSONova Design Tokens ── */
 @theme {
@@ -66,6 +66,7 @@
   --color-surface-tint: #ffb68e;
 
   --color-text-primary: #f5f1ea;
+  --color-text-secondary: #8b92a8;
   --color-gold-number: #d4b483;
   --color-sage-string: #7db87d;
 
@@ -160,6 +161,7 @@
   --color-inverse-on-surface: #e5e8ef;
   --color-surface-tint: #c07040;
   --color-text-primary: #111318;
+  --color-text-secondary: #5a6070;
   --color-gold-number: #8a6830;
   --color-sage-string: #2d6e2d;
 }

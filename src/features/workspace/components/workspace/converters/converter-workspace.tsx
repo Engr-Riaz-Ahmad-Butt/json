@@ -59,7 +59,7 @@ export function ConverterWorkspace({
   return (
     <div className="grid h-full min-h-0 xl:grid-cols-[minmax(0,1fr)_minmax(360px,0.92fr)]">
       <div className="flex min-h-0 flex-col border-b-[0.5px] border-ui-border xl:border-b-0 xl:border-r-[0.5px]">
-        <div className="min-h-[320px] flex-1 bg-[#050505] xl:min-h-0">
+        <div className="min-h-[320px] flex-1 bg-obsidian-base xl:min-h-0">
           <MonacoEditor
             height="100%"
             language="json"
@@ -80,7 +80,7 @@ export function ConverterWorkspace({
         </div>
       </div>
 
-      <aside className="flex min-h-0 flex-col bg-[#121212]">
+      <aside className="flex min-h-0 flex-col bg-surface-elevated">
         <div className="border-b-[0.5px] border-ui-border px-4 py-4 sm:px-5">
           <div className="mb-3">
             <p className="text-sm font-semibold text-[#d6c3b5]">Output</p>
@@ -162,8 +162,8 @@ function ConverterButtonGroup({
             className={cn(
               "h-7 rounded-[6px] border-[0.5px] px-3 text-[12px] font-medium transition-colors",
               activeTab === tab
-                ? "border-[#C07040] bg-[#1F140C] text-[#C07040]"
-                : "border-[#2A2F42] bg-[#1A1D24] text-[#8B92A8]",
+                ? "border-copper-accent bg-copper-accent/10 text-copper-accent"
+                : "border-ui-border bg-surface-elevated text-text-secondary hover:border-ui-border-hover hover:text-text-primary",
             )}
           >
             {tab}
@@ -180,7 +180,7 @@ function ConverterOutputPreview({ tab, value }: { tab: ConverterTab; value: stri
   }
 
   return (
-    <pre className="overflow-auto rounded-sm border-[0.5px] border-ui-border bg-[#0a0a0a] p-4 font-mono text-[12px] leading-6 text-[#E8EAF0]">
+    <pre className="overflow-auto rounded-sm border-[0.5px] border-ui-border bg-obsidian-base p-4 font-mono text-[12px] leading-6 text-text-primary">
       {renderHighlightedLines(tab, value)}
     </pre>
   );
@@ -190,9 +190,9 @@ function CsvPreview({ value }: { value: string }) {
   if (value.startsWith(CSV_ERROR_PREFIX)) {
     const errorMessage = value.replace(CSV_ERROR_PREFIX, "");
     return (
-      <div className="rounded-[10px] border-[0.5px] border-[#5A3A1A] bg-[#1A0E00] px-4 py-4">
-        <p className="text-[13px] font-medium text-[#C07040]">Cannot Export CSV</p>
-        <p className="mt-1 text-[12px] leading-[1.6] text-[#8B92A8] whitespace-pre-line">
+      <div className="rounded-[10px] border-[0.5px] border-red-500/20 dark:border-red-900/30 bg-red-50 dark:bg-red-950/20 px-4 py-4">
+        <p className="text-[13px] font-medium text-red-600 dark:text-red-400">Cannot Export CSV</p>
+        <p className="mt-1 text-[12px] leading-[1.6] text-text-secondary whitespace-pre-line">
           {errorMessage}
         </p>
       </div>
@@ -209,10 +209,10 @@ function CsvPreview({ value }: { value: string }) {
   }
 
   return (
-    <div className="overflow-auto rounded-sm border-[0.5px] border-ui-border bg-[#0a0a0a]">
+    <div className="overflow-auto rounded-sm border-[0.5px] border-ui-border bg-obsidian-base">
       <table className="min-w-full border-collapse font-mono text-[12px]">
         <thead>
-          <tr className="bg-[#1A1D24] text-[#C07040]">
+          <tr className="bg-surface-container text-copper-accent">
             {rows[0].map((cell, index) => (
               <th
                 key={`${cell}-${index}`}
@@ -225,11 +225,11 @@ function CsvPreview({ value }: { value: string }) {
         </thead>
         <tbody>
           {rows.slice(1).map((row, rowIndex) => (
-            <tr key={rowIndex} className={rowIndex % 2 === 0 ? "bg-[#0F1117]" : "bg-[#0A0C0F]"}>
+            <tr key={rowIndex} className={rowIndex % 2 === 0 ? "bg-surface/40" : "bg-transparent"}>
               {row.map((cell, cellIndex) => (
                 <td
                   key={`${rowIndex}-${cellIndex}`}
-                  className="border-b-[0.5px] border-ui-border px-3 py-2 text-[#E8EAF0]"
+                  className="border-b-[0.5px] border-ui-border px-3 py-2 text-text-primary"
                 >
                   {cell}
                 </td>

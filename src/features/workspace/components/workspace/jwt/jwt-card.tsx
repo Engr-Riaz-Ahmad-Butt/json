@@ -17,29 +17,26 @@ export function JwtCard({
   actions?: React.ReactNode;
   children: React.ReactNode;
 }) {
-  const accentColor =
+  const accentClasses =
     accent === "header"
-      ? "#79C0FF"
+      ? { text: "text-blue-600 dark:text-[#79C0FF]", bar: "bg-blue-600 dark:bg-[#79C0FF]" }
       : accent === "payload"
-      ? "#C07040"
+      ? { text: "text-copper-accent", bar: "bg-copper-accent" }
       : accent === "signature"
-      ? "#F5A623"
-      : "#E8EAF0";
+      ? { text: "text-emerald-600 dark:text-[#3DD68C]", bar: "bg-emerald-600 dark:bg-[#3DD68C]" }
+      : { text: "text-text-primary", bar: "bg-ui-border-hover" };
 
   return (
-    <div className="group overflow-hidden rounded-lg border-[0.5px] border-ui-border bg-[#121212]">
-      <div className="flex items-center justify-between border-b-[0.5px] border-ui-border bg-[#0e0e0e] px-4 py-3">
+    <div className="group overflow-hidden rounded-lg border-[0.5px] border-ui-border bg-surface-elevated">
+      <div className="flex items-center justify-between border-b-[0.5px] border-ui-border bg-surface-container px-4 py-3">
         <div className="flex items-center gap-3">
-          <span className="h-5 w-[2px] rounded-full" style={{ backgroundColor: accentColor }} />
-          <span
-            className={cn("text-[12px] font-semibold tracking-[0.01em]")}
-            style={{ color: accentColor }}
-          >
+          <span className={cn("h-5 w-[2px] rounded-full", accentClasses.bar)} />
+          <span className={cn("text-[12px] font-semibold tracking-[0.01em]", accentClasses.text)}>
             {title}
           </span>
         </div>
         <div className="flex items-center gap-3">
-          <span className="text-[13px] font-normal leading-[1.6] text-[#8B92A8]">{subtitle}</span>
+          <span className="text-[13px] font-normal leading-[1.6] text-text-secondary">{subtitle}</span>
           {actions}
         </div>
       </div>

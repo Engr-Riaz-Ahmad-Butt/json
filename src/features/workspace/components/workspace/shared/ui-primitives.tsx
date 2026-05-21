@@ -56,7 +56,7 @@ export function IconButton({
 export function SidebarSection({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="border-b-[0.5px] border-ui-border p-5">
-      <h3 className="mb-4 text-[11px] font-medium tracking-[0.5px] text-outline-variant">{title}</h3>
+      <h3 className="mb-4 text-[11px] font-semibold uppercase tracking-[0.08em] text-text-secondary/80">{title}</h3>
       {children}
     </div>
   );
@@ -91,18 +91,18 @@ export function IssueCard({
 }) {
   const toneClasses =
     tone === "error"
-      ? "border-[#4A1520] bg-[#2A0D10] text-[#FFB3BD]"
+      ? "border-red-500/20 dark:border-red-900/30 bg-red-50 dark:bg-red-950/20 text-red-600 dark:text-red-400"
       : tone === "warning"
-      ? "border-[#4A3000] bg-[#2A1A00] text-[#F4D39A]"
-      : "border-[#1D4D35] bg-[#0D2E23] text-[#A8E8BF]";
+      ? "border-amber-500/20 dark:border-amber-900/30 bg-amber-50 dark:bg-amber-950/20 text-amber-600 dark:text-amber-400"
+      : "border-emerald-500/20 dark:border-emerald-900/30 bg-emerald-50 dark:bg-emerald-950/20 text-emerald-600 dark:text-emerald-400";
 
   return (
     <div className={cn("rounded-sm border-[0.5px] px-4 py-4", toneClasses)}>
       <div className="flex items-start gap-3">
         <div className="mt-0.5">{icon}</div>
         <div>
-          <p className="text-[14px] font-medium text-text-primary">{title}</p>
-          <p className="mt-1 text-[13px] font-normal leading-[1.6] text-current/85">{body}</p>
+          <p className="text-[14px] font-semibold text-text-primary">{title}</p>
+          <p className="mt-1 text-[13px] font-normal leading-[1.6] text-text-secondary">{body}</p>
         </div>
       </div>
     </div>

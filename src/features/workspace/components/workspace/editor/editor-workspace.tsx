@@ -339,8 +339,8 @@ export function EditorWorkspace({
                 className={cn(
                   "flex items-center gap-3 rounded-sm border px-4 py-4",
                   parseResult?.valid
-                    ? "border-ui-border bg-[#0e130f] text-[#8ed08e]"
-                    : "border-ui-border bg-[#210b0b] text-[#e68f8f]",
+                    ? "border-emerald-500/20 dark:border-emerald-900/30 bg-emerald-50 dark:bg-emerald-950/20 text-emerald-600 dark:text-emerald-400"
+                    : "border-red-500/20 dark:border-red-900/30 bg-red-50 dark:bg-red-950/20 text-red-600 dark:text-red-400",
                 )}
               >
                 {parseResult?.valid ? (
@@ -348,7 +348,7 @@ export function EditorWorkspace({
                 ) : (
                   <XCircle className="size-5" />
                 )}
-                <span className="text-[14px] font-medium">
+                <span className="text-[14px] font-semibold">
                   {parseResult?.valid ? "Valid JSON" : "Invalid JSON"}
                 </span>
               </div>

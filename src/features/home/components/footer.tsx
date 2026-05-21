@@ -39,7 +39,7 @@ export default function Footer() {
             <p
               className="mt-4"
               style={{
-                color: "#F5F1EA",
+                color: "var(--color-text-primary)",
                 fontFamily: "Inter, sans-serif",
                 fontSize: "15px",
                 lineHeight: "26px",
@@ -50,7 +50,7 @@ export default function Footer() {
             <p
               className="mt-2"
               style={{
-                color: "#8B92A8",
+                color: "var(--color-text-secondary)",
                 fontFamily: "Inter, sans-serif",
                 fontSize: "14px",
                 lineHeight: "24px",
@@ -71,7 +71,7 @@ export default function Footer() {
                 key={badge}
                 className="rounded-[10px] border-[0.5px] border-ui-border bg-surface-elevated px-3 py-1.5"
                 style={{
-                  color: "#d9c2b6",
+                  color: "var(--color-on-surface-variant)",
                   fontFamily: "JetBrains Mono, monospace",
                   fontSize: "11px",
                 }}
@@ -87,7 +87,7 @@ export default function Footer() {
             <div key={group.title}>
               <h3
                 className="mb-4 text-[11px] font-medium tracking-[0.04em]"
-                style={{ color: "#5A6070", fontFamily: "Inter, sans-serif" }}
+                style={{ color: "var(--color-text-secondary)", fontFamily: "Inter, sans-serif" }}
               >
                 {group.title}
               </h3>
@@ -96,9 +96,9 @@ export default function Footer() {
                   <Link
                     key={link}
                     href="#"
-                    className="block transition-colors hover:text-[#F5F1EA]"
+                    className="block transition-colors hover:text-text-primary"
                     style={{
-                      color: "#d9c2b6",
+                      color: "var(--color-on-surface-variant)",
                       fontFamily: "Inter, sans-serif",
                       fontSize: "14px",
                     }}
@@ -117,8 +117,8 @@ export default function Footer() {
           className="mx-auto flex w-full max-w-300 flex-col gap-3 px-4 py-4 text-center sm:px-6 md:flex-row md:items-center md:justify-between md:px-8 md:text-left"
           style={{ fontFamily: "JetBrains Mono, monospace", fontSize: "12px", lineHeight: "18px" }}
         >
-          <span style={{ color: "#d9c2b6" }}>© 2026 JSONova. All rights reserved.</span>
-          <div className="flex flex-wrap items-center gap-4" style={{ color: "#d9c2b6" }}>
+          <span style={{ color: "var(--color-text-secondary)" }}>© 2026 JSONova. All rights reserved.</span>
+          <div className="flex flex-wrap items-center gap-4" style={{ color: "var(--color-text-secondary)" }}>
             <span>Local-only processing</span>
             <span>No signup required</span>
             <span>Built for developers</span>

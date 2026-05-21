@@ -105,7 +105,7 @@ export default function Home() {
             <div className="rounded-[12px] border-[0.5px] border-ui-border bg-surface-elevated p-6 sm:p-7 lg:p-8">
               <p
                 className="mb-3 text-[11px] font-medium tracking-[0.04em]"
-                style={{ color: "#5A6070" }}
+                style={{ color: "var(--color-text-secondary)" }}
               >
                 Privacy-first
               </p>
@@ -121,7 +121,7 @@ export default function Home() {
               </h2>
               <p
                 className="mt-4"
-                style={{ color: "#8B92A8", fontSize: "15px", lineHeight: "28px" }}
+                style={{ color: "var(--color-text-secondary)", fontSize: "15px", lineHeight: "28px" }}
               >
                 JSONova is designed for payloads that developers actually care about. Formatting,
                 validation, tree exploration, JWT decoding, diffing, and generation all happen in a
@@ -139,7 +139,7 @@ export default function Home() {
                   key={item}
                   className="rounded-[12px] border-[0.5px] border-ui-border bg-surface-elevated p-5"
                 >
-                  <p style={{ color: "#8B92A8", fontSize: "14px", lineHeight: "24px" }}>{item}</p>
+                  <p style={{ color: "var(--color-text-secondary)", fontSize: "14px", lineHeight: "24px" }}>{item}</p>
                 </div>
               ))}
             </div>
@@ -150,7 +150,7 @@ export default function Home() {
           <div className="mb-8">
             <p
               className="mb-2 text-[11px] font-medium tracking-[0.04em]"
-              style={{ color: "#5A6070" }}
+              style={{ color: "var(--color-text-secondary)" }}
             >
               Use cases
             </p>
@@ -174,7 +174,7 @@ export default function Home() {
               >
                 <h3
                   style={{
-                    color: "#F5F1EA",
+                    color: "var(--color-text-primary)",
                     fontSize: "18px",
                     lineHeight: "24px",
                     fontWeight: 600,
@@ -184,7 +184,7 @@ export default function Home() {
                 </h3>
                 <p
                   className="mt-3"
-                  style={{ color: "#8B92A8", fontSize: "14px", lineHeight: "24px" }}
+                  style={{ color: "var(--color-text-secondary)", fontSize: "14px", lineHeight: "24px" }}
                 >
                   {description}
                 </p>
@@ -198,7 +198,7 @@ export default function Home() {
             <div className="rounded-[12px] border-[0.5px] border-ui-border bg-surface-elevated p-6 sm:p-7 lg:p-8">
               <p
                 className="mb-3 text-[11px] font-medium tracking-[0.04em]"
-                style={{ color: "#5A6070" }}
+                style={{ color: "var(--color-text-secondary)" }}
               >
                 Comparison
               </p>
@@ -219,14 +219,14 @@ export default function Home() {
                     key={left}
                     className="grid gap-2 rounded-[10px] border-[0.5px] border-ui-border bg-obsidian-base px-4 py-3 sm:grid-cols-[1fr_auto_1fr] sm:items-center sm:gap-3"
                   >
-                    <span style={{ color: "#8B92A8", fontSize: "13px" }}>{left}</span>
+                    <span style={{ color: "var(--color-text-secondary)", fontSize: "13px" }}>{left}</span>
                     <span
                       className="hidden sm:inline"
                       style={{ color: "#C07040", fontSize: "13px", fontWeight: 700 }}
                     >
                       →
                     </span>
-                    <span style={{ color: "#F5F1EA", fontSize: "13px" }}>{right}</span>
+                    <span style={{ color: "var(--color-text-primary)", fontSize: "13px" }}>{right}</span>
                   </div>
                 ))}
               </div>
@@ -235,7 +235,7 @@ export default function Home() {
             <div className="rounded-[12px] border-[0.5px] border-ui-border bg-surface-elevated p-6 sm:p-7 lg:p-8">
               <p
                 className="mb-3 text-[11px] font-medium tracking-[0.04em]"
-                style={{ color: "#5A6070" }}
+                style={{ color: "var(--color-text-secondary)" }}
               >
                 Search-friendly content
               </p>
@@ -251,7 +251,7 @@ export default function Home() {
               </h2>
               <p
                 className="mt-4"
-                style={{ color: "#8B92A8", fontSize: "15px", lineHeight: "28px" }}
+                style={{ color: "var(--color-text-secondary)", fontSize: "15px", lineHeight: "28px" }}
               >
                 JSONova combines JSON formatting, JWT decoding, JSON diffing, type generation,
                 search, and safety checks in one modern workspace. That makes it easier to
@@ -259,7 +259,7 @@ export default function Home() {
               </p>
               <p
                 className="mt-4"
-                style={{ color: "#8B92A8", fontSize: "15px", lineHeight: "28px" }}
+                style={{ color: "var(--color-text-secondary)", fontSize: "15px", lineHeight: "28px" }}
               >
                 Instead of feeling like a thin marketing wrapper, the homepage should show the real
                 product, explain why it matters, and surface the workflows people want to use most.
@@ -272,7 +272,7 @@ export default function Home() {
           <div className="mb-8">
             <p
               className="mb-2 text-[11px] font-medium tracking-[0.04em]"
-              style={{ color: "#5A6070" }}
+              style={{ color: "var(--color-text-secondary)" }}
             >
               Questions
             </p>

@@ -164,16 +164,16 @@ export function AiWorkspace({
 
   return (
     <div className="flex h-full min-h-0 flex-col bg-obsidian-base">
-      <div className="flex shrink-0 items-center justify-between border-b-[0.5px] border-ui-border bg-[#171717]/60 px-4 py-3 sm:px-5">
+      <div className="flex shrink-0 items-center justify-between border-b-[0.5px] border-ui-border bg-surface/60 px-4 py-3 sm:px-5">
         <div className="flex items-center gap-2">
-          <Cpu className="size-4 text-[#C07040]" />
-          <h2 className="text-[14px] font-medium text-[#E8EAF0]">AI Assistant</h2>
-          <span className="rounded-full border-[0.5px] border-[#C07040]/30 bg-[#1F140C] px-2 py-0.5 text-[10px] font-medium text-[#C07040]">
+          <Cpu className="size-4 text-copper-accent" />
+          <h2 className="text-[14px] font-medium text-text-primary">AI Assistant</h2>
+          <span className="rounded-full border-[0.5px] border-copper-accent/30 bg-copper-accent/10 px-2 py-0.5 text-[10px] font-medium text-copper-accent">
             Beta
           </span>
         </div>
         {showRemaining ? (
-          <span className="text-[11px] text-[#5A6070]">{remaining} of 10 free today</span>
+          <span className="text-[11px] text-text-secondary">{remaining} of 10 free today</span>
         ) : null}
       </div>
 
@@ -189,8 +189,8 @@ export function AiWorkspace({
             className={cn(
               "flex-1 py-2.5 text-[12px] font-medium transition-colors",
               activeTab === tab.id
-                ? "border-b-2 border-[#C07040] text-[#E8EAF0]"
-                : "text-[#5A6070] hover:text-[#8B92A8]",
+                ? "border-b-2 border-copper-accent text-text-primary"
+                : "text-text-secondary hover:text-text-primary",
             )}
           >
             {tab.label}
@@ -243,7 +243,7 @@ export function AiWorkspace({
 
       <form
         onSubmit={handleSubmit}
-        className="shrink-0 border-t-[0.5px] border-ui-border bg-[#0F1117] px-4 py-3 sm:px-5"
+        className="shrink-0 border-t-[0.5px] border-ui-border bg-surface-container px-4 py-3 sm:px-5"
       >
         <div className="flex gap-2">
           <input
@@ -252,18 +252,18 @@ export function AiWorkspace({
             onChange={(event) => setQuestion(event.target.value)}
             placeholder={PLACEHOLDERS[activeTab]}
             disabled={aiState.status === "loading" || retryCountdown > 0}
-            className="h-9 min-w-0 flex-1 rounded-md border-[0.5px] border-ui-border bg-[#0A0C0F] px-3 text-[13px] text-[#E8EAF0] outline-none placeholder:text-[#3A4060] focus-visible:border-[#C07040] disabled:opacity-50"
+            className="h-9 min-w-0 flex-1 rounded-md border-[0.5px] border-ui-border bg-obsidian-base px-3 text-[13px] text-text-primary outline-none placeholder:text-text-secondary/50 focus-visible:border-copper-accent disabled:opacity-50"
           />
           <button
             type="submit"
             disabled={aiState.status === "loading" || !hasJson || retryCountdown > 0}
             aria-label="Send"
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-[#C07040] text-white transition-colors hover:bg-[#D48050] disabled:opacity-40 focus-visible:outline-none"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-copper-accent text-white transition-colors hover:bg-copper-accent/90 disabled:opacity-40 focus-visible:outline-none"
           >
             <Send className="size-3.5" />
           </button>
         </div>
-        <p className="mt-2 text-[10px] leading-normal text-[#3A4060]">
+        <p className="mt-2 text-[10px] leading-normal text-text-secondary/75">
           Queries are processed by Gemini. Do not send passwords, private keys, or personal
           data.
         </p>
@@ -275,12 +275,12 @@ export function AiWorkspace({
 function EmptyNoJson() {
   return (
     <div className="flex flex-1 flex-col items-center justify-center gap-4 p-8 text-center">
-      <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#1A1D24]">
-        <Cpu className="size-6 text-[#5A6070]" />
+      <div className="flex h-14 w-14 items-center justify-center rounded-full bg-surface-elevated">
+        <Cpu className="size-6 text-text-secondary" />
       </div>
       <div>
-        <p className="text-[15px] font-medium text-[#5A6070]">No JSON loaded</p>
-        <p className="mt-1.5 text-[13px] leading-[1.6] text-[#3A4060]">
+        <p className="text-[15px] font-medium text-text-secondary">No JSON loaded</p>
+        <p className="mt-1.5 text-[13px] leading-[1.6] text-text-secondary/75">
           Paste or upload JSON in the Editor, then return here to analyze it.
         </p>
       </div>
@@ -303,10 +303,10 @@ function IdleState({
 
   return (
     <div className="flex flex-1 flex-col gap-5 p-4 sm:p-5">
-      <p className="text-[13px] leading-[1.6] text-[#5A6070]">{TAB_HINTS[activeTab]}</p>
+      <p className="text-[13px] leading-[1.6] text-text-secondary">{TAB_HINTS[activeTab]}</p>
 
       <div>
-        <p className="mb-2.5 text-[11px] font-medium uppercase tracking-[0.06em] text-[#3A4060]">
+        <p className="mb-2.5 text-[11px] font-medium uppercase tracking-[0.06em] text-text-secondary/85">
           Quick actions
         </p>
         <div className="grid gap-2 sm:grid-cols-2">
@@ -315,9 +315,9 @@ function IdleState({
               key={action.label}
               type="button"
               onClick={() => onQuickAction(action)}
-              className="flex items-center gap-2.5 rounded-xl border-[0.5px] border-ui-border bg-[#0F1117] px-3 py-2.5 text-left text-[12px] font-medium text-[#8B92A8] transition-colors hover:border-[#C07040]/40 hover:bg-[#1F140C] hover:text-[#E8EAF0]"
+              className="flex items-center gap-2.5 rounded-xl border-[0.5px] border-ui-border bg-surface-elevated px-3 py-2.5 text-left text-[12px] font-medium text-text-secondary transition-colors hover:border-copper-accent/40 hover:bg-copper-accent/10 dark:hover:bg-copper-accent/20 hover:text-text-primary"
             >
-              <span className="text-[#C07040]">*</span>
+              <span className="text-copper-accent">*</span>
               {action.label}
             </button>
           ))}
@@ -334,12 +334,12 @@ function LoadingState() {
         {[0, 1, 2].map((index) => (
           <span
             key={index}
-            className="h-1.5 w-1.5 rounded-full bg-[#C07040]"
+            className="h-1.5 w-1.5 rounded-full bg-copper-accent"
             style={{ animation: `ai-pulse 1.2s ease-in-out ${index * 0.2}s infinite` }}
           />
         ))}
       </div>
-      <p className="text-[13px] text-[#5A6070]">Thinking...</p>
+      <p className="text-[13px] text-text-secondary">Thinking...</p>
       <style>{`@keyframes ai-pulse{0%,80%,100%{opacity:.2;transform:scale(.8)}40%{opacity:1;transform:scale(1)}}`}</style>
     </div>
   );
@@ -366,19 +366,19 @@ function ErrorState({
 
   return (
     <div className="flex flex-1 flex-col items-center justify-center gap-4 p-8 text-center">
-      <div className="w-full max-w-sm rounded-xl border-[0.5px] border-[#FF5C6C]/40 bg-[#2A0D10] px-4 py-3">
-        <p className="text-[13px] font-medium text-[#FF5C6C]">Error</p>
-        <p className="mt-1 text-[12px] leading-[1.6] text-[#8B92A8]">{message}</p>
+      <div className="w-full max-w-sm rounded-xl border-[0.5px] border-red-500/20 dark:border-red-900/30 bg-red-500/5 dark:bg-red-950/20 px-4 py-3">
+        <p className="text-[13px] font-medium text-red-600 dark:text-red-400">Error</p>
+        <p className="mt-1 text-[12px] leading-[1.6] text-text-secondary">{message}</p>
         {isUpstreamRateLimit ? (
-          <div className="mt-3 rounded-lg border-[0.5px] border-[#2A2F42] bg-[#0F1117] px-3 py-2 text-left">
-            <p className="font-mono text-[11px] text-[#5A6070]">
-              Provider: <span className="text-[#E8EAF0]">{provider ?? "gemini"}</span>
+          <div className="mt-3 rounded-lg border-[0.5px] border-ui-border bg-surface-container px-3 py-2 text-left">
+            <p className="font-mono text-[11px] text-text-secondary">
+              Provider: <span className="text-text-primary">{provider ?? "gemini"}</span>
             </p>
-            <p className="mt-1 font-mono text-[11px] text-[#5A6070]">
-              Model: <span className="text-[#E8EAF0]">{model ?? "unknown"}</span>
+            <p className="mt-1 font-mono text-[11px] text-text-secondary">
+              Model: <span className="text-text-primary">{model ?? "unknown"}</span>
             </p>
             {upstreamMessage ? (
-              <p className="mt-1 break-words font-mono text-[11px] leading-[1.6] text-[#8B92A8]">
+              <p className="mt-1 break-words font-mono text-[11px] leading-[1.6] text-text-secondary">
                 Upstream: {upstreamMessage}
               </p>
             ) : null}
@@ -389,13 +389,13 @@ function ErrorState({
         <button
           type="button"
           onClick={onRetry}
-          className="flex items-center gap-1.5 text-[12px] font-medium text-[#C07040] hover:text-[#D48050]"
+          className="flex items-center gap-1.5 text-[12px] font-medium text-copper-accent hover:opacity-85"
         >
           <RotateCcw className="size-3" />
           Try again
         </button>
       ) : retryAfter && retryAfter > 0 ? (
-        <div className="flex items-center gap-1.5 text-[12px] font-medium text-[#5A6070]">
+        <div className="flex items-center gap-1.5 text-[12px] font-medium text-text-secondary">
           <RotateCcw className="size-3" />
           Retry available in {retryAfter}s
         </div>
@@ -424,7 +424,7 @@ function ResultState({
   return (
     <div className="flex flex-col gap-3 p-4 sm:p-5">
       <div className="flex items-center justify-between">
-        <p className="text-[11px] font-medium uppercase tracking-[0.06em] text-[#3A4060]">
+        <p className="text-[11px] font-medium uppercase tracking-[0.06em] text-text-secondary">
           Response
         </p>
         <div className="flex items-center gap-2">
@@ -432,7 +432,7 @@ function ResultState({
             <button
               type="button"
               onClick={onSendToEditor}
-              className="flex items-center gap-1.5 rounded-md border-[0.5px] border-[#3DD68C]/30 bg-[#0D2E23] px-2.5 py-1.5 text-[11px] font-medium text-[#3DD68C] transition-colors hover:opacity-80"
+              className="flex items-center gap-1.5 rounded-md border-[0.5px] border-emerald-500/20 dark:border-emerald-900/30 bg-emerald-500/5 dark:bg-emerald-950/20 px-2.5 py-1.5 text-[11px] font-medium text-emerald-600 dark:text-emerald-400 transition-colors hover:opacity-80"
             >
               <ArrowDownToLine className="size-3" />
               {sendButtonLabel}
@@ -442,7 +442,7 @@ function ResultState({
             <button
               type="button"
               onClick={onSendToEditor}
-              className="flex items-center gap-1.5 rounded-md border-[0.5px] border-[#3DD68C]/30 bg-[#0D2E23] px-2.5 py-1.5 text-[11px] font-medium text-[#3DD68C] transition-colors hover:opacity-80"
+              className="flex items-center gap-1.5 rounded-md border-[0.5px] border-emerald-500/20 dark:border-emerald-900/30 bg-emerald-500/5 dark:bg-emerald-950/20 px-2.5 py-1.5 text-[11px] font-medium text-emerald-600 dark:text-emerald-400 transition-colors hover:opacity-80"
             >
               <ArrowDownToLine className="size-3" />
               {sendButtonLabel}
@@ -452,7 +452,7 @@ function ResultState({
             <button
               type="button"
               onClick={onCopyJsonPath}
-              className="flex items-center gap-1.5 rounded-md border-[0.5px] border-[#C07040]/30 bg-[#1F140C] px-2.5 py-1.5 text-[11px] font-medium text-[#C07040] transition-colors hover:opacity-80"
+              className="flex items-center gap-1.5 rounded-md border-[0.5px] border-copper-accent/30 bg-copper-accent/10 dark:bg-copper-accent/20 px-2.5 py-1.5 text-[11px] font-medium text-copper-accent transition-colors hover:opacity-80"
             >
               <Copy className="size-3" />
               Copy JSONPath
@@ -461,7 +461,7 @@ function ResultState({
           <button
             type="button"
             onClick={onCopy}
-            className="flex items-center gap-1.5 rounded-md border-[0.5px] border-ui-border bg-[#1A1D24] px-2.5 py-1.5 text-[11px] font-medium text-[#8B92A8] transition-colors hover:text-[#E8EAF0]"
+            className="flex items-center gap-1.5 rounded-md border-[0.5px] border-ui-border bg-surface-elevated px-2.5 py-1.5 text-[11px] font-medium text-text-secondary transition-colors hover:text-text-primary"
           >
             <Copy className="size-3" />
             Copy
@@ -469,7 +469,7 @@ function ResultState({
           <button
             type="button"
             onClick={onReset}
-            className="flex items-center gap-1.5 rounded-md border-[0.5px] border-ui-border bg-[#1A1D24] px-2.5 py-1.5 text-[11px] font-medium text-[#8B92A8] transition-colors hover:text-[#E8EAF0]"
+            className="flex items-center gap-1.5 rounded-md border-[0.5px] border-ui-border bg-surface-elevated px-2.5 py-1.5 text-[11px] font-medium text-text-secondary transition-colors hover:text-text-primary"
           >
             <RotateCcw className="size-3" />
             New
@@ -477,7 +477,7 @@ function ResultState({
         </div>
       </div>
 
-      <div className="rounded-xl border-[0.5px] border-ui-border bg-[#0A0C0F] p-4">
+      <div className="rounded-xl border-[0.5px] border-ui-border bg-surface-container p-4">
         <RenderedResponse text={result} />
       </div>
     </div>
@@ -488,12 +488,12 @@ function RenderedResponse({ text }: { text: string }) {
   const parts = splitOnCodeBlocks(text);
 
   return (
-    <div className="space-y-3 text-[13px] leading-[1.7] text-[#8B92A8]">
+    <div className="space-y-3 text-[13px] leading-[1.7] text-text-secondary">
       {parts.map((part, index) =>
         part.type === "code" ? (
           <pre
             key={index}
-            className="overflow-x-auto rounded-md bg-[#0F1117] p-3 font-mono text-[12px] leading-6 text-[#3DD68C]"
+            className="overflow-x-auto rounded-md bg-obsidian-base border-[0.5px] border-ui-border p-3 font-mono text-[12px] leading-6 text-emerald-600 dark:text-emerald-400"
           >
             <code>{part.content}</code>
           </pre>
@@ -519,7 +519,7 @@ function InlineText({ text }: { text: string }) {
           return (
             <div
               key={index}
-              className="rounded-md border-[0.5px] border-[#2A2F42] bg-[#0F1117] px-3 py-2 font-mono text-[11px] text-[#C07040]"
+              className="rounded-md border-[0.5px] border-ui-border bg-surface-container px-3 py-2 font-mono text-[11px] text-copper-accent"
             >
               {renderInlineMarkup(trimmedLine)}
             </div>
@@ -534,10 +534,10 @@ function InlineText({ text }: { text: string }) {
               className={cn(
                 "pt-2 text-[12px] font-semibold",
                 tone === "alert"
-                  ? "text-[#F5A623]"
+                  ? "text-copper-accent"
                   : tone === "success"
-                    ? "text-[#3DD68C]"
-                    : "text-[#E8EAF0]",
+                    ? "text-emerald-600 dark:text-emerald-400"
+                    : "text-text-primary",
               )}
             >
               {renderInlineMarkup(trimmedLine)}
@@ -548,7 +548,7 @@ function InlineText({ text }: { text: string }) {
         if (/^[-*]\s/.test(trimmedLine)) {
           return (
             <div key={index} className="flex gap-2">
-              <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#C07040]" />
+              <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-copper-accent" />
               <span>{renderInlineMarkup(trimmedLine.replace(/^[-*]\s/, ""))}</span>
             </div>
           );
@@ -557,7 +557,7 @@ function InlineText({ text }: { text: string }) {
         if (/^\d+\.\s/.test(trimmedLine)) {
           return (
             <div key={index} className="flex gap-2">
-              <span className="min-w-5 font-mono text-[11px] text-[#5A6070]">
+              <span className="min-w-5 font-mono text-[11px] text-text-secondary">
                 {trimmedLine.match(/^\d+\./)?.[0]}
               </span>
               <span>{renderInlineMarkup(trimmedLine.replace(/^\d+\.\s/, ""))}</span>
@@ -575,7 +575,7 @@ function renderInlineMarkup(text: string): React.ReactNode {
   return text.split(/(\*\*[^*]+\*\*|`[^`]+`)/g).map((part, index) => {
     if (/^\*\*[^*]+\*\*$/.test(part)) {
       return (
-        <strong key={index} className="font-semibold text-[#E8EAF0]">
+        <strong key={index} className="font-semibold text-text-primary">
           {part.slice(2, -2)}
         </strong>
       );
@@ -583,7 +583,7 @@ function renderInlineMarkup(text: string): React.ReactNode {
 
     if (/^`[^`]+`$/.test(part)) {
       return (
-        <code key={index} className="rounded bg-[#1A1D24] px-1 font-mono text-[11px] text-[#C07040]">
+        <code key={index} className="rounded bg-surface-elevated border-[0.5px] border-ui-border px-1 font-mono text-[11px] text-copper-accent">
           {part.slice(1, -1)}
         </code>
       );

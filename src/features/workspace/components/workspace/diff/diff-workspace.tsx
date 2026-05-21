@@ -35,7 +35,7 @@ export function DiffWorkspace({
   onCopy: (value: string, message?: string) => Promise<void>;
   onDownload: (content: string, filename: string) => void;
 }) {
-  const { monacoTheme } = useTheme();
+  const { monacoTheme, isDark } = useTheme();
   const isDesktopDiff = useMediaQuery("(min-width: 1024px)");
   const isWideSidebar = useMediaQuery("(min-width: 1536px)");
   const [syncScrolling, setSyncScrolling] = useState(true);
@@ -138,30 +138,30 @@ export function DiffWorkspace({
         {
           label: "Added fields",
           value: String(summary.added.length),
-          background: "#0D2E23",
-          border: "#1D4D35",
-          text: "#3DD68C",
+          background: isDark ? "#0D2E23" : "#ECFDF5",
+          border: isDark ? "#1D4D35" : "#A7F3D0",
+          text: isDark ? "#3DD68C" : "#047857",
         },
         {
           label: "Removed fields",
           value: String(summary.removed.length),
-          background: "#2A0D10",
-          border: "#4A1520",
-          text: "#FF5C6C",
+          background: isDark ? "#2A0D10" : "#FFF1F2",
+          border: isDark ? "#4A1520" : "#FECDD3",
+          text: isDark ? "#FF5C6C" : "#BE123C",
         },
         {
           label: "Changed values",
           value: String(summary.changed.length),
-          background: "#2A1A00",
-          border: "#4A3000",
-          text: "#F5A623",
+          background: isDark ? "#2A1A00" : "#FFFBEB",
+          border: isDark ? "#4A3000" : "#FDE68A",
+          text: isDark ? "#F5A623" : "#B45309",
         },
         {
           label: "Type changes",
           value: String(summary.typeChanges.length),
-          background: "#0D1F2E",
-          border: "#1A3A50",
-          text: "#79C0FF",
+          background: isDark ? "#0D1F2E" : "#F0F9FF",
+          border: isDark ? "#1A3A50" : "#BAE6FD",
+          text: isDark ? "#79C0FF" : "#0369A1",
         },
       ]
     : [];
@@ -178,8 +178,8 @@ export function DiffWorkspace({
     <div className="flex h-full min-h-0 flex-col bg-obsidian-base">
       <div className="flex flex-col gap-4 border-b-[0.5px] border-ui-border bg-surface-elevated px-4 py-3 sm:px-5 lg:flex-row lg:items-center lg:justify-between">
         <div className="flex flex-wrap items-center gap-3">
-          <div className="flex items-center gap-2 text-[14px] font-medium text-[#E8EAF0]">
-            <FileDiff className="size-4 text-[#c07040]" />
+          <div className="flex items-center gap-2 text-[14px] font-medium text-text-primary">
+            <FileDiff className="size-4 text-copper-accent" />
             JSON diff
           </div>
           <div className="hidden h-5 w-px bg-ui-border lg:block" />
@@ -188,10 +188,10 @@ export function DiffWorkspace({
               type="button"
               onClick={() => setSyncScrolling((current) => !current)}
               className={cn(
-                "h-9 rounded-sm border-[0.5px] px-3 text-xs font-semibold transition-colors",
+                "h-9 rounded-sm border-[0.5px] px-3 text-xs font-semibold transition-colors focus-visible:outline-none",
                 syncScrolling
-                  ? "border-[#2A2F42] bg-[#2a1c13] text-[#d69463]"
-                  : "border-ui-border bg-[#0a0a0a] text-[#d6c3b5]",
+                  ? "border-copper-accent bg-copper-accent/10 text-copper-accent"
+                  : "border-ui-border bg-surface-elevated text-text-secondary hover:border-ui-border-hover hover:text-text-primary",
               )}
             >
               Sync Scrolling
@@ -200,10 +200,10 @@ export function DiffWorkspace({
               type="button"
               onClick={() => setIgnoreWhitespace((current) => !current)}
               className={cn(
-                "h-9 rounded-sm border-[0.5px] px-3 text-xs font-semibold transition-colors",
+                "h-9 rounded-sm border-[0.5px] px-3 text-xs font-semibold transition-colors focus-visible:outline-none",
                 ignoreWhitespace
-                  ? "border-[#2A2F42] bg-[#2a1c13] text-[#d69463]"
-                  : "border-ui-border bg-[#0a0a0a] text-[#d6c3b5]",
+                  ? "border-copper-accent bg-copper-accent/10 text-copper-accent"
+                  : "border-ui-border bg-surface-elevated text-text-secondary hover:border-ui-border-hover hover:text-text-primary",
               )}
             >
               Ignore Whitespace
@@ -214,7 +214,7 @@ export function DiffWorkspace({
                 setDiffOld(diffNew);
                 setDiffNew(diffOld);
               }}
-              className="h-9 rounded-sm border-[0.5px] border-ui-border bg-[#0a0a0a] px-3 text-xs font-semibold text-[#d6c3b5] transition-colors hover:border-[#2A2F42] focus-visible:border-[#C07040] focus-visible:outline-none"
+              className="h-9 rounded-sm border-[0.5px] border-ui-border bg-surface-elevated px-3 text-xs font-semibold text-text-secondary transition-colors hover:border-ui-border-hover hover:text-text-primary focus-visible:border-copper-accent focus-visible:outline-none"
             >
               Swap Sides
             </button>
@@ -234,19 +234,19 @@ export function DiffWorkspace({
             <button
               type="button"
               onClick={() => void onCopy(diffReport, "Copied shareable diff report")}
-              className="h-9 rounded-sm border-[0.5px] border-[#C07040] bg-transparent px-3 text-xs font-semibold text-[#d6c3b5] transition-colors hover:border-[#D48050] focus-visible:border-[#C07040] focus-visible:outline-none"
+              className="h-9 rounded-sm border-[0.5px] border-copper-accent bg-transparent px-3 text-xs font-semibold text-text-secondary transition-colors hover:border-copper-accent hover:text-text-primary focus-visible:border-copper-accent focus-visible:outline-none"
             >
               Share diff
             </button>
           </div>
 
           <div className="flex items-center gap-4">
-            <span className="font-mono text-[13px] font-normal text-[#d6c3b5]">
+            <span className="font-mono text-[13px] font-normal text-text-secondary">
               {totalDifferences} differences found
             </span>
             <div className="flex items-center gap-3 font-mono text-[13px] font-normal">
-              <span className="text-[#FF5C6C]">-{summary?.removed.length ?? 0}</span>
-              <span className="text-[#3DD68C]">+{summary?.added.length ?? 0}</span>
+              <span className="text-red-600 dark:text-red-400">-{summary?.removed.length ?? 0}</span>
+              <span className="text-emerald-600 dark:text-emerald-400">+{summary?.added.length ?? 0}</span>
             </div>
           </div>
         </div>
@@ -269,7 +269,7 @@ export function DiffWorkspace({
               </div>
 
               <div className="flex h-[420px] flex-row md:h-[520px] xl:h-[620px] 2xl:h-[calc(100vh-240px)]">
-                <div className="flex min-h-0 w-1/2 flex-col overflow-hidden border-r-[0.5px] border-[#1E2433] bg-[#050505]">
+                <div className="flex min-h-0 w-1/2 flex-col overflow-hidden border-r-[0.5px] border-ui-border bg-obsidian-base">
                   <div className="flex-1 overflow-hidden">
                     <MonacoEditor
                       height="100%"
@@ -300,7 +300,7 @@ export function DiffWorkspace({
                   </div>
                 </div>
 
-                <div className="flex min-h-0 w-1/2 flex-col overflow-hidden bg-[#050505]">
+                <div className="flex min-h-0 w-1/2 flex-col overflow-hidden bg-obsidian-base">
                   <div className="flex-1 overflow-hidden">
                     <MonacoEditor
                       height="100%"
@@ -333,7 +333,7 @@ export function DiffWorkspace({
               </div>
             </div>
           ) : (
-            <div className="space-y-4 bg-[#050505] px-3 py-4 sm:px-4">
+            <div className="space-y-4 bg-obsidian-base px-3 py-4 sm:px-4">
               {summary ? (
                 <div className="grid grid-cols-2 gap-3">
                   {statCards.map((card) => (
@@ -496,12 +496,12 @@ function DiffStatCard({
 function DiffDetailItem({ item }: { item: { kind: "changed" | "type" | "removed"; raw: string } }) {
   if (item.kind === "removed") {
     return (
-      <div className="rounded-[8px] border-[0.5px] border-[#4A1520] bg-[#2A0D10] px-4 py-3">
+      <div className="rounded-[8px] border-[0.5px] border-red-500/20 dark:border-red-900/30 bg-red-50 dark:bg-red-950/20 px-4 py-3">
         <div className="flex items-start gap-3">
-          <span className="text-[12px] leading-none text-[#FF5C6C]">✕</span>
+          <span className="text-[12px] leading-none text-red-600 dark:text-[#FF5C6C]">✕</span>
           <div className="min-w-0">
-            <p className="text-[12px] font-medium text-[#FF5C6C]">Removed</p>
-            <p className="mt-1 font-mono text-[11px] text-[#8B92A8]">{item.raw}</p>
+            <p className="text-[12px] font-medium text-red-600 dark:text-[#FF5C6C]">Removed</p>
+            <p className="mt-1 font-mono text-[11px] text-text-secondary">{item.raw}</p>
           </div>
         </div>
       </div>
@@ -513,16 +513,16 @@ function DiffDetailItem({ item }: { item: { kind: "changed" | "type" | "removed"
 
   if (item.kind === "type") {
     return (
-      <div className="rounded-[8px] border-[0.5px] border-[#1A3A50] bg-[#0D1F2E] px-4 py-3">
+      <div className="rounded-[8px] border-[0.5px] border-blue-500/20 dark:border-blue-900/30 bg-blue-50 dark:bg-blue-950/20 px-4 py-3">
         <div className="flex items-start gap-3">
-          <span className="text-[12px] leading-none text-[#79C0FF]">ⓘ</span>
+          <span className="text-[12px] leading-none text-blue-600 dark:text-[#79C0FF]">ⓘ</span>
           <div className="min-w-0">
-            <p className="text-[12px] font-medium text-[#79C0FF]">Type changed</p>
-            <p className="mt-1 font-mono text-[11px] text-[#8B92A8]">{path}</p>
-            <p className="mt-1 font-mono text-[11px] text-[#E8EAF0]">
-              <span className="text-[#FF5C6C]">{oldValue}</span>
-              <span className="px-1 text-[#8B92A8]">→</span>
-              <span className="text-[#3DD68C]">{newValue}</span>
+            <p className="text-[12px] font-medium text-blue-600 dark:text-[#79C0FF]">Type changed</p>
+            <p className="mt-1 font-mono text-[11px] text-text-secondary">{path}</p>
+            <p className="mt-1 font-mono text-[11px] text-text-primary">
+              <span className="text-red-600 dark:text-[#FF5C6C]">{oldValue}</span>
+              <span className="px-1 text-text-secondary">→</span>
+              <span className="text-emerald-600 dark:text-[#3DD68C]">{newValue}</span>
             </p>
           </div>
         </div>
@@ -531,16 +531,16 @@ function DiffDetailItem({ item }: { item: { kind: "changed" | "type" | "removed"
   }
 
   return (
-    <div className="rounded-[8px] border-[0.5px] border-[#4A3000] bg-[#2A1A00] px-4 py-3">
+    <div className="rounded-[8px] border-[0.5px] border-amber-500/20 dark:border-amber-900/30 bg-amber-50 dark:bg-amber-950/20 px-4 py-3">
       <div className="flex items-start gap-3">
-        <span className="text-[12px] leading-none text-[#F5A623]">⟳</span>
+        <span className="text-[12px] leading-none text-amber-600 dark:text-[#F5A623]">⟳</span>
         <div className="min-w-0">
-          <p className="text-[12px] font-medium text-[#F5A623]">Changed</p>
-          <p className="mt-1 font-mono text-[11px] text-[#8B92A8]">{path}</p>
-          <p className="mt-1 font-mono text-[11px] text-[#E8EAF0]">
-            <span className="text-[#FF5C6C]">{oldValue}</span>
-            <span className="px-1 text-[#8B92A8]">→</span>
-            <span className="text-[#3DD68C]">{newValue}</span>
+          <p className="text-[12px] font-medium text-amber-600 dark:text-[#F5A623]">Changed</p>
+          <p className="mt-1 font-mono text-[11px] text-text-secondary">{path}</p>
+          <p className="mt-1 font-mono text-[11px] text-text-primary">
+            <span className="text-red-600 dark:text-[#FF5C6C]">{oldValue}</span>
+            <span className="px-1 text-text-secondary">→</span>
+            <span className="text-emerald-600 dark:text-[#3DD68C]">{newValue}</span>
           </p>
         </div>
       </div>

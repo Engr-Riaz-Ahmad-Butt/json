@@ -179,23 +179,23 @@ export function MockWorkspace({
   return (
     <div className="grid h-full min-h-0 xl:grid-cols-[minmax(0,1fr)_minmax(380px,0.95fr)]">
       {/* Left Settings Panel */}
-      <div className="flex min-h-0 flex-col border-b-[0.5px] border-ui-border bg-[#101010] p-4 sm:p-5 xl:border-b-0 xl:border-r-[0.5px] overflow-y-auto">
+      <div className="flex min-h-0 flex-col border-b-[0.5px] border-ui-border bg-background p-4 sm:p-5 xl:border-b-0 xl:border-r-[0.5px] overflow-y-auto">
         <div className="mb-5">
-          <h2 className="text-[16px] font-semibold text-[#d6c3b5]">Mock Data Generator</h2>
-          <p className="mt-1 text-[13px] text-[#8B92A8] leading-[1.6]">
+          <h2 className="text-[16px] font-semibold text-text-primary">Mock Data Generator</h2>
+          <p className="mt-1 text-[13px] text-text-secondary leading-[1.6]">
             Configure custom field schemas or pick a preset template to generate highly realistic JSON arrays.
           </p>
         </div>
 
         {/* Preset Selector */}
         <div className="mb-6">
-          <p className="mb-2 text-[11px] font-medium tracking-[0.05em] text-[#5A6070] uppercase">Preset Templates</p>
+          <p className="mb-2 text-[11px] font-medium tracking-[0.05em] text-text-secondary uppercase">Preset Templates</p>
           <div className="flex flex-wrap gap-2">
             {Object.entries(PRESET_TEMPLATES).map(([key, template]) => (
               <button
                 key={key}
                 onClick={() => loadPreset(key)}
-                className="h-8 rounded-[6px] border-[0.5px] border-[#2A2F42] bg-[#1A1D24] px-3.5 text-[12px] font-medium text-[#8B92A8] transition-colors hover:border-[#C07040] hover:text-[#E8EAF0]"
+                className="h-8 rounded-[6px] border-[0.5px] border-ui-border bg-surface-elevated px-3.5 text-[12px] font-medium text-text-secondary transition-colors hover:border-copper-accent hover:text-text-primary"
               >
                 {template.label}
               </button>
@@ -204,15 +204,15 @@ export function MockWorkspace({
         </div>
 
         {/* Count configuration */}
-        <div className="mb-6 flex items-center justify-between rounded-[8px] border-[0.5px] border-ui-border bg-[#0a0a0a] px-4 py-3">
+        <div className="mb-6 flex items-center justify-between rounded-[8px] border-[0.5px] border-ui-border bg-surface-container px-4 py-3">
           <div>
-            <p className="text-[13px] font-medium text-[#E8EAF0]">Records count</p>
-            <p className="text-[11px] text-[#5A6070]">How many rows of JSON objects to generate</p>
+            <p className="text-[13px] font-medium text-text-primary">Records count</p>
+            <p className="text-[11px] text-text-secondary">How many rows of JSON objects to generate</p>
           </div>
           <select
             value={count}
             onChange={(e) => setCount(Number(e.target.value))}
-            className="h-9 rounded-[6px] border-[0.5px] border-ui-border bg-[#161616] px-3 text-[13px] font-semibold text-[#C07040] outline-none focus-visible:border-[#C07040]"
+            className="h-9 rounded-[6px] border-[0.5px] border-ui-border bg-obsidian-base px-3 text-[13px] font-semibold text-copper-accent outline-none focus-visible:border-copper-accent"
           >
             <option value={1}>1 Record</option>
             <option value={5}>5 Records</option>
@@ -226,10 +226,10 @@ export function MockWorkspace({
         {/* Fields Schema Editor */}
         <div className="flex-1 min-h-0">
           <div className="mb-3 flex items-center justify-between">
-            <p className="text-[11px] font-medium tracking-[0.05em] text-[#5A6070] uppercase">Schema Fields</p>
+            <p className="text-[11px] font-medium tracking-[0.05em] text-text-secondary uppercase">Schema Fields</p>
             <button
               onClick={addField}
-              className="flex h-7 items-center gap-1.5 rounded-[6px] border-[0.5px] border-[#C07040]/30 bg-[#1F140C] px-2.5 text-[12px] font-semibold text-[#C07040] transition-colors hover:bg-[#2A1D13]"
+              className="flex h-7 items-center gap-1.5 rounded-[6px] border-[0.5px] border-copper-accent/30 bg-copper-accent/10 px-2.5 text-[12px] font-semibold text-copper-accent transition-colors hover:bg-copper-accent/20"
             >
               <Plus className="size-3.5" /> Add Field
             </button>
@@ -239,20 +239,20 @@ export function MockWorkspace({
             {fields.map((field, index) => (
               <div
                 key={index}
-                className="flex items-center gap-2 rounded-[8px] border-[0.5px] border-ui-border bg-[#090909] p-2"
+                className="flex items-center gap-2 rounded-[8px] border-[0.5px] border-ui-border bg-surface-elevated p-2"
               >
                 <input
                   type="text"
                   value={field.key}
                   onChange={(e) => updateFieldKey(index, e.target.value)}
                   placeholder="field_name"
-                  className="h-9 flex-1 min-w-0 rounded-[6px] border-[0.5px] border-ui-border bg-[#161616] px-3 font-mono text-[12px] text-[#E8EAF0] outline-none focus-visible:border-[#C07040]"
+                  className="h-9 flex-1 min-w-0 rounded-[6px] border-[0.5px] border-ui-border bg-obsidian-base px-3 font-mono text-[12px] text-text-primary outline-none focus-visible:border-copper-accent"
                 />
 
                 <select
                   value={field.type}
                   onChange={(e) => updateFieldType(index, e.target.value as FieldType)}
-                  className="h-9 w-[110px] sm:w-[130px] rounded-[6px] border-[0.5px] border-ui-border bg-[#161616] px-2 text-[12px] font-medium text-[#8B92A8] outline-none focus-visible:border-[#C07040]"
+                  className="h-9 w-[110px] sm:w-[130px] rounded-[6px] border-[0.5px] border-ui-border bg-obsidian-base px-2 text-[12px] font-medium text-text-secondary outline-none focus-visible:border-copper-accent"
                 >
                   <option value="uuid">UUID v4</option>
                   <option value="name">Full Name</option>
@@ -267,7 +267,7 @@ export function MockWorkspace({
 
                 <button
                   onClick={() => removeField(index)}
-                  className="flex h-9 w-9 items-center justify-center rounded-[6px] border-[0.5px] border-ui-border bg-[#141414] text-[#5A6070] transition-colors hover:border-[#FF5C6C]/40 hover:text-[#FF5C6C]"
+                  className="flex h-9 w-9 items-center justify-center rounded-[6px] border-[0.5px] border-ui-border bg-obsidian-base text-text-secondary transition-colors hover:border-red-500/40 hover:text-red-500 dark:hover:text-red-400"
                   title="Remove Field"
                 >
                   <Trash2 className="size-4" />
@@ -277,10 +277,10 @@ export function MockWorkspace({
 
             {fields.length === 0 && (
               <div className="flex h-32 flex-col items-center justify-center rounded-[8px] border-[0.5px] border-dashed border-ui-border text-center">
-                <p className="text-[13px] text-[#5A6070]">No fields in schema.</p>
+                <p className="text-[13px] text-text-secondary">No fields in schema.</p>
                 <button
                   onClick={addField}
-                  className="mt-2 text-[12px] font-semibold text-[#C07040] hover:underline"
+                  className="mt-2 text-[12px] font-semibold text-copper-accent hover:underline"
                 >
                   Create one now
                 </button>
@@ -291,16 +291,16 @@ export function MockWorkspace({
       </div>
 
       {/* Right Output Preview */}
-      <aside className="flex min-h-0 flex-col bg-[#121212]">
+      <aside className="flex min-h-0 flex-col bg-surface-container">
         <div className="flex flex-wrap items-center justify-between border-b-[0.5px] border-ui-border px-4 py-3 sm:px-5">
           <div>
-            <p className="text-sm font-semibold text-[#d6c3b5]">Preview Output</p>
-            <p className="text-[11px] text-[#8B92A8]">Generated Array of Objects</p>
+            <p className="text-sm font-semibold text-text-primary">Preview Output</p>
+            <p className="text-[11px] text-text-secondary">Generated Array of Objects</p>
           </div>
           <div className="flex items-center gap-2">
             <button
               onClick={handleGenerate}
-              className="flex h-8 w-8 items-center justify-center rounded-[6px] border-[0.5px] border-ui-border bg-[#161616] text-[#8B92A8] transition-colors hover:border-[#C07040] hover:text-[#C07040]"
+              className="flex h-8 w-8 items-center justify-center rounded-[6px] border-[0.5px] border-ui-border bg-surface-elevated text-text-secondary transition-colors hover:border-copper-accent hover:text-copper-accent"
               title="Regenerate"
             >
               <RefreshCw className="size-4" />
@@ -308,7 +308,7 @@ export function MockWorkspace({
           </div>
         </div>
 
-        <div className="min-h-[300px] flex-1 bg-[#050505] relative">
+        <div className="min-h-[300px] flex-1 bg-obsidian-base relative">
           <MonacoEditor
             height="100%"
             language="json"
@@ -329,23 +329,23 @@ export function MockWorkspace({
         </div>
 
         {/* Footer Actions */}
-        <div className="grid grid-cols-3 gap-2 border-t-[0.5px] border-ui-border p-4 bg-[#101010]">
+        <div className="grid grid-cols-3 gap-2 border-t-[0.5px] border-ui-border p-4 bg-surface-container">
           <button
             onClick={triggerCopy}
-            className="flex h-10 items-center justify-center gap-2 rounded-[8px] border-[0.5px] border-ui-border bg-[#161616] text-[13px] font-semibold text-[#E8EAF0] transition-colors hover:border-[#2A2F42]"
+            className="flex h-10 items-center justify-center gap-2 rounded-[8px] border-[0.5px] border-ui-border bg-surface-elevated text-[13px] font-semibold text-text-primary transition-colors hover:border-ui-border-hover"
           >
             {copied ? <Check className="size-4 text-[#3DD68C]" /> : <Copy className="size-4" />}
             {copied ? "Copied" : "Copy"}
           </button>
           <button
             onClick={handleDownload}
-            className="flex h-10 items-center justify-center gap-2 rounded-[8px] border-[0.5px] border-ui-border bg-[#161616] text-[13px] font-semibold text-[#E8EAF0] transition-colors hover:border-[#2A2F42]"
+            className="flex h-10 items-center justify-center gap-2 rounded-[8px] border-[0.5px] border-ui-border bg-surface-elevated text-[13px] font-semibold text-text-primary transition-colors hover:border-ui-border-hover"
           >
             <Download className="size-4" /> Download
           </button>
           <button
             onClick={handleSendToMainEditor}
-            className="flex h-10 items-center justify-center gap-2 rounded-[8px] bg-[#C07040] text-[13px] font-semibold text-white transition-colors hover:bg-[#D48050]"
+            className="flex h-10 items-center justify-center gap-2 rounded-[8px] bg-copper-accent text-[13px] font-semibold text-white transition-colors hover:bg-copper-accent/90"
           >
             <Send className="size-4" /> Load Editor
           </button>

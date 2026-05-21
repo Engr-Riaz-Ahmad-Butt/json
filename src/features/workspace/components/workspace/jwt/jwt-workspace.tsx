@@ -71,90 +71,74 @@ export function JwtWorkspace({
   const bannerConfig =
     signatureState === "verified"
       ? {
-          background: "#0D2E23",
-          border: "#3DD68C",
-          text: "#3DD68C",
+          className: "border-emerald-500/20 dark:border-emerald-900/30 bg-emerald-500/5 dark:bg-emerald-950/20 text-emerald-600 dark:text-emerald-400 font-semibold",
           icon: <CheckCircle2 className="size-4" />,
           label: "Signature verified — token is authentic",
-          weight: 500,
         }
       : signatureState === "invalid"
       ? {
-          background: "#2A0D10",
-          border: "#FF5C6C",
-          text: "#FF5C6C",
+          className: "border-red-500/20 dark:border-red-900/30 bg-red-500/5 dark:bg-red-950/20 text-red-600 dark:text-red-400 font-semibold",
           icon: <AlertTriangle className="size-4" />,
           label: "Signature invalid — do not trust this token",
-          weight: 500,
         }
       : {
-          background: "#1A1D24",
-          border: "#2A2F42",
-          text: "#5A6070",
+          className: "border-ui-border bg-surface-container text-text-secondary font-medium",
           icon: <Unlock className="size-4" />,
           label: "Signature not verified — enter secret below to verify",
-          weight: 400,
         };
 
   return (
     <div className="grid h-full min-h-0 gap-[0.5px] bg-ui-border xl:grid-cols-2">
-      <section className="flex min-h-0 flex-col bg-[#080808]">
-        <div className="flex items-center justify-between border-b-[0.5px] border-ui-border bg-[#171717]/60 px-4 py-4 sm:px-5">
-          <h2 className="flex items-center gap-2 text-[14px] font-medium text-[#E8EAF0]">
+      <section className="flex min-h-0 flex-col bg-obsidian-base">
+        <div className="flex items-center justify-between border-b-[0.5px] border-ui-border bg-surface/60 px-4 py-4 sm:px-5">
+          <h2 className="flex items-center gap-2 text-[14px] font-semibold text-text-primary">
             <LockKeyhole className="size-4 text-[#c07040]" />
             Encoded Token
           </h2>
           <button
             type="button"
             onClick={() => setJwtInput("")}
-            className="text-[11px] font-medium tracking-[0.5px] text-[#5A6070] transition-colors hover:text-[#f5f1ea]"
+            className="text-[11px] font-medium tracking-[0.5px] text-text-secondary transition-colors hover:text-text-primary"
           >
             Clear
           </button>
         </div>
 
-        <div className="space-y-2 bg-[#080808] p-4 sm:p-5">
+        <div className="space-y-2 bg-obsidian-base p-4 sm:p-5">
           <textarea
             value={jwtInput}
             onChange={(event) => setJwtInput(event.target.value)}
             spellCheck={false}
             placeholder={`eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.\neyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6Impzb25MaW5lcyBEZW1vIiwiaWF0IjoxNTE2MjM5MDIyfQ.\nSflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c`}
-            className="max-h-[100px] min-h-[100px] w-full resize-none overflow-y-auto rounded-[8px] border-[0.5px] border-ui-border bg-[#0A0A0A] px-3 py-3 font-mono text-[13px] font-normal leading-6 text-[#f5f1ea] outline-none placeholder:text-[#5b5450]"
+            className="max-h-[100px] min-h-[100px] w-full resize-none overflow-y-auto rounded-[8px] border-[0.5px] border-ui-border bg-surface px-3 py-3 font-mono text-[13px] font-normal leading-6 text-text-primary outline-none placeholder:text-text-secondary/50 focus-visible:border-copper-accent"
           />
 
           <div className="space-y-1">
             {[
               {
                 label: "Header",
-                background: "#1A2040",
-                text: "#79C0FF",
+                className: "bg-blue-500/5 dark:bg-blue-950/20 text-blue-600 dark:text-blue-400 border-blue-500/10 dark:border-blue-900/30",
                 value: tokenParts[0],
               },
               {
                 label: "Payload",
-                background: "#1F140C",
-                text: "#C07040",
+                className: "bg-[#C07040]/5 dark:bg-[#C07040]/20 text-[#C07040] dark:text-[#ffb68e] border-[#C07040]/10 dark:border-[#C07040]/30",
                 value: tokenParts[1],
               },
               {
                 label: "Signature",
-                background: "#1A2A1A",
-                text: "#3DD68C",
+                className: "bg-emerald-500/5 dark:bg-emerald-950/20 text-emerald-600 dark:text-emerald-400 border-emerald-500/10 dark:border-emerald-900/30",
                 value: tokenParts[2],
               },
             ].map((part) => (
               <div
                 key={part.label}
-                className="flex h-11 items-center justify-between rounded-[6px] border-[0.5px] border-ui-border px-3"
-                style={{ backgroundColor: part.background }}
+                className={cn("flex h-11 items-center justify-between rounded-[6px] border-[0.5px] px-3", part.className)}
               >
-                <span className="text-[12px] font-medium" style={{ color: part.text }}>
+                <span className="text-[12px] font-semibold">
                   {part.label}
                 </span>
-                <span
-                  className="max-w-[60%] truncate font-mono text-[12px]"
-                  style={{ color: part.text }}
-                >
+                <span className="max-w-[60%] truncate font-mono text-[12px]">
                   {truncateTokenPart(part.value)}
                 </span>
               </div>
@@ -162,9 +146,9 @@ export function JwtWorkspace({
           </div>
         </div>
 
-        <div className="border-t-[0.5px] border-ui-border bg-[#121212] p-4 sm:p-6">
+        <div className="border-t-[0.5px] border-ui-border bg-surface-elevated p-4 sm:p-6">
           <div className="mb-4 flex items-center justify-between">
-            <h3 className="text-[14px] font-medium text-[#E8EAF0]">Verify signature</h3>
+            <h3 className="text-[14px] font-semibold text-text-primary">Verify signature</h3>
             <button
               type="button"
               role="switch"
@@ -172,12 +156,12 @@ export function JwtWorkspace({
               onClick={() => setVerifyEnabled((current) => !current)}
               className={cn(
                 "relative h-5 w-9 rounded-full transition-colors",
-                verifyEnabled ? "bg-[#c77742]" : "bg-[#353534]",
+                verifyEnabled ? "bg-copper-accent" : "bg-surface-container border border-ui-border",
               )}
             >
               <span
                 className={cn(
-                  "absolute top-[2px] h-4 w-4 rounded-full bg-[#f5f1ea] transition-transform",
+                  "absolute top-[2px] h-4 w-4 rounded-full bg-white dark:bg-[#f5f1ea] transition-transform",
                   verifyEnabled ? "left-[18px]" : "left-[2px]",
                 )}
               />
@@ -186,32 +170,32 @@ export function JwtWorkspace({
 
           <div className="space-y-4">
             <div className="grid gap-4 md:grid-cols-[100px_minmax(0,1fr)] md:items-center">
-              <label className="text-[13px] font-normal leading-[1.6] text-[#8B92A8]">
+              <label className="text-[13px] font-medium leading-[1.6] text-text-secondary">
                 Algorithm
               </label>
               <div className="relative">
                 <select
                   value={jwtAlgorithm}
                   onChange={(event) => setJwtAlgorithm(event.target.value)}
-                  className="h-11 w-full appearance-none rounded-sm border-[0.5px] border-ui-border bg-[#080808] px-3 font-mono text-[13px] font-normal text-[#f5f1ea] outline-none focus-visible:border-[#C07040]"
+                  className="h-11 w-full appearance-none rounded-sm border-[0.5px] border-ui-border bg-obsidian-base px-3 font-mono text-[13px] font-normal text-text-primary outline-none focus-visible:border-copper-accent"
                 >
                   <option>HS256</option>
                   <option>RS256</option>
                   <option>ES256</option>
                 </select>
-                <ChevronDown className="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-[#a89589]" />
+                <ChevronDown className="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-text-secondary" />
               </div>
             </div>
 
             <div className="grid gap-4 md:grid-cols-[100px_minmax(0,1fr)] md:items-start">
-              <label className="pt-2 text-[13px] font-normal leading-[1.6] text-[#8B92A8]">
+              <label className="pt-2 text-[13px] font-medium leading-[1.6] text-text-secondary">
                 Secret
               </label>
               <div className="space-y-2">
                 <textarea
                   value={jwtSecret}
                   onChange={(event) => setJwtSecret(event.target.value)}
-                  className="h-24 w-full resize-none rounded-sm border-[0.5px] border-ui-border bg-[#080808] px-3 py-2 font-mono text-[13px] font-normal text-[#f5f1ea] outline-none focus-visible:border-[#C07040]"
+                  className="h-24 w-full resize-none rounded-sm border-[0.5px] border-ui-border bg-obsidian-base px-3 py-2 font-mono text-[13px] font-normal text-text-primary outline-none focus-visible:border-copper-accent"
                   placeholder="your-256-bit-secret"
                 />
                 <div className="flex justify-end">
@@ -226,9 +210,9 @@ export function JwtWorkspace({
         </div>
       </section>
 
-      <section className="flex min-h-0 flex-col overflow-y-auto bg-[#080808]">
-        <div className="sticky top-0 z-10 border-b-[0.5px] border-ui-border bg-[#171717]/60 px-4 py-4 sm:px-5">
-          <h2 className="flex items-center gap-2 text-[14px] font-medium text-[#E8EAF0]">
+      <section className="flex min-h-0 flex-col overflow-y-auto bg-obsidian-base">
+        <div className="sticky top-0 z-10 border-b-[0.5px] border-ui-border bg-surface/60 px-4 py-4 sm:px-5">
+          <h2 className="flex items-center gap-2 text-[14px] font-semibold text-text-primary">
             <Eye className="size-4 text-[#ffb68e]" />
             Decoded Payload
           </h2>
@@ -238,32 +222,24 @@ export function JwtWorkspace({
           {decodedJwt ? (
             <>
               <div
-                className="flex w-full items-center gap-3 rounded-[8px] border-[0.5px] px-4 py-3"
-                style={{
-                  backgroundColor: bannerConfig.background,
-                  borderColor: bannerConfig.border,
-                  color: bannerConfig.text,
-                }}
+                className={cn(
+                  "flex w-full items-center gap-3 rounded-[8px] border-[0.5px] px-4 py-3",
+                  bannerConfig.className
+                )}
               >
                 {bannerConfig.icon}
-                <span
-                  style={{
-                    fontSize: "13px",
-                    fontWeight: bannerConfig.weight,
-                    lineHeight: "1.4",
-                  }}
-                >
+                <span className="text-[13px] font-medium leading-[1.4]">
                   {bannerConfig.label}
                 </span>
               </div>
 
-              <div className="rounded-[8px] border-[0.5px] border-ui-border bg-[#0F1117] px-4 py-3">
+              <div className="rounded-[8px] border-[0.5px] border-ui-border bg-surface-container px-4 py-3">
                 <div className="flex flex-col gap-3 md:flex-row md:items-center md:gap-4">
                   <div className="min-w-0">
-                    <p className="text-[10px] font-normal uppercase tracking-[0.06em] text-[#5A6070]">
+                    <p className="text-[10px] font-normal uppercase tracking-[0.06em] text-text-secondary">
                       Issued
                     </p>
-                    <p className="mt-1 font-mono text-[12px] text-[#8B92A8]">
+                    <p className="mt-1 font-mono text-[12px] text-text-secondary">
                       {formatJwtDate(issuedAt)}
                     </p>
                   </div>
@@ -271,15 +247,15 @@ export function JwtWorkspace({
                   <div className="hidden h-8 w-px bg-ui-border md:block" />
 
                   <div className="min-w-0">
-                    <p className="text-[10px] font-normal uppercase tracking-[0.06em] text-[#5A6070]">
+                    <p className="text-[10px] font-normal uppercase tracking-[0.06em] text-text-secondary">
                       Expires
                     </p>
                     <div className="mt-1 flex flex-wrap items-center gap-2">
-                      <p className="font-mono text-[12px]" style={{ color: expiryMeta.color }}>
+                      <p className={cn("font-mono text-[12px]", expiryMeta.color)}>
                         {expiryMeta.label}
                       </p>
                       {expiryMeta.badge ? (
-                        <span className="rounded-full border-[0.5px] border-[#FF5C6C] bg-[#2A0D10] px-2 py-0.5 text-[10px] font-medium text-[#FF5C6C]">
+                        <span className="rounded-full border-[0.5px] border-red-500/20 dark:border-red-900/30 bg-red-500/10 dark:bg-red-950/40 px-2 py-0.5 text-[10px] font-medium text-red-600 dark:text-red-400">
                           {expiryMeta.badge}
                         </span>
                       ) : null}
@@ -317,26 +293,26 @@ export function JwtWorkspace({
               </JwtCard>
 
               <JwtCard title="Signature" subtitle="Verification" accent="signature">
-                <div className="space-y-2 font-mono text-xs leading-6 text-[#d6c3b5]">
+                <div className="space-y-2 font-mono text-xs leading-6 text-text-primary">
                   <p className="flex gap-2">
-                    <span className="w-24 text-[#ffb68e]">Algorithm:</span>
-                    <span className="text-[#f5f1ea]">{tokenAlgorithm || "Unknown"}</span>
+                    <span className="w-24 text-copper-accent dark:text-[#ffb68e]">Algorithm:</span>
+                    <span className="text-text-primary">{tokenAlgorithm || "Unknown"}</span>
                   </p>
                   <p className="flex gap-2">
-                    <span className="w-24 text-[#ffb68e]">Data:</span>
-                    <span className="truncate text-[#f5f1ea]/75">
+                    <span className="w-24 text-copper-accent dark:text-[#ffb68e]">Data:</span>
+                    <span className="truncate text-text-primary/75">
                       {decodedJwt.tokenParts[0]}.{decodedJwt.tokenParts[1]}
                     </span>
                   </p>
                   <p className="flex gap-2">
-                    <span className="w-24 text-[#ffb68e]">Secret:</span>
-                    <span className="truncate text-[#f5f1ea]/75">
+                    <span className="w-24 text-copper-accent dark:text-[#ffb68e]">Secret:</span>
+                    <span className="truncate text-text-primary/75">
                       {jwtSecret || "No secret provided"}
                     </span>
                   </p>
                   <p className="flex gap-2">
-                    <span className="w-24 text-[#ffb68e]">Signature:</span>
-                    <span className="truncate text-[#f5f1ea]/75">{decodedJwt.signature}</span>
+                    <span className="w-24 text-copper-accent dark:text-[#ffb68e]">Signature:</span>
+                    <span className="truncate text-text-primary/75">{decodedJwt.signature}</span>
                   </p>
                 </div>
               </JwtCard>
@@ -369,22 +345,24 @@ export function JwtWorkspace({
                   {payloadClaims.map(([key, value]) => (
                     <div
                       key={key}
-                      className="flex items-center justify-between gap-4 rounded-[6px] border-[0.5px] border-ui-border bg-[#111111] px-3 py-2 transition-colors hover:bg-[#1A1D24]"
+                      className="flex items-center justify-between gap-4 rounded-[6px] border-[0.5px] border-ui-border bg-surface-elevated px-3 py-2 transition-colors hover:bg-surface-container"
                     >
                       <div className="flex min-w-0 items-center gap-2">
                         <span
-                          className="text-[12px] font-medium"
-                          style={{ color: isStandardJwtClaim(key) ? "#C07040" : "#8B92A8" }}
+                          className={cn(
+                            "text-[12px] font-medium",
+                            isStandardJwtClaim(key) ? "text-copper-accent" : "text-text-secondary"
+                          )}
                         >
                           {key}
                         </span>
                         {isStandardJwtClaim(key) ? (
-                          <span className="rounded-[4px] bg-[#1F140C] px-1.5 py-0.5 text-[9px] font-medium leading-none text-[#C07040]">
+                          <span className="rounded-[4px] bg-copper-accent/10 px-1.5 py-0.5 text-[9px] font-medium leading-none text-copper-accent">
                             std
                           </span>
                         ) : null}
                       </div>
-                      <span className="max-w-[70%] truncate text-right font-mono text-[12px] text-[#E8EAF0]">
+                      <span className="max-w-[70%] truncate text-right font-mono text-[12px] text-text-primary">
                         {typeof value === "string" ? value : JSON.stringify(value)}
                       </span>
                     </div>
@@ -393,9 +371,9 @@ export function JwtWorkspace({
               </JwtCard>
             </>
           ) : (
-            <div className="rounded-sm border-[0.5px] border-ui-border bg-[#121212] p-6">
-              <p className="text-[14px] font-medium text-[#E8EAF0]">Paste a valid JWT token</p>
-              <p className="mt-2 text-[13px] font-normal leading-[1.6] text-[#8B92A8]">
+            <div className="rounded-sm border-[0.5px] border-ui-border bg-surface-elevated p-6">
+              <p className="text-[14px] font-medium text-text-primary">Paste a valid JWT token</p>
+              <p className="mt-2 text-[13px] font-normal leading-[1.6] text-text-secondary">
                 Header, payload, and signature details will appear here as soon as the token can be
                 decoded.
               </p>
@@ -446,7 +424,7 @@ function getExpiryMeta(issuedAt: number | null, expiresAt: number | null) {
   if (!expiresAt) {
     return {
       label: "No expiry set",
-      color: "#3A4060",
+      color: "text-text-secondary",
       badge: null as string | null,
       issuedLabel: formatJwtDate(issuedAt),
     };
@@ -459,7 +437,7 @@ function getExpiryMeta(issuedAt: number | null, expiresAt: number | null) {
   if (deltaMs <= 0) {
     return {
       label: `Expired ${formatElapsedTime(Math.abs(deltaMs))} ago`,
-      color: "#FF5C6C",
+      color: "text-red-600 dark:text-red-400",
       badge: "Expired",
       issuedLabel: formatJwtDate(issuedAt),
     };
@@ -467,7 +445,7 @@ function getExpiryMeta(issuedAt: number | null, expiresAt: number | null) {
 
   return {
     label: `in ${formatRemainingTime(deltaMs)} (${formatShortDate(expiresAtMs)})`,
-    color: "#3DD68C",
+    color: "text-emerald-600 dark:text-emerald-400",
     badge: null as string | null,
     issuedLabel: formatJwtDate(issuedAt),
   };

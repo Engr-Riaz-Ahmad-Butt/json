@@ -28,7 +28,7 @@ export default function FaqSection({ items }: { items: readonly FaqItem[] }) {
             >
               <h3
                 style={{
-                  color: "#F5F1EA",
+                  color: "var(--color-text-primary)",
                   fontSize: "clamp(16px, 2vw, 18px)",
                   lineHeight: "24px",
                   fontWeight: 600,
@@ -48,7 +48,7 @@ export default function FaqSection({ items }: { items: readonly FaqItem[] }) {
             {isOpen ? (
               <p
                 className="mt-3"
-                style={{ color: "#8B92A8", fontSize: "15px", lineHeight: "26px" }}
+                style={{ color: "var(--color-text-secondary)", fontSize: "15px", lineHeight: "26px" }}
               >
                 {item.answer}
               </p>

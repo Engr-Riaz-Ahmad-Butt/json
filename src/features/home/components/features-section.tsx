@@ -29,13 +29,13 @@ export default function FeaturesSection() {
       <div className="mb-8 flex flex-col gap-3 md:mb-10">
         <p
           className="text-xs font-semibold tracking-[0.02em]"
-          style={{ color: "#d9c2b6", fontFamily: "Inter, sans-serif" }}
+          style={{ color: "var(--color-on-surface-variant)", fontFamily: "Inter, sans-serif" }}
         >
           Core Features
         </p>
         <h2
           style={{
-            color: "#F5F1EA",
+            color: "var(--color-text-primary)",
             fontFamily: "Inter, sans-serif",
             fontSize: "clamp(28px, 4vw, 40px)",
             lineHeight: "1.08",
@@ -48,7 +48,7 @@ export default function FeaturesSection() {
         <p
           className="max-w-3xl"
           style={{
-            color: "#d9c2b6",
+            color: "var(--color-on-surface-variant)",
             fontFamily: "Inter, sans-serif",
             fontSize: "15px",
             lineHeight: "26px",
@@ -75,7 +75,7 @@ export default function FeaturesSection() {
             <div className="relative mb-1 flex items-center justify-between">
               <span
                 style={{
-                  color: "#5A6070",
+                  color: "var(--color-text-secondary)",
                   fontFamily: "Inter, sans-serif",
                   fontSize: "11px",
                   fontWeight: 500,
@@ -86,15 +86,15 @@ export default function FeaturesSection() {
               </span>
               <span
                 className="h-[0.5px] w-10 transition-all duration-150 group-hover:w-14"
-                style={{ backgroundColor: "#2A2F42" }}
+                style={{ backgroundColor: "var(--color-ui-border)" }}
               />
             </div>
 
             <div
               className="relative mt-3 flex h-11 w-11 items-center justify-center rounded-[10px] border-[0.5px] transition-colors"
               style={{
-                backgroundColor: "#1F140C",
-                borderColor: "#1E2433",
+                backgroundColor: "var(--color-surface-container)",
+                borderColor: "var(--color-ui-border)",
                 color: "#C07040",
               }}
             >
@@ -104,7 +104,7 @@ export default function FeaturesSection() {
             <h3
               className="relative mt-4"
               style={{
-                color: "#F5F1EA",
+                color: "var(--color-text-primary)",
                 fontFamily: "Inter, sans-serif",
                 fontSize: "15px",
                 lineHeight: "1.4",
@@ -117,7 +117,7 @@ export default function FeaturesSection() {
             <p
               className="relative mt-3 max-w-[26ch]"
               style={{
-                color: "#8B92A8",
+                color: "var(--color-text-secondary)",
                 fontFamily: "Inter, sans-serif",
                 fontSize: "13px",
                 lineHeight: "1.5",
@@ -129,7 +129,7 @@ export default function FeaturesSection() {
 
             <div
               className="relative mt-5 h-[0.5px] w-full transition-colors duration-150 group-hover:bg-[#C07040]"
-              style={{ backgroundColor: "#2A2F42" }}
+              style={{ backgroundColor: "var(--color-ui-border)" }}
             />
           </div>
         ))}

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import Script from "next/script";
 
+import { ThemeProvider } from "@/hooks/use-theme";
 import "./globals.css";
 
 const inter = Inter({
@@ -84,7 +85,7 @@ export default function RootLayout({
             strategy="afterInteractive"
           />
         ) : null}
-        {children}
+        <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
   );

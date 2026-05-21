@@ -184,12 +184,12 @@ export function TableWorkspace({
   }
 
   return (
-    <div className="flex h-full min-h-0 flex-col bg-[#0A0C0F]">
+    <div className="flex h-full min-h-0 flex-col bg-obsidian-base">
       {/* ------------------------------------------------------------------ Toolbar */}
-      <div className="flex shrink-0 flex-wrap items-center gap-3 border-b-[0.5px] border-ui-border bg-[#0F1117] px-4 py-3 sm:px-5">
+      <div className="flex shrink-0 flex-wrap items-center gap-3 border-b-[0.5px] border-ui-border bg-surface-container px-4 py-3 sm:px-5">
         {/* Search */}
-        <div className="flex h-9 min-w-[200px] flex-1 items-center gap-2 rounded-md border-[0.5px] border-ui-border bg-[#0A0C0F] px-3">
-          <Search className="size-3.5 shrink-0 text-[#3A4060]" />
+        <div className="flex h-9 min-w-[200px] flex-1 items-center gap-2 rounded-md border-[0.5px] border-ui-border bg-obsidian-base px-3">
+          <Search className="size-3.5 shrink-0 text-text-secondary/70" />
           <input
             value={search}
             onChange={(e) => {
@@ -197,17 +197,17 @@ export function TableWorkspace({
               setPage(1);
             }}
             placeholder="Filter rows..."
-            className="w-full bg-transparent font-mono text-[12px] text-[#E8EAF0] outline-none placeholder:text-[#3A4060]"
+            className="w-full bg-transparent font-mono text-[12px] text-text-primary outline-none placeholder:text-text-secondary/50"
           />
           {search ? (
-            <button type="button" onClick={() => setSearch("")} className="text-[#5A6070] hover:text-[#E8EAF0]">
+            <button type="button" onClick={() => setSearch("")} className="text-text-secondary hover:text-text-primary">
               <X className="size-3" />
             </button>
           ) : null}
         </div>
 
         {/* Stats badge */}
-        <span className="shrink-0 rounded-full border-[0.5px] border-[#C07040]/30 bg-[#1F140C] px-3 py-1 text-[11px] font-medium text-[#C07040]">
+        <span className="shrink-0 rounded-full border-[0.5px] border-copper-accent/30 bg-copper-accent/10 px-3 py-1 text-[11px] font-medium text-copper-accent">
           {filteredRows.length.toLocaleString()} / {rows.length.toLocaleString()} rows · {visibleCols.length} cols
         </span>
 
@@ -215,7 +215,7 @@ export function TableWorkspace({
         <button
           type="button"
           onClick={exportCsv}
-          className="flex h-9 items-center gap-1.5 rounded-md border-[0.5px] border-ui-border bg-[#1A1D24] px-3 text-[11px] font-medium text-[#8B92A8] transition-colors hover:border-[#C07040]/40 hover:text-[#E8EAF0] focus-visible:outline-none"
+          className="flex h-9 items-center gap-1.5 rounded-md border-[0.5px] border-ui-border bg-surface-elevated px-3 text-[11px] font-medium text-text-secondary transition-colors hover:border-copper-accent/40 hover:text-text-primary focus-visible:outline-none"
         >
           <Download className="size-3.5" />
           Export CSV
@@ -225,7 +225,7 @@ export function TableWorkspace({
         <button
           type="button"
           onClick={() => void onCopy(JSON.stringify(sortedRows, null, 2), "Copied filtered rows as JSON")}
-          className="flex h-9 items-center gap-1.5 rounded-md border-[0.5px] border-ui-border bg-[#1A1D24] px-3 text-[11px] font-medium text-[#8B92A8] transition-colors hover:border-[#C07040]/40 hover:text-[#E8EAF0] focus-visible:outline-none"
+          className="flex h-9 items-center gap-1.5 rounded-md border-[0.5px] border-ui-border bg-surface-elevated px-3 text-[11px] font-medium text-text-secondary transition-colors hover:border-copper-accent/40 hover:text-text-primary focus-visible:outline-none"
         >
           <Copy className="size-3.5" />
           Copy JSON
@@ -234,8 +234,8 @@ export function TableWorkspace({
 
       {/* ------------------------------------------------------------------ Column visibility */}
       {columns.length > 0 ? (
-        <div className="flex shrink-0 items-center gap-2 overflow-x-auto border-b-[0.5px] border-ui-border bg-[#0A0C0F] px-4 py-2 sm:px-5">
-          <span className="shrink-0 text-[10px] font-medium uppercase tracking-[0.06em] text-[#3A4060]">
+        <div className="flex shrink-0 items-center gap-2 overflow-x-auto border-b-[0.5px] border-ui-border bg-obsidian-base px-4 py-2 sm:px-5">
+          <span className="shrink-0 text-[10px] font-medium uppercase tracking-[0.06em] text-text-secondary">
             Columns
           </span>
           <div className="flex gap-1.5">
@@ -247,8 +247,8 @@ export function TableWorkspace({
                 className={cn(
                   "shrink-0 rounded-full border-[0.5px] px-2.5 py-0.5 text-[10px] font-medium transition-colors",
                   hiddenCols.has(col)
-                    ? "border-[#2A2F42] bg-transparent text-[#3A4060] line-through"
-                    : "border-[#C07040]/30 bg-[#1F140C] text-[#C07040]",
+                    ? "border-ui-border bg-transparent text-text-secondary/60 line-through"
+                    : "border-copper-accent/30 bg-copper-accent/10 text-copper-accent",
                 )}
               >
                 {col}
@@ -262,9 +262,9 @@ export function TableWorkspace({
       <div className="min-h-0 flex-1 overflow-auto">
         <table className="w-full min-w-max border-collapse text-[12px]">
           <thead className="sticky top-0 z-10">
-            <tr className="bg-[#0F1117]">
+            <tr className="bg-surface-container">
               {/* Row # */}
-              <th className="w-12 border-b-[0.5px] border-r-[0.5px] border-ui-border px-3 py-2.5 text-left font-mono text-[10px] text-[#3A4060]">
+              <th className="w-12 border-b-[0.5px] border-r-[0.5px] border-ui-border px-3 py-2.5 text-left font-mono text-[10px] text-text-secondary">
                 #
               </th>
               {visibleCols.map((col) => {
@@ -277,8 +277,10 @@ export function TableWorkspace({
                     <button
                       type="button"
                       onClick={() => toggleSort(col)}
-                      className="flex items-center gap-1.5 font-mono text-[11px] font-semibold transition-colors hover:text-[#C07040] focus-visible:outline-none"
-                      style={{ color: isSorted ? "#C07040" : "#8B92A8" }}
+                      className={cn(
+                        "flex items-center gap-1.5 font-mono text-[11px] font-semibold transition-colors hover:text-copper-accent focus-visible:outline-none",
+                        isSorted ? "text-copper-accent" : "text-text-secondary"
+                      )}
                     >
                       {col}
                       {isSorted && sort.dir === "asc" ? (
@@ -307,14 +309,14 @@ export function TableWorkspace({
                   className={cn(
                     "cursor-pointer border-b-[0.5px] border-ui-border transition-colors",
                     isSelected
-                      ? "bg-[#1F140C]"
+                      ? "bg-copper-accent/20"
                       : rowIndex % 2 === 0
-                      ? "bg-[#0A0C0F] hover:bg-[#0F1117]"
-                      : "bg-[#0D0F14] hover:bg-[#0F1117]",
+                      ? "bg-obsidian-base hover:bg-surface-container"
+                      : "bg-surface hover:bg-surface-container",
                   )}
                 >
                   {/* Row number */}
-                  <td className="border-r-[0.5px] border-ui-border px-3 py-2 font-mono text-[10px] text-[#3A4060]">
+                  <td className="border-r-[0.5px] border-ui-border px-3 py-2 font-mono text-[10px] text-text-secondary">
                     {absoluteIndex + 1}
                   </td>
 
@@ -336,14 +338,14 @@ export function TableWorkspace({
                           className={cn(
                             "block truncate font-mono text-[12px]",
                             isNull
-                              ? "text-[#5A6070]"
+                              ? "text-text-secondary/60"
                               : isBool
-                              ? "text-[#79C0FF]"
+                              ? "text-blue-600 dark:text-[#79C0FF]"
                               : isNum
-                              ? "text-[#3DD68C]"
+                              ? "text-emerald-600 dark:text-[#3DD68C]"
                               : isComplex
-                              ? "italic text-[#8B92A8]"
-                              : "text-[#E8EAF0]",
+                              ? "italic text-text-secondary"
+                              : "text-text-primary",
                           )}
                         >
                           {text}
@@ -361,7 +363,7 @@ export function TableWorkspace({
                         copyRowJson(row);
                       }}
                       title="Copy row as JSON"
-                      className="rounded p-1 text-[#3A4060] transition-colors hover:bg-[#1A1D24] hover:text-[#C07040] focus-visible:outline-none"
+                      className="rounded p-1 text-text-secondary transition-colors hover:bg-surface-container hover:text-copper-accent focus-visible:outline-none"
                     >
                       <Copy className="size-3" />
                     </button>
@@ -373,7 +375,7 @@ export function TableWorkspace({
         </table>
 
         {filteredRows.length === 0 ? (
-          <div className="flex h-40 items-center justify-center text-[13px] text-[#3A4060]">
+          <div className="flex h-40 items-center justify-center text-[13px] text-text-secondary">
             No rows match the current filter.
           </div>
         ) : null}
@@ -390,16 +392,16 @@ export function TableWorkspace({
       ) : null}
 
       {/* ------------------------------------------------------------------ Pagination */}
-      <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-t-[0.5px] border-ui-border bg-[#0F1117] px-4 py-3 sm:px-5">
+      <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-t-[0.5px] border-ui-border bg-surface-container px-4 py-3 sm:px-5">
         <div className="flex items-center gap-2">
-          <span className="text-[11px] text-[#5A6070]">Rows per page</span>
+          <span className="text-[11px] text-text-secondary">Rows per page</span>
           <select
             value={pageSize}
             onChange={(e) => {
               setPageSize(Number(e.target.value));
               setPage(1);
             }}
-            className="h-7 rounded-md border-[0.5px] border-ui-border bg-[#0A0C0F] px-2 text-[11px] text-[#8B92A8] outline-none focus-visible:border-[#C07040]"
+            className="h-7 rounded-md border-[0.5px] border-ui-border bg-obsidian-base px-2 text-[11px] text-text-secondary outline-none focus-visible:border-copper-accent"
           >
             {PAGE_SIZES.map((s) => (
               <option key={s} value={s}>{s}</option>
@@ -408,14 +410,14 @@ export function TableWorkspace({
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="text-[11px] text-[#5A6070]">
+          <span className="text-[11px] text-text-secondary">
             Page {page} of {totalPages}
           </span>
           <button
             type="button"
             disabled={page <= 1}
             onClick={() => setPage((p) => p - 1)}
-            className="flex h-7 w-7 items-center justify-center rounded-md border-[0.5px] border-ui-border bg-[#0A0C0F] text-[#8B92A8] transition-colors hover:border-[#C07040]/40 hover:text-[#E8EAF0] disabled:opacity-30 focus-visible:outline-none"
+            className="flex h-7 w-7 items-center justify-center rounded-md border-[0.5px] border-ui-border bg-obsidian-base text-text-secondary transition-colors hover:border-copper-accent/40 hover:text-text-primary disabled:opacity-30 focus-visible:outline-none"
           >
             <ChevronLeft className="size-3.5" />
           </button>
@@ -423,7 +425,7 @@ export function TableWorkspace({
             type="button"
             disabled={page >= totalPages}
             onClick={() => setPage((p) => p + 1)}
-            className="flex h-7 w-7 items-center justify-center rounded-md border-[0.5px] border-ui-border bg-[#0A0C0F] text-[#8B92A8] transition-colors hover:border-[#C07040]/40 hover:text-[#E8EAF0] disabled:opacity-30 focus-visible:outline-none"
+            className="flex h-7 w-7 items-center justify-center rounded-md border-[0.5px] border-ui-border bg-obsidian-base text-text-secondary transition-colors hover:border-copper-accent/40 hover:text-text-primary disabled:opacity-30 focus-visible:outline-none"
           >
             <ChevronRight className="size-3.5" />
           </button>
@@ -449,23 +451,23 @@ function RowDetailPanel({
   onCopy: (value: string, message?: string) => Promise<void>;
 }) {
   return (
-    <div className="shrink-0 border-t-[0.5px] border-[#C07040]/30 bg-[#0F1117]">
+    <div className="shrink-0 border-t-[0.5px] border-copper-accent/30 bg-surface-container">
       <div className="flex items-center justify-between border-b-[0.5px] border-ui-border px-4 py-2.5">
-        <p className="text-[11px] font-medium uppercase tracking-[0.06em] text-[#C07040]">
+        <p className="text-[11px] font-medium uppercase tracking-[0.06em] text-copper-accent">
           Row {rowIndex + 1} — Detail
         </p>
         <div className="flex items-center gap-2">
           <button
             type="button"
             onClick={() => void onCopy(JSON.stringify(row, null, 2), "Copied row as JSON")}
-            className="flex items-center gap-1 rounded-md border-[0.5px] border-ui-border bg-[#1A1D24] px-2 py-1 text-[10px] font-medium text-[#8B92A8] transition-colors hover:text-[#E8EAF0]"
+            className="flex items-center gap-1 rounded-md border-[0.5px] border-ui-border bg-surface-elevated px-2 py-1 text-[10px] font-medium text-text-secondary transition-colors hover:text-text-primary"
           >
             <Copy className="size-3" /> Copy JSON
           </button>
           <button
             type="button"
             onClick={onClose}
-            className="rounded-md p-1 text-[#5A6070] transition-colors hover:text-[#E8EAF0] focus-visible:outline-none"
+            className="rounded-md p-1 text-text-secondary transition-colors hover:text-text-primary focus-visible:outline-none"
           >
             <X className="size-3.5" />
           </button>
@@ -474,19 +476,19 @@ function RowDetailPanel({
       <div className="grid max-h-40 grid-cols-2 gap-x-4 gap-y-1 overflow-y-auto px-4 py-3 sm:grid-cols-3 lg:grid-cols-4">
         {Object.entries(row).map(([key, val]) => (
           <div key={key} className="min-w-0">
-            <p className="truncate text-[10px] font-medium text-[#5A6070]">{key}</p>
+            <p className="truncate text-[10px] font-medium text-text-secondary">{key}</p>
             <p
               className={cn(
                 "truncate font-mono text-[11px]",
                 val === null
-                  ? "text-[#5A6070]"
+                  ? "text-text-secondary/60"
                   : typeof val === "boolean"
-                  ? "text-[#79C0FF]"
+                  ? "text-blue-600 dark:text-[#79C0FF]"
                   : typeof val === "number"
-                  ? "text-[#3DD68C]"
+                  ? "text-emerald-600 dark:text-[#3DD68C]"
                   : typeof val === "object"
-                  ? "italic text-[#8B92A8]"
-                  : "text-[#E8EAF0]",
+                  ? "italic text-text-secondary"
+                  : "text-text-primary",
               )}
               title={typeof val === "object" ? JSON.stringify(val, null, 2) : cellText(val)}
             >
@@ -505,12 +507,12 @@ function RowDetailPanel({
 
 function TableEmpty({ message }: { message: string }) {
   return (
-    <div className="flex h-full items-center justify-center bg-[#0A0C0F] p-8">
+    <div className="flex h-full items-center justify-center bg-obsidian-base p-8">
       <div className="flex max-w-[320px] flex-col items-center gap-4 text-center">
-        <div className="flex h-16 w-16 items-center justify-center rounded-[12px] bg-[#1A1D24]">
-          <Table2 className="size-7 text-[#5A6070]" />
+        <div className="flex h-16 w-16 items-center justify-center rounded-[12px] bg-surface-elevated">
+          <Table2 className="size-7 text-text-secondary" />
         </div>
-        <p className="text-[14px] font-medium text-[#5A6070]">{message}</p>
+        <p className="text-[14px] font-medium text-text-secondary">{message}</p>
       </div>
     </div>
   );
