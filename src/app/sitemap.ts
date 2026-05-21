@@ -16,6 +16,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
   ];
 
   const standardPages = ["contact", "privacy", "terms"];
+  const contentPages = [
+    "what-is-json",
+    "common-json-errors",
+    "how-to-validate-json",
+    "json-vs-yaml",
+    "jwt-decoding-guide",
+    "how-jsonpath-works",
+  ];
 
   return [
     {
@@ -41,6 +49,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: new Date(),
       changeFrequency: "monthly" as const,
       priority: 0.5,
+    })),
+    ...contentPages.map((slug) => ({
+      url: `${baseUrl}/${slug}`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
     })),
   ];
 }

@@ -103,6 +103,11 @@ const sharedRelatedTools = {
     label: "JSON to Zod",
     description: "Generate runtime-safe Zod schemas from the same JSON example.",
   },
+  schema: {
+    href: "/json-schema-generator",
+    label: "JSON Schema generator",
+    description: "Create portable schema definitions from example payloads in the same converter flow.",
+  },
 } as const;
 
 export const TOOL_PAGES = {
@@ -299,6 +304,32 @@ export const TOOL_PAGES = {
       "A JSON diff is only helpful when the changes are easy to understand. Payloada keeps the raw side-by-side comparison but also adds semantic summary cards for additions, removals, value changes, and type changes. That gives developers both the detailed code-level view and the higher-level explanation they need when reviewing API regressions or schema drift.",
       "The diff workspace is especially useful for expected-versus-actual QA checks, backend response debugging, and contract review between environments. Because it is part of the wider Payloada workspace, you can move from diffing into conversion, validation, or export without rebuilding context in another tool.",
     ],
+    useCases: [
+      "Compare staging and production API responses when a bug only appears in one environment.",
+      "Review expected-versus-actual fixtures in QA without losing the raw JSON context.",
+      "Spot type changes separately from ordinary value changes during backend contract reviews.",
+      "Summarize additions, removals, and changed fields before copying a report into an issue or PR.",
+    ],
+    examples: [
+      {
+        title: "Backend response regression",
+        input: '{"status":"ok"} → {"status":200}',
+        outcome:
+          "A clear type-change signal instead of a vague visual difference buried in the payload.",
+      },
+      {
+        title: "Added response field",
+        input: '{"id":1} → {"id":1,"role":"admin"}',
+        outcome:
+          "A summary card for added fields plus a side-by-side view of the exact new path.",
+      },
+      {
+        title: "Unexpected nested removal",
+        input: '{"user":{"id":1,"email":"a@x.com"}} → {"user":{"id":1}}',
+        outcome:
+          "A readable removed-field summary that makes schema drift easier to explain.",
+      },
+    ],
     faqs: [
       {
         q: "Can I compare two API responses side by side?",
@@ -314,6 +345,11 @@ export const TOOL_PAGES = {
         a: "Yes. The diff workspace includes copy and download actions for generated reports.",
       },
     ],
+    relatedTools: [
+      sharedRelatedTools.formatter,
+      sharedRelatedTools.validator,
+      sharedRelatedTools.typescript,
+    ],
     workspaceView: "diff" as WorkspaceView,
   },
   typescript: {
@@ -327,6 +363,32 @@ export const TOOL_PAGES = {
     description: [
       "Type generation is one of the most practical JSON workflows for frontend and full-stack teams. Payloada converts parsed JSON into TypeScript interfaces directly inside the converter workspace, so you can format, validate, and inspect the payload before generating code. That reduces the risk of turning malformed data or inconsistent keys into bad type definitions.",
       "The generator also lives next to Zod, Schema, Prisma, Mongoose, Go, Python, and other outputs, which makes it easier to compare different representations of the same JSON structure. Instead of bouncing between tools, you can keep the payload in one place and switch outputs as needed.",
+    ],
+    useCases: [
+      "Turn real API responses into interfaces before wiring them into React, Next.js, or Node code.",
+      "Generate starter types from nested payloads without manually reading every field.",
+      "Validate and clean a payload before generating interfaces so malformed JSON does not become bad code.",
+      "Compare TypeScript output against Zod or JSON Schema when one example payload needs multiple targets.",
+    ],
+    examples: [
+      {
+        title: "API response to interface",
+        input: '{"id":42,"email":"dev@example.com","active":true}',
+        outcome:
+          "A clean interface definition you can copy directly into a frontend or API client project.",
+      },
+      {
+        title: "Nested user payload",
+        input: '{"user":{"profile":{"name":"Ava","age":28}}}',
+        outcome:
+          "Readable nested interfaces instead of manually building several related types by hand.",
+      },
+      {
+        title: "Unsafe property names",
+        input: '{"user-name":"Ava","2fa":true}',
+        outcome:
+          "Quoted property names in the generated output so the TypeScript stays valid.",
+      },
     ],
     faqs: [
       {
@@ -343,6 +405,11 @@ export const TOOL_PAGES = {
         a: "Yes. The converter output panel includes copy and download actions.",
       },
     ],
+    relatedTools: [
+      sharedRelatedTools.validator,
+      sharedRelatedTools.zod,
+      sharedRelatedTools.schema,
+    ],
     workspaceView: "converters" as WorkspaceView,
     converterTab: "TypeScript" as ConverterTab,
   },
@@ -357,6 +424,32 @@ export const TOOL_PAGES = {
     description: [
       "Zod generation is useful when a sample payload needs to become both a type and a runtime contract. Payloada converts JSON into readable Zod schema output and keeps that process attached to the same editor, validator, and converter workflow developers already use for the payload itself. That makes it easier to inspect edge cases before trusting the generated schema.",
       "Because the converter workspace supports multiple output targets, Zod can also be compared directly with TypeScript interfaces, JSON Schema, Prisma, and Mongoose output. This is helpful when teams want one JSON example to feed several implementation layers without manually rewriting the same structure multiple times.",
+    ],
+    useCases: [
+      "Generate a runtime validation layer from the same JSON payload you already use for interface generation.",
+      "Prototype Zod schemas quickly from real API responses before refining them in your codebase.",
+      "Compare Zod output with TypeScript and JSON Schema when designing shared frontend/backend contracts.",
+      "Inspect payload structure first, then generate validation code without leaving the converter workspace.",
+    ],
+    examples: [
+      {
+        title: "Basic object schema",
+        input: '{"id":42,"email":"dev@example.com","active":true}',
+        outcome:
+          "A starter Zod object schema that mirrors the primitive fields in the payload.",
+      },
+      {
+        title: "Nested profile data",
+        input: '{"user":{"name":"Ava","roles":["admin"]}}',
+        outcome:
+          "Readable nested `.object()` and `.array()` output instead of hand-writing the structure.",
+      },
+      {
+        title: "Multi-target conversion",
+        input: '{"status":"ok","items":[{"sku":"A1","qty":2}]}',
+        outcome:
+          "A fast way to compare Zod output against TypeScript or Schema for the same JSON example.",
+      },
     ],
     faqs: [
       {
@@ -373,6 +466,11 @@ export const TOOL_PAGES = {
         a: "Yes. The converter workspace lets you switch outputs without leaving the page.",
       },
     ],
+    relatedTools: [
+      sharedRelatedTools.typescript,
+      sharedRelatedTools.schema,
+      sharedRelatedTools.validator,
+    ],
     workspaceView: "converters" as WorkspaceView,
     converterTab: "Zod" as ConverterTab,
   },
@@ -387,6 +485,32 @@ export const TOOL_PAGES = {
     description: [
       "Some JSON structures are easier to understand as a graph than as raw text. Payloada's graph view turns nested objects and arrays into interactive connected nodes, which helps developers trace relationships, spot repeated shapes, and understand deeply nested payloads faster than line-by-line reading alone.",
       "The graph visualizer is especially useful for large API responses, config objects, and data exploration tasks where the structure matters as much as the values. Since it lives inside the same workspace as the editor, tree view, JSONPath, diff, and converters, it supports visual exploration without breaking the broader workflow.",
+    ],
+    useCases: [
+      "Explore large nested payloads visually when line-by-line reading is too slow or too abstract.",
+      "Show teammates the structure of a response or config object during debugging sessions and reviews.",
+      "Spot repeated container shapes and deeply nested branches before writing JSONPath or conversion logic.",
+      "Move from graph view back into tree, validator, or converter workflows without reloading the payload.",
+    ],
+    examples: [
+      {
+        title: "Nested API payload",
+        input: '{"data":{"users":[{"profile":{"name":"Ava"}}]}}',
+        outcome:
+          "A connected graph that makes parent-child structure easier to understand than raw indented text.",
+      },
+      {
+        title: "Large config object",
+        input: '{"features":{"auth":{"providers":["google","github"]}}}',
+        outcome:
+          "A quicker way to inspect branches and relationships before editing or documenting the object.",
+      },
+      {
+        title: "Debugging unfamiliar JSON",
+        input: '{"org":{"teams":[{"members":[{"id":1}]}]}}',
+        outcome:
+          "A visual map that helps you find the right part of the payload before using JSONPath or tree view.",
+      },
     ],
     faqs: [
       {
@@ -403,6 +527,11 @@ export const TOOL_PAGES = {
         a: "Yes. It visualizes the parsed editor payload directly.",
       },
     ],
+    relatedTools: [
+      sharedRelatedTools.formatter,
+      sharedRelatedTools.validator,
+      sharedRelatedTools.diff,
+    ],
     workspaceView: "editor" as WorkspaceView,
     inspectorView: "graph" as InspectorView,
   },
@@ -417,6 +546,32 @@ export const TOOL_PAGES = {
     description: [
       "CSV conversion is one of the most common ways to move JSON into spreadsheets, exports, or lightweight reporting tools. Payloada keeps this workflow inside the main converter workspace and gives explicit feedback when the input is not shaped correctly for CSV output. That makes it easier to understand whether the issue is the converter or the source data.",
       "The CSV view works especially well for arrays of objects and is useful for exporting API lists, analytics payloads, and test fixtures. Developers can validate and inspect the JSON first, then switch to CSV output without pasting the same document into another tool.",
+    ],
+    useCases: [
+      "Export API list responses into spreadsheets or reporting tools without manually flattening the data first.",
+      "Convert arrays of objects into quick CSV fixtures for QA, demos, or analytics handoff.",
+      "Validate a JSON payload before CSV export so shape issues are caught early and explained clearly.",
+      "Keep JSON, CSV, and other converter outputs in one workflow instead of jumping across utility sites.",
+    ],
+    examples: [
+      {
+        title: "User list export",
+        input: '[{\"id\":1,\"email\":\"a@x.com\"},{\"id\":2,\"email\":\"b@x.com\"}]',
+        outcome:
+          "A column-based CSV output that is ready for spreadsheets, reporting, or lightweight imports.",
+      },
+      {
+        title: "Analytics rows",
+        input: '[{\"date\":\"2026-05-21\",\"visits\":124}]',
+        outcome:
+          "A simple CSV export that is easier to share with non-developers than raw JSON.",
+      },
+      {
+        title: "Wrong input shape",
+        input: '{\"id\":1,\"email\":\"a@x.com\"}',
+        outcome:
+          "A clear explanation that CSV conversion expects an array of objects, not a single object.",
+      },
     ],
     faqs: [
       {
@@ -433,6 +588,11 @@ export const TOOL_PAGES = {
         a: "Yes. The converter workspace includes download and copy actions.",
       },
     ],
+    relatedTools: [
+      sharedRelatedTools.validator,
+      sharedRelatedTools.typescript,
+      sharedRelatedTools.schema,
+    ],
     workspaceView: "converters" as WorkspaceView,
     converterTab: "CSV" as ConverterTab,
   },
@@ -447,6 +607,32 @@ export const TOOL_PAGES = {
     description: [
       "JSON Schema is useful when a payload needs to become a contract, validation layer, or portable schema definition. Payloada generates schema output directly from the parsed JSON and keeps that process close to the original editor, validator, and converter workflow. That helps teams inspect the source structure before trusting the generated contract.",
       "The schema generator is most useful when paired with the rest of the product: you can validate the input, inspect it in the tree or graph, compare versions with diff, and then export the schema. Keeping all of that in one place reduces context switching and makes the output easier to trust.",
+    ],
+    useCases: [
+      "Generate a contract from a real payload before sharing it across teams or services.",
+      "Convert JSON into a schema baseline before refining validation rules in your own codebase.",
+      "Compare JSON Schema output with TypeScript or Zod when one example payload needs multiple definitions.",
+      "Validate and inspect a source payload first so generated schema output is based on trusted JSON.",
+    ],
+    examples: [
+      {
+        title: "API contract draft",
+        input: '{"id":42,"email":"dev@example.com","active":true}',
+        outcome:
+          "A portable schema-style definition that can be refined into a stronger validation contract.",
+      },
+      {
+        title: "Nested object contract",
+        input: '{"user":{"profile":{"name":"Ava","age":28}}}',
+        outcome:
+          "A useful schema starting point for nested objects without manually writing every property rule.",
+      },
+      {
+        title: "Compare output targets",
+        input: '{"items":[{"sku":"A1","qty":2}]}',
+        outcome:
+          "A fast way to compare Schema, TypeScript, and Zod output from the same JSON example.",
+      },
     ],
     faqs: [
       {
@@ -463,6 +649,11 @@ export const TOOL_PAGES = {
         a: "Yes. You can copy or download it and refine it in your own codebase.",
       },
     ],
+    relatedTools: [
+      sharedRelatedTools.typescript,
+      sharedRelatedTools.zod,
+      sharedRelatedTools.validator,
+    ],
     workspaceView: "converters" as WorkspaceView,
     converterTab: "Schema" as ConverterTab,
   },
@@ -478,6 +669,32 @@ export const TOOL_PAGES = {
       "Mock data generation is most useful when it starts from a shape you already trust. Payloada uses the current editor payload as the template, then generates realistic records for common fields like names, email addresses, IDs, status values, dates, and booleans. That makes it easy to build fixtures for tests, demos, and local development without inventing the structure from scratch.",
       "Because the generator is part of the same workspace, the output can be sent directly back to the editor for further validation, conversion, graph exploration, or export. It is a practical way to move from a single example payload to a reusable development dataset inside one product.",
     ],
+    useCases: [
+      "Turn a single example object into a realistic fixture set for local development or demos.",
+      "Generate repeatable mock records before testing converters, diff flows, or frontend states.",
+      "Use trusted JSON shapes as the template instead of inventing fake structures from scratch.",
+      "Send generated mock data back into the editor immediately for validation, graphing, or export.",
+    ],
+    examples: [
+      {
+        title: "User fixture generation",
+        input: '{"id":"uuid","name":"Ava","email":"ava@example.com"}',
+        outcome:
+          "A larger array of realistic user records for UI states, fixtures, or test environments.",
+      },
+      {
+        title: "Order sample expansion",
+        input: '{"orderId":"uuid","status":"success","total":49.99}',
+        outcome:
+          "A mock dataset that feels closer to real development data than placeholder lorem JSON.",
+      },
+      {
+        title: "Round-trip workflow",
+        input: "Generate mock array → send to editor",
+        outcome:
+          "A smooth path from sample generation into validation, conversion, diffing, or graph view.",
+      },
+    ],
     faqs: [
       {
         q: "How does Payloada decide what values to generate?",
@@ -492,6 +709,11 @@ export const TOOL_PAGES = {
         q: "Can I send the generated data back into the editor?",
         a: "Yes. The mock workspace includes a send-to-editor flow.",
       },
+    ],
+    relatedTools: [
+      sharedRelatedTools.formatter,
+      sharedRelatedTools.validator,
+      sharedRelatedTools.typescript,
     ],
     workspaceView: "mock" as WorkspaceView,
   },

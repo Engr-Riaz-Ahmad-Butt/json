@@ -25,10 +25,11 @@ const footerGroups = [
     title: "Resources",
     links: [
       { label: "Workspace", href: "/workspace" },
-      { label: "JSON Formatter", href: "/json-formatter" },
-      { label: "JSON Validator", href: "/json-validator" },
-      { label: "JWT Decoder", href: "/jwt-decoder" },
-      { label: "JSON Diff", href: "/json-diff" },
+      { label: "What is JSON?", href: "/what-is-json" },
+      { label: "Common JSON Errors", href: "/common-json-errors" },
+      { label: "How to Validate JSON", href: "/how-to-validate-json" },
+      { label: "JSON vs YAML", href: "/json-vs-yaml" },
+      { label: "How JSONPath Works", href: "/how-jsonpath-works" },
     ],
   },
   {
@@ -139,7 +140,9 @@ export default function Footer() {
           className="mx-auto flex w-full max-w-300 flex-col gap-3 px-4 py-4 text-center sm:px-6 md:flex-row md:items-center md:justify-between md:px-8 md:text-left"
           style={{ fontFamily: "JetBrains Mono, monospace", fontSize: "12px", lineHeight: "18px" }}
         >
-          <span style={{ color: "var(--color-text-secondary)" }}>© 2026 Payloada. All rights reserved.</span>
+          <span style={{ color: "var(--color-text-secondary)" }}>
+            Copyright 2026 Payloada. All rights reserved.
+          </span>
           <div className="flex flex-wrap items-center gap-4" style={{ color: "var(--color-text-secondary)" }}>
             <span>Local-only processing</span>
             <span>No signup required</span>

@@ -4,7 +4,17 @@ import type { GraphNodeData, JsonValue } from "../core/types";
 import { appendPath, previewValue } from "../editor/json-path-utils";
 import type { Edge, Node } from "@xyflow/react";
 
-export function buildDiffSummary(oldSource: string, newSource: string) {
+export type DiffChangedEntry = { path: string; oldValue: JsonValue; newValue: JsonValue };
+export type DiffTypeChangeEntry = { path: string; oldType: string; newType: string };
+
+export type DiffSummaryResult = {
+  added: string[];
+  removed: string[];
+  changed: DiffChangedEntry[];
+  typeChanges: DiffTypeChangeEntry[];
+};
+
+export function buildDiffSummary(oldSource: string, newSource: string): DiffSummaryResult | null {
   const oldParsed = parseJsonSafe(oldSource);
   const newParsed = parseJsonSafe(newSource);
 
@@ -12,11 +22,11 @@ export function buildDiffSummary(oldSource: string, newSource: string) {
     return null;
   }
 
-  const summary = {
-    added: [] as string[],
-    removed: [] as string[],
-    changed: [] as string[],
-    typeChanges: [] as string[],
+  const summary: DiffSummaryResult = {
+    added: [],
+    removed: [],
+    changed: [],
+    typeChanges: [],
   };
 
   compareValues("$", oldParsed.data, newParsed.data, summary);
@@ -27,12 +37,7 @@ function compareValues(
   path: string,
   oldValue: JsonValue,
   newValue: JsonValue,
-  summary: {
-    added: string[];
-    removed: string[];
-    changed: string[];
-    typeChanges: string[];
-  },
+  summary: DiffSummaryResult,
 ) {
   if (Array.isArray(oldValue) && Array.isArray(newValue)) {
     const max = Math.max(oldValue.length, newValue.length);
@@ -72,12 +77,12 @@ function compareValues(
   }
 
   if (typeof oldValue !== typeof newValue) {
-    summary.typeChanges.push(`${path}: ${typeof oldValue} -> ${typeof newValue}`);
+    summary.typeChanges.push({ path, oldType: typeof oldValue, newType: typeof newValue });
     return;
   }
 
   if (oldValue !== newValue) {
-    summary.changed.push(`${path}: ${JSON.stringify(oldValue)} -> ${JSON.stringify(newValue)}`);
+    summary.changed.push({ path, oldValue, newValue });
   }
 }
 

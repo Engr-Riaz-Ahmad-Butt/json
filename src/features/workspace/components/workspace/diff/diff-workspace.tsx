@@ -1,6 +1,6 @@
-"use client";
+﻿"use client";
 
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { FileDiff } from "lucide-react";
 
@@ -11,12 +11,18 @@ import { cn } from "@/lib/utils";
 import { SidebarEmpty, SidebarSection, SmallAction } from "../shared";
 import type { DiffPaneEditor } from "../core/types";
 import { buildDiffSummary, buildLineDiff } from "../shared/utils";
+import type { DiffChangedEntry, DiffTypeChangeEntry } from "./diff-utils";
 
 const MonacoEditor = dynamic(() => import("@monaco-editor/react").then((mod) => mod.default), {
   ssr: false,
 });
 
 type DiffSummary = ReturnType<typeof buildDiffSummary>;
+type DiffDetailItemData =
+  | { kind: "added"; raw: string }
+  | { kind: "changed"; raw: DiffChangedEntry }
+  | { kind: "type"; raw: DiffTypeChangeEntry }
+  | { kind: "removed"; raw: string };
 
 export function DiffWorkspace({
   diffOld,
@@ -62,7 +68,7 @@ export function DiffWorkspace({
     (summary?.typeChanges.length ?? 0);
   const diffReport = useMemo(() => buildDiffReport(summary), [summary]);
 
-  useEffect(() => {
+  const applyDecorations = useCallback(() => {
     const originalEditor = originalEditorRef.current;
     const modifiedEditor = modifiedEditorRef.current;
     if (!originalEditor || !modifiedEditor) {
@@ -103,6 +109,10 @@ export function DiffWorkspace({
       })),
     );
   }, [visualDiff]);
+
+  useEffect(() => {
+    applyDecorations();
+  }, [applyDecorations]);
 
   useEffect(() => {
     const originalEditor = originalEditorRef.current;
@@ -166,13 +176,19 @@ export function DiffWorkspace({
       ]
     : [];
 
-  const detailItems = summary
+  const detailItems: DiffDetailItemData[] = summary
     ? [
+        ...summary.added.map((item) => ({ kind: "added" as const, raw: item })),
         ...summary.changed.map((item) => ({ kind: "changed" as const, raw: item })),
         ...summary.typeChanges.map((item) => ({ kind: "type" as const, raw: item })),
         ...summary.removed.map((item) => ({ kind: "removed" as const, raw: item })),
       ]
     : [];
+
+  const detailItemKey = (item: DiffDetailItemData) =>
+    item.kind === "added" || item.kind === "removed"
+      ? `${item.kind}-${item.raw}`
+      : `${item.kind}-${item.raw.path}`;
 
   return (
     <div className="flex h-full min-h-0 flex-col bg-obsidian-base">
@@ -272,6 +288,7 @@ export function DiffWorkspace({
                       onChange={(value) => setDiffOld(value ?? "")}
                       onMount={(editor) => {
                         originalEditorRef.current = editor as unknown as DiffPaneEditor;
+                        applyDecorations();
                       }}
                       options={{
                         automaticLayout: true,
@@ -303,6 +320,7 @@ export function DiffWorkspace({
                       onChange={(value) => setDiffNew(value ?? "")}
                       onMount={(editor) => {
                         modifiedEditorRef.current = editor as unknown as DiffPaneEditor;
+                        applyDecorations();
                       }}
                       options={{
                         automaticLayout: true,
@@ -394,7 +412,7 @@ export function DiffWorkspace({
                   {detailItems.length > 0 ? (
                     <div className="space-y-2">
                       {detailItems.map((item) => (
-                        <DiffDetailItem key={`${item.kind}-${item.raw}`} item={item} />
+                        <DiffDetailItem key={detailItemKey(item)} item={item} />
                       ))}
                     </div>
                   ) : (
@@ -419,7 +437,7 @@ export function DiffWorkspace({
 
                   <div className="space-y-2">
                     {detailItems.map((item) => (
-                      <DiffDetailItem key={`${item.kind}-${item.raw}`} item={item} />
+                      <DiffDetailItem key={detailItemKey(item)} item={item} />
                     ))}
                   </div>
                 </div>
@@ -444,7 +462,7 @@ export function DiffWorkspace({
 
                 <div className="space-y-2">
                   {detailItems.map((item) => (
-                    <DiffDetailItem key={`${item.kind}-${item.raw}`} item={item} />
+                    <DiffDetailItem key={detailItemKey(item)} item={item} />
                   ))}
                 </div>
               </div>
@@ -486,12 +504,26 @@ function DiffStatCard({
   );
 }
 
-function DiffDetailItem({ item }: { item: { kind: "changed" | "type" | "removed"; raw: string } }) {
+function DiffDetailItem({ item }: { item: DiffDetailItemData }) {
+  if (item.kind === "added") {
+    return (
+      <div className="rounded-[8px] border-[0.5px] border-emerald-500/20 bg-emerald-50 px-4 py-3 dark:border-emerald-900/30 dark:bg-emerald-950/20">
+        <div className="flex items-start gap-3">
+          <span className="text-[12px] leading-none text-emerald-600 dark:text-[#3DD68C]">+</span>
+          <div className="min-w-0">
+            <p className="text-[12px] font-medium text-emerald-600 dark:text-[#3DD68C]">Added</p>
+            <p className="mt-1 font-mono text-[11px] text-text-secondary">{item.raw}</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (item.kind === "removed") {
     return (
-      <div className="rounded-[8px] border-[0.5px] border-red-500/20 dark:border-red-900/30 bg-red-50 dark:bg-red-950/20 px-4 py-3">
+      <div className="rounded-[8px] border-[0.5px] border-red-500/20 bg-red-50 px-4 py-3 dark:border-red-900/30 dark:bg-red-950/20">
         <div className="flex items-start gap-3">
-          <span className="text-[12px] leading-none text-red-600 dark:text-[#FF5C6C]">✕</span>
+          <span className="text-[12px] leading-none text-red-600 dark:text-[#FF5C6C]">&#x2715;</span>
           <div className="min-w-0">
             <p className="text-[12px] font-medium text-red-600 dark:text-[#FF5C6C]">Removed</p>
             <p className="mt-1 font-mono text-[11px] text-text-secondary">{item.raw}</p>
@@ -501,21 +533,18 @@ function DiffDetailItem({ item }: { item: { kind: "changed" | "type" | "removed"
     );
   }
 
-  const [path, remainder = ""] = item.raw.split(": ");
-  const [oldValue = "", newValue = ""] = remainder.split(" -> ");
-
   if (item.kind === "type") {
     return (
-      <div className="rounded-[8px] border-[0.5px] border-blue-500/20 dark:border-blue-900/30 bg-blue-50 dark:bg-blue-950/20 px-4 py-3">
+      <div className="rounded-[8px] border-[0.5px] border-blue-500/20 bg-blue-50 px-4 py-3 dark:border-blue-900/30 dark:bg-blue-950/20">
         <div className="flex items-start gap-3">
-          <span className="text-[12px] leading-none text-blue-600 dark:text-[#79C0FF]">ⓘ</span>
+          <span className="text-[12px] leading-none text-blue-600 dark:text-[#79C0FF]">&#9432;</span>
           <div className="min-w-0">
             <p className="text-[12px] font-medium text-blue-600 dark:text-[#79C0FF]">Type changed</p>
-            <p className="mt-1 font-mono text-[11px] text-text-secondary">{path}</p>
+            <p className="mt-1 font-mono text-[11px] text-text-secondary">{item.raw.path}</p>
             <p className="mt-1 font-mono text-[11px] text-text-primary">
-              <span className="text-red-600 dark:text-[#FF5C6C]">{oldValue}</span>
-              <span className="px-1 text-text-secondary">→</span>
-              <span className="text-emerald-600 dark:text-[#3DD68C]">{newValue}</span>
+              <span className="text-red-600 dark:text-[#FF5C6C]">{item.raw.oldType}</span>
+              <span className="px-1 text-text-secondary">&rarr;</span>
+              <span className="text-emerald-600 dark:text-[#3DD68C]">{item.raw.newType}</span>
             </p>
           </div>
         </div>
@@ -524,16 +553,16 @@ function DiffDetailItem({ item }: { item: { kind: "changed" | "type" | "removed"
   }
 
   return (
-    <div className="rounded-[8px] border-[0.5px] border-amber-500/20 dark:border-amber-900/30 bg-amber-50 dark:bg-amber-950/20 px-4 py-3">
+    <div className="rounded-[8px] border-[0.5px] border-amber-500/20 bg-amber-50 px-4 py-3 dark:border-amber-900/30 dark:bg-amber-950/20">
       <div className="flex items-start gap-3">
-        <span className="text-[12px] leading-none text-amber-600 dark:text-[#F5A623]">⟳</span>
+        <span className="text-[12px] leading-none text-amber-600 dark:text-[#F5A623]">&#8635;</span>
         <div className="min-w-0">
           <p className="text-[12px] font-medium text-amber-600 dark:text-[#F5A623]">Changed</p>
-          <p className="mt-1 font-mono text-[11px] text-text-secondary">{path}</p>
+          <p className="mt-1 font-mono text-[11px] text-text-secondary">{item.raw.path}</p>
           <p className="mt-1 font-mono text-[11px] text-text-primary">
-            <span className="text-red-600 dark:text-[#FF5C6C]">{oldValue}</span>
-            <span className="px-1 text-text-secondary">→</span>
-            <span className="text-emerald-600 dark:text-[#3DD68C]">{newValue}</span>
+            <span className="text-red-600 dark:text-[#FF5C6C]">{JSON.stringify(item.raw.oldValue)}</span>
+            <span className="px-1 text-text-secondary">&rarr;</span>
+            <span className="text-emerald-600 dark:text-[#3DD68C]">{JSON.stringify(item.raw.newValue)}</span>
           </p>
         </div>
       </div>
@@ -570,13 +599,17 @@ function buildDiffReport(summary: DiffSummary) {
 
   if (summary.changed.length > 0) {
     lines.push("Changed values:");
-    summary.changed.forEach((item) => lines.push(`- ${item}`));
+    summary.changed.forEach((item) =>
+      lines.push(`- ${item.path}: ${JSON.stringify(item.oldValue)} -> ${JSON.stringify(item.newValue)}`),
+    );
     lines.push("");
   }
 
   if (summary.typeChanges.length > 0) {
     lines.push("Type changes:");
-    summary.typeChanges.forEach((item) => lines.push(`- ${item}`));
+    summary.typeChanges.forEach((item) =>
+      lines.push(`- ${item.path}: ${item.oldType} -> ${item.newType}`),
+    );
   }
 
   return lines.join("\n").trim();
