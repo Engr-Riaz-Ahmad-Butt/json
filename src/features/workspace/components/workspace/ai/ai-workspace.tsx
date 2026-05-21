@@ -9,10 +9,18 @@ import { cn } from "@/lib/utils";
 type AiTask = "explain" | "fix" | "query" | "generate";
 
 type ChatMsg =
-  | { id: string; role: "user"; content: string; task: AiTask }
-  | { id: string; role: "assistant"; content: string; task: AiTask; json: string | null; jsonPath: string | null }
+  | { id: string; role: "user"; content: string; task: AiTask; createdAt: number }
+  | {
+      id: string;
+      role: "assistant";
+      content: string;
+      task: AiTask;
+      json: string | null;
+      jsonPath: string | null;
+      createdAt: number;
+    }
   | { id: string; role: "loading" }
-  | { id: string; role: "error"; message: string; code?: string; retryAfter?: number };
+  | { id: string; role: "error"; message: string; code?: string; retryAfter?: number; createdAt: number };
 
 type AiApiResponse = {
   result?: string;
@@ -27,6 +35,7 @@ type AiApiResponse = {
 
 let _uid = 0;
 const uid = () => String(++_uid);
+const getNow = () => Date.now();
 
 const TASKS: AiTask[] = ["explain", "fix", "query", "generate"];
 
@@ -38,8 +47,8 @@ const TASK_LABEL: Record<AiTask, string> = {
 };
 
 const PLACEHOLDERS: Record<AiTask, string> = {
-  explain: "Ask anything about this JSON…",
-  fix: "Describe what to fix, or press send…",
+  explain: "Ask anything about this JSON...",
+  fix: "Describe what to fix, or press send...",
   query: "e.g. Find all users where active is true",
   generate: "e.g. 10 records with varied statuses",
 };
@@ -92,13 +101,14 @@ export function AiWorkspace({
     }
 
     const content = q ?? input.trim();
+    const createdAt = getNow();
     setInput("");
     setLoading(true);
 
     const loadId = uid();
     setMsgs((p) => [
       ...p,
-      { id: uid(), role: "user", content: content || TASK_LABEL[t], task: t },
+      { id: uid(), role: "user", content: content || getFallbackUserMessage(t), task: t, createdAt },
       { id: loadId, role: "loading" },
     ]);
 
@@ -123,6 +133,7 @@ export function AiWorkspace({
                   message: data.error ?? "Something went wrong",
                   code: data.code,
                   retryAfter: data.retryAfter,
+                  createdAt: getNow(),
                 }
               : m,
           ),
@@ -141,6 +152,7 @@ export function AiWorkspace({
                 task: t,
                 json: extractFirstJsonBlock(result),
                 jsonPath: extractJsonPath(result),
+                createdAt: getNow(),
               }
             : m,
         ),
@@ -150,7 +162,12 @@ export function AiWorkspace({
       setMsgs((p) =>
         p.map((m) =>
           m.id === loadId
-            ? { id: loadId, role: "error" as const, message: "Could not reach the AI service." }
+            ? {
+                id: loadId,
+                role: "error" as const,
+                message: "Could not reach the AI service.",
+                createdAt: getNow(),
+              }
             : m,
         ),
       );
@@ -167,7 +184,6 @@ export function AiWorkspace({
 
   return (
     <div className="flex h-full flex-col bg-obsidian-base">
-      {/* Header */}
       <div className="flex shrink-0 items-center justify-between border-b-[0.5px] border-ui-border bg-surface/60 px-4 py-3 sm:px-5">
         <div className="flex items-center gap-2.5">
           <div className="flex h-7 w-7 items-center justify-center rounded-full bg-copper-accent/15">
@@ -195,7 +211,6 @@ export function AiWorkspace({
         </div>
       </div>
 
-      {/* Chat messages */}
       <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
         {!hasJson ? (
           <EmptyNoJson />
@@ -209,8 +224,8 @@ export function AiWorkspace({
                   <div key={m.id} className="flex justify-end">
                     <div className="max-w-[82%] rounded-2xl rounded-tr-sm border-[0.5px] border-ui-border bg-surface-container-high px-4 py-3">
                       <p className="text-[13px] leading-relaxed text-text-primary">{m.content}</p>
-                      <p className="mt-1.5 text-right text-[10px] font-medium uppercase tracking-wider text-copper-accent/60">
-                        {TASK_LABEL[m.task]}
+                      <p className="mt-1.5 text-right text-[10px] text-text-secondary/70">
+                        {formatMessageTime(m.createdAt)}
                       </p>
                     </div>
                   </div>
@@ -242,6 +257,7 @@ export function AiWorkspace({
                     <div className="max-w-[82%] rounded-2xl rounded-tl-sm border-[0.5px] border-red-500/20 bg-red-500/5 px-4 py-3">
                       <p className="text-[12px] font-semibold text-red-500 dark:text-red-400">Error</p>
                       <p className="mt-1 text-[12px] leading-relaxed text-text-secondary">{m.message}</p>
+                      <p className="mt-1.5 text-[10px] text-text-secondary/70">{formatMessageTime(m.createdAt)}</p>
                       {countdown > 0 ? (
                         <p className="mt-2 text-[11px] text-text-secondary">Retry in {countdown}s</p>
                       ) : (
@@ -266,6 +282,7 @@ export function AiWorkspace({
                       <div className="rounded-2xl rounded-tl-sm border-[0.5px] border-ui-border bg-surface-elevated px-4 py-4">
                         <RenderedResponse text={m.content} />
                       </div>
+                      <p className="mt-1.5 pl-0.5 text-[10px] text-text-secondary/70">{formatMessageTime(m.createdAt)}</p>
                       <div className="mt-2 flex flex-wrap items-center gap-1.5 pl-0.5">
                         <MsgBtn onClick={() => void onCopy(m.content, "Copied response")}>
                           <Copy className="size-3" /> Copy
@@ -294,9 +311,7 @@ export function AiWorkspace({
         )}
       </div>
 
-      {/* Input bar */}
       <div className="shrink-0 border-t-[0.5px] border-ui-border bg-surface px-4 py-3 sm:px-5">
-        {/* Task chips */}
         <div className="mb-2.5 flex gap-1.5 overflow-x-auto pb-0.5">
           {TASKS.map((t) => (
             <button
@@ -315,7 +330,6 @@ export function AiWorkspace({
           ))}
         </div>
 
-        {/* Input row */}
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -413,9 +427,9 @@ function WelcomeScreen({ onSuggest }: { onSuggest: (s: (typeof SUGGESTIONS)[numb
         <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-copper-accent/15">
           <Sparkles className="size-5 text-copper-accent" />
         </div>
-        <p className="text-[16px] font-semibold text-text-primary">Ask anything about your JSON</p>
+        <p className="text-[16px] font-semibold text-text-primary">How can I help with this JSON?</p>
         <p className="mt-1.5 text-[13px] leading-relaxed text-text-secondary">
-          Explain, fix, query, or generate mock data.
+          Ask a question, inspect the payload, or generate mock data.
         </p>
       </div>
 
@@ -574,13 +588,28 @@ function extractJsonPath(text: string): string | null {
 }
 
 function isSectionHeading(line: string) {
-  return (
-    /^\*\*[^*]+\*\*$/.test(line) || /^(Key fields|Watchouts|What changed|Issues found)$/i.test(line)
-  );
+  return /^\*\*[^*]+\*\*$/.test(line) || /^(Key fields|Watchouts|What changed|Issues found)$/i.test(line);
 }
 
 function getHeadingTone(line: string) {
   if (/^(Watchouts|Issues found)$/i.test(line.replace(/\*/g, ""))) return "alert" as const;
   if (/^What changed$/i.test(line.replace(/\*/g, ""))) return "success" as const;
   return "default" as const;
+}
+
+function getFallbackUserMessage(task: AiTask) {
+  switch (task) {
+    case "explain":
+      return "Help me understand this JSON";
+    case "fix":
+      return "Review and fix this JSON";
+    case "query":
+      return "Query this JSON";
+    case "generate":
+      return "Generate mock data from this JSON";
+  }
+}
+
+function formatMessageTime(timestamp: number) {
+  return new Date(timestamp).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
 }

@@ -3,7 +3,8 @@ function intro(role: string) {
 
 General rules:
 - Be concise, technical, and accurate.
-- Do not greet the user or add filler.
+- If the user sends only a greeting or a vague message, respond naturally and ask one short clarifying question.
+- Do not add filler or unnecessary introductions.
 - Do not restate the prompt unless needed for clarity.
 - Never invent fields, values, or external context.
 - Use valid fenced code blocks only when returning code or JSON.
@@ -106,7 +107,21 @@ export function buildUserPrompt(
 
   switch (task) {
     case "explain":
-      return `Analyze this JSON payload:\n\n\`\`\`json\n${json}\n\`\`\`${truncatedNote}`;
+      if (question?.trim()) {
+        return `User message: ${question}
+
+JSON payload:
+
+\`\`\`json
+${json}
+\`\`\`${truncatedNote}
+
+If the user message is only a greeting, vague, or conversational (for example: "hi", "hello", "help", "can you help me"), do not analyze the payload yet.
+Instead, reply briefly in a natural way and ask what they want to know about the JSON.
+
+If the user message asks for an explanation or analysis, explain the payload using the required format.`;
+      }
+      return `Explain this JSON payload:\n\n\`\`\`json\n${json}\n\`\`\`${truncatedNote}`;
 
     case "fix":
       return `Repair or review this JSON:\n\n\`\`\`json\n${json}\n\`\`\`${truncatedNote}`;
