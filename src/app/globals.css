@@ -209,3 +209,11 @@
     outline: none;
   }
 }
+
+@layer base {
+  button:not(:disabled),
+  a:not([aria-disabled="true"]),
+  [role="button"]:not(:disabled) {
+    cursor: pointer !important;
+  }
+}

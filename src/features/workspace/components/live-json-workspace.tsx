@@ -262,6 +262,7 @@ export function LiveJsonWorkspace({
 
               {workspaceView === "mock" ? (
                 <MockWorkspace
+                  source={source}
                   onSendToEditor={(value) => {
                     setSource(value);
                     openWorkspace("editor");

@@ -102,21 +102,96 @@ function buildMockRecords(fields: SchemaField[], count: number) {
   });
 }
 
+function inferFieldType(value: unknown): FieldType {
+  if (typeof value === "boolean") {
+    return "boolean";
+  }
+
+  if (typeof value === "number") {
+    return Number.isInteger(value) ? "integer" : "price";
+  }
+
+  if (typeof value === "string") {
+    if (/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value)) {
+      return "uuid";
+    }
+
+    if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+      return "email";
+    }
+
+    if (!Number.isNaN(Date.parse(value)) && /[-:T]/.test(value)) {
+      return "timestamp";
+    }
+
+    if (/(pending|success|failed|active|inactive)/i.test(value)) {
+      return "status";
+    }
+
+    if (/^\+?[0-9()\-\s]{8,}$/.test(value)) {
+      return "phone";
+    }
+  }
+
+  return "name";
+}
+
+function deriveMockStateFromSource(source: string) {
+  const trimmed = source.trim();
+
+  if (!trimmed) {
+    return null;
+  }
+
+  try {
+    const parsed = JSON.parse(trimmed) as unknown;
+    const records = Array.isArray(parsed) ? parsed : [parsed];
+    const firstRecord = records.find(
+      (entry): entry is Record<string, unknown> =>
+        entry !== null && typeof entry === "object" && !Array.isArray(entry),
+    );
+
+    if (!firstRecord) {
+      return null;
+    }
+
+    const fields = Object.entries(firstRecord).map(([key, value]) => ({
+      key,
+      type: inferFieldType(value),
+    }));
+
+    if (fields.length === 0) {
+      return null;
+    }
+
+    return {
+      fields,
+      count: Array.isArray(parsed) ? Math.max(records.length, 1) : 1,
+      output: JSON.stringify(parsed, null, 2),
+    };
+  } catch {
+    return null;
+  }
+}
+
 export function MockWorkspace({
+  source,
   onSendToEditor,
   onCopy,
 }: {
+  source: string;
   onSendToEditor: (json: string) => void;
   onCopy: (value: string, message?: string) => Promise<void>;
 }) {
   const { monacoTheme } = useTheme();
-  const [fields, setFields] = useState<SchemaField[]>(PRESET_TEMPLATES.users.fields);
-  const [count, setCount] = useState<number>(10);
-  const [output, setOutput] = useState<string>(() =>
-    JSON.stringify(buildMockRecords(PRESET_TEMPLATES.users.fields, 10), null, 2),
+  const initialState = deriveMockStateFromSource(source);
+  const [fields, setFields] = useState<SchemaField[]>(() => initialState?.fields ?? PRESET_TEMPLATES.users.fields);
+  const [count, setCount] = useState<number>(() => initialState?.count ?? 10);
+  const [output, setOutput] = useState<string>(
+    () => initialState?.output ?? JSON.stringify(buildMockRecords(PRESET_TEMPLATES.users.fields, 10), null, 2),
   );
   const [copied, setCopied] = useState(false);
-  const fieldCounterRef = useRef(PRESET_TEMPLATES.users.fields.length);
+  const fieldCounterRef = useRef((initialState?.fields ?? PRESET_TEMPLATES.users.fields).length);
 
   const handleGenerate = useCallback(() => {
     if (fields.length === 0) {
