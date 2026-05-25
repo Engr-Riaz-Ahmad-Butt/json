@@ -36,6 +36,7 @@ type AiApiResponse = {
 let _uid = 0;
 const uid = () => String(++_uid);
 const getNow = () => Date.now();
+const AI_WORKSPACE_SESSION_KEY = "payloada-ai-workspace-session";
 
 const TASKS: AiTask[] = ["explain", "fix", "query", "generate"];
 
@@ -85,7 +86,64 @@ export function AiWorkspace({
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const hasRestoredSessionRef = useRef(false);
   const hasJson = source.trim().length > 0;
+
+  useEffect(() => {
+    try {
+      const raw = window.sessionStorage.getItem(AI_WORKSPACE_SESSION_KEY);
+      if (!raw) return;
+
+      const saved = JSON.parse(raw) as {
+        msgs?: ChatMsg[];
+        task?: AiTask;
+        input?: string;
+        remaining?: number | null;
+        countdown?: number;
+      };
+
+      if (Array.isArray(saved.msgs)) {
+        setMsgs(saved.msgs);
+      }
+      if (saved.task && TASKS.includes(saved.task)) {
+        setTask(saved.task);
+      }
+      if (typeof saved.input === "string") {
+        setInput(saved.input);
+      }
+      if (typeof saved.remaining === "number" || saved.remaining === null) {
+        setRemaining(saved.remaining ?? null);
+      }
+      if (typeof saved.countdown === "number" && saved.countdown > 0) {
+        setCountdown(saved.countdown);
+      }
+    } catch {
+      window.sessionStorage.removeItem(AI_WORKSPACE_SESSION_KEY);
+    } finally {
+      hasRestoredSessionRef.current = true;
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!hasRestoredSessionRef.current) {
+      return;
+    }
+
+    try {
+      window.sessionStorage.setItem(
+        AI_WORKSPACE_SESSION_KEY,
+        JSON.stringify({
+          msgs,
+          task,
+          input,
+          remaining,
+          countdown,
+        }),
+      );
+    } catch {
+      // Ignore storage write failures and keep the in-memory experience working.
+    }
+  }, [countdown, input, msgs, remaining, task]);
 
   function handleFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -206,6 +264,13 @@ export function AiWorkspace({
     setMsgs([]);
     setCountdown(0);
     setLoading(false);
+    setRemaining(null);
+    setInput("");
+    try {
+      window.sessionStorage.removeItem(AI_WORKSPACE_SESSION_KEY);
+    } catch {
+      // Ignore storage cleanup failures.
+    }
   }
 
   return (

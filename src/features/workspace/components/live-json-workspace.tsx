@@ -248,9 +248,9 @@ export function LiveJsonWorkspace({
                 />
               ) : null}
 
-              {workspaceView === "ai" ? (
+              <div className={workspaceView === "ai" ? "h-full" : "hidden"}>
                 <AiWorkspace source={source} onSendToEditor={setSource} onSetSource={setSource} onCopy={handleCopy} />
-              ) : null}
+              </div>
 
               {workspaceView === "table" ? (
                 <TableWorkspace
