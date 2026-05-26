@@ -117,7 +117,6 @@ export function AiWorkspace({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const hasRestoredSessionRef = useRef(false);
   const hasJson = source.trim().length > 0;
-  const jsonSizeKb = hasJson ? (new TextEncoder().encode(source).length / 1024).toFixed(1) : null;
   const lastAssistant = [...msgs].reverse().find((message): message is Extract<ChatMsg, { role: "assistant" }> => message.role === "assistant");
   const lastUser = [...msgs].reverse().find((message): message is Extract<ChatMsg, { role: "user" }> => message.role === "user");
 
@@ -402,12 +401,11 @@ export function AiWorkspace({
         </div>
       </div>
 
-      <div className="flex shrink-0 flex-wrap items-center gap-x-3 gap-y-1.5 border-b-[0.5px] border-ui-border bg-[#0F1117] px-4 py-1.5 sm:px-5">
+      <div className="flex shrink-0 items-center gap-2 border-b-[0.5px] border-ui-border bg-[#0F1117] px-4 py-1.5 sm:px-5">
         {hasJson ? (
           <span className="flex items-center gap-2 font-mono text-[11px] text-text-secondary">
             <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-500" />
             Using editor JSON
-            <span className="text-[#5A6070]">- {jsonSizeKb} KB</span>
           </span>
         ) : (
           <span className="flex items-center gap-2 font-mono text-[11px] text-text-secondary">
@@ -416,19 +414,9 @@ export function AiWorkspace({
           </span>
         )}
 
-        <span className="hidden h-3.5 w-px bg-ui-border sm:block" />
-        <span className="font-mono text-[11px] text-text-secondary">
-          Mode <span className="text-[#8B92A8]">{TASK_LABEL[task]}</span>
-        </span>
-        <span className="hidden h-3.5 w-px bg-ui-border sm:block" />
-        <span className="font-mono text-[11px] text-text-secondary">
-          Model <span className="text-[#8B92A8]">Gemini</span>
-        </span>
-
         {remaining !== null && remaining <= 10 ? (
           <>
-            <span className="hidden h-3.5 w-px bg-ui-border sm:block" />
-            <span className="font-mono text-[11px] text-text-secondary">
+            <span className="ml-auto font-mono text-[11px] text-text-secondary">
               Uses left <span className="text-[#F5A623]">{remaining}</span>
             </span>
           </>
@@ -627,7 +615,7 @@ export function AiWorkspace({
           }}
           className="flex items-end gap-2"
         >
-          <div className="flex-1 rounded-xl border-[0.5px] border-ui-border bg-[#0F1117] px-3 py-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.02)]">
+          <div className="flex-1 rounded-xl border-[0.5px] border-ui-border bg-[#0F1117] px-3 py-1.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.02)]">
             <textarea
               ref={inputRef}
               value={input}
@@ -635,11 +623,10 @@ export function AiWorkspace({
               onKeyDown={handleComposerKeyDown}
               placeholder={PLACEHOLDERS[task]}
               disabled={loading || countdown > 0 || !hasJson}
-              rows={2}
-              className="min-h-[36px] w-full resize-none bg-transparent text-[13px] leading-relaxed text-text-primary outline-none placeholder:text-text-secondary/50 disabled:opacity-50"
+              rows={1}
+              className="min-h-[28px] w-full resize-none bg-transparent text-[13px] leading-relaxed text-text-primary outline-none placeholder:text-text-secondary/50 disabled:opacity-50"
             />
-            <div className="mt-1.5 flex items-center justify-between">
-              <p className="text-[10px] text-[#5A6070]">Shift+Enter new line - Enter to send</p>
+            <div className="mt-1 flex items-center justify-end">
               <p className="text-[10px] text-[#5A6070]">{input.length} / 2000</p>
             </div>
           </div>
