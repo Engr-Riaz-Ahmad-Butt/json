@@ -1,20 +1,29 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import {
   Braces,
   CheckCircle2,
+  ChevronDown,
   ChevronLeft,
   ChevronRight,
+  ClipboardPaste,
+  Columns,
   Copy,
   FileJson2,
+  GitBranch,
   Info,
+  Link2,
   Loader2,
+  List,
   Maximize2,
   Minimize2,
   Search,
   ShieldAlert,
+  Sparkles,
+  Upload,
+  Waypoints,
   X,
   XCircle,
 } from "lucide-react";
@@ -27,16 +36,21 @@ import { useTheme } from "@/hooks/use-theme";
 
 import {
   CodePreview,
+  EditorControlButton,
+  EditorFileTab,
+  IconButton,
   IssueCard,
   JsonGraphView,
   SidebarEmpty,
   SidebarSection,
   SmallAction,
+  SquareIconButton,
   StatsGrid,
   TreeNode,
 } from "../shared";
 import { maskSensitiveValues } from "../shared/utils";
-import type { EditorInstance, InspectorView, SearchMatch, SelectedNode } from "../core/types";
+import type { EditorInstance, InspectorView, RoleMode, SearchMatch, SelectedNode } from "../core/types";
+import { ROLE_MODE_INFO, ROLE_MODES } from "../core/constants";
 import { evaluateJsonPathQuery, findSearchMatches, renderJsonValue } from "../shared/utils";
 import { ColumnView } from "./column-view";
 
@@ -63,8 +77,22 @@ export function EditorWorkspace({
   setLinePosition,
   onClear,
   onPaste,
+  fileInputRef,
+  onUpload,
+  onFormat,
+  onMinify,
+  onRepair,
+  onSort,
+  onOpenConverters,
+  roleMode,
+  setRoleMode,
   onLoadSample,
   onFetchFromUrl,
+  showUrlInput,
+  urlValue,
+  setUrlValue,
+  onLoadUrlToggle,
+  onLoadUrl,
   isParsing,
   workerParseMs,
 }: {
@@ -89,8 +117,22 @@ export function EditorWorkspace({
   setLinePosition: React.Dispatch<React.SetStateAction<{ line: number; column: number }>>;
   onClear: () => void;
   onPaste: () => Promise<void>;
+  fileInputRef: React.MutableRefObject<HTMLInputElement | null>;
+  onUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onFormat: () => void;
+  onMinify: () => void;
+  onRepair: () => void;
+  onSort: () => void;
+  onOpenConverters: () => void;
+  roleMode: RoleMode;
+  setRoleMode: React.Dispatch<React.SetStateAction<RoleMode>>;
   onLoadSample: () => void;
   onFetchFromUrl: () => void;
+  showUrlInput: boolean;
+  urlValue: string;
+  setUrlValue: React.Dispatch<React.SetStateAction<string>>;
+  onLoadUrlToggle: () => void;
+  onLoadUrl: () => void;
   isParsing?: boolean;
   workerParseMs?: number | null;
 }) {
@@ -121,6 +163,8 @@ export function EditorWorkspace({
   const [treeContainerElement, setTreeContainerElement] = useState<HTMLDivElement | null>(null);
   const [showStats, setShowStats] = useState(false);
   const [isEditorFullscreen, setIsEditorFullscreen] = useState(false);
+  const [showModeMenu, setShowModeMenu] = useState(false);
+  const modeMenuRef = useRef<HTMLDivElement | null>(null);
   const [jsonPathQuery, setJsonPathQuery] = useState("");
   const jsonPathState = useMemo(
     () =>
@@ -182,6 +226,17 @@ export function EditorWorkspace({
   };
 
   useEffect(() => {
+    const handlePointerDown = (event: MouseEvent) => {
+      if (!modeMenuRef.current?.contains(event.target as Node)) {
+        setShowModeMenu(false);
+      }
+    };
+
+    window.addEventListener("mousedown", handlePointerDown);
+    return () => window.removeEventListener("mousedown", handlePointerDown);
+  }, []);
+
+  useEffect(() => {
     if (!isEditorFullscreen) {
       return;
     }
@@ -206,23 +261,128 @@ export function EditorWorkspace({
         inspectorView === "none" ? "" : "border-r-[0.5px] border-ui-border",
       )}
     >
-      <div className="flex items-center justify-between border-b-[0.5px] border-ui-border bg-surface-elevated px-4 py-3 sm:px-5">
-        <span className="font-mono text-[13px] font-normal text-on-surface-variant">input.json</span>
-        <div className="flex items-center gap-2 text-on-surface-variant">
-          <button
-            type="button"
-            onClick={() => setIsEditorFullscreen((current) => !current)}
-            title={isEditorFullscreen ? "Exit fullscreen" : "Fullscreen editor"}
-            className="transition-colors hover:text-text-primary"
-          >
-            {isEditorFullscreen ? <Minimize2 className="size-4" /> : <Maximize2 className="size-4" />}
-          </button>
-          <button type="button" onClick={() => onCopy(source, "Copied editor content")}>
-            <Copy className="size-4" />
-          </button>
-          <button type="button" onClick={onClear}>
-            <XCircle className="size-4" />
-          </button>
+      <div className="border-b-[0.5px] border-ui-border bg-surface-elevated">
+        <div className="flex flex-col gap-3 px-4 py-3 sm:px-5">
+          <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
+            <div className="flex min-w-0 flex-wrap items-center gap-2">
+              {/* General Mode Dropdown Selector */}
+              <div ref={modeMenuRef} className="relative">
+                <button
+                  type="button"
+                  onClick={() => setShowModeMenu((current) => !current)}
+                  className="flex h-9 items-center gap-1.5 rounded-[6px] border-[0.5px] border-ui-border bg-surface-elevated/40 px-3.5 text-left transition-all hover:border-[#C07040]/50 hover:bg-[#C07040]/5 focus-visible:border-copper-accent focus-visible:outline-none"
+                >
+                  <span className="text-[12px] font-semibold text-text-secondary">{roleMode} mode</span>
+                  <ChevronDown
+                    className="size-3.5 text-text-tertiary transition-transform duration-200"
+                    style={{ transform: showModeMenu ? "rotate(180deg)" : "rotate(0deg)" }}
+                  />
+                </button>
+
+                {showModeMenu ? (
+                  <div className="absolute left-0 top-[calc(100%+8px)] z-20 w-[320px] overflow-hidden rounded-[12px] border-[0.5px] border-ui-border bg-surface shadow-xl animate-in fade-in slide-in-from-top-2 duration-150">
+                    <div className="border-b-[0.5px] border-ui-border px-4 py-3">
+                      <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-text-secondary/80">Mode</p>
+                    </div>
+                    <div className="p-2">
+                      {ROLE_MODES.map((item) => (
+                        <button
+                          key={item}
+                          type="button"
+                          onClick={() => {
+                            setRoleMode(item);
+                            setShowModeMenu(false);
+                          }}
+                          className="flex w-full flex-col rounded-[8px] px-3 py-2.5 text-left transition-colors hover:bg-surface-container-low"
+                        >
+                          <span
+                            className="text-[13.5px] font-semibold"
+                            style={{ color: roleMode === item ? "#C07040" : "var(--color-text-primary)" }}
+                          >
+                            {item}
+                          </span>
+                          <span className="mt-1 text-[11.5px] leading-[1.4] text-text-secondary">
+                            {ROLE_MODE_INFO[item].description}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
+              </div>
+
+              {/* Transform Action Buttons */}
+              <EditorControlButton
+                icon={<Search className="size-3.5" />}
+                label="Parse"
+                onClick={() => {
+                  setInspectorView("status");
+                  editorRef.current?.focus();
+                }}
+                priority="primary"
+              />
+              <EditorControlButton icon={<Sparkles className="size-3.5" />} label="Format" onClick={onFormat} priority="accent" />
+              <EditorControlButton icon={<Braces className="size-3.5" />} label="Minify" onClick={onMinify} />
+              <EditorControlButton icon={<CheckCircle2 className="size-3.5" />} label="Repair" onClick={onRepair} />
+              <EditorControlButton icon={<List className="size-3.5" />} label="Sort" onClick={onSort} />
+              <EditorControlButton icon={<GitBranch className="size-3.5" />} label="Convert to" onClick={onOpenConverters} />
+              <EditorControlButton icon={<Waypoints className="size-3.5" />} label="JSONPath" onClick={() => setInspectorView("jsonpath")} />
+            </div>
+
+            {/* File Utilities Button Lockup */}
+            <div className="flex flex-wrap items-center gap-2 xl:justify-end border-t-[0.5px] border-ui-border/30 pt-3 xl:border-t-0 xl:pt-0">
+              <EditorControlButton icon={<ClipboardPaste className="size-3.5" />} label="Paste" onClick={() => void onPaste()} />
+              <EditorControlButton icon={<Upload className="size-3.5" />} label="Upload File" onClick={() => fileInputRef.current?.click()} />
+              <EditorControlButton icon={<Link2 className="size-3.5" />} label="Load URL" onClick={onLoadUrlToggle} active={showUrlInput} />
+              <EditorControlButton icon={<Sparkles className="size-3.5" />} label="Try Sample" onClick={onLoadSample} />
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".json,application/json"
+                className="hidden"
+                onChange={onUpload}
+              />
+            </div>
+          </div>
+
+          {showUrlInput ? (
+            <div className="flex flex-col gap-3 xl:flex-row xl:items-center">
+              <input
+                value={urlValue}
+                onChange={(event) => setUrlValue(event.target.value)}
+                placeholder="https://api.example.com/users"
+                className="h-11 w-full flex-1 rounded-[12px] border-[0.5px] border-ui-border bg-obsidian-base px-4 text-[14px] text-text-primary outline-none placeholder:text-outline-variant focus-visible:border-copper-accent"
+              />
+              <EditorControlButton label="Fetch JSON" onClick={onLoadUrl} priority="primary" />
+            </div>
+          ) : null}
+        </div>
+
+        <div className="flex items-end justify-between border-t-[0.5px] border-ui-border">
+          <EditorFileTab label="input.json" onClose={onClear} />
+          <div className="flex items-center gap-2 px-4 py-3 text-on-surface-variant sm:px-5">
+            <SquareIconButton
+              icon={isEditorFullscreen ? <Minimize2 className="size-4" /> : <Maximize2 className="size-4" />}
+              onClick={() => setIsEditorFullscreen((current) => !current)}
+              title={isEditorFullscreen ? "Exit fullscreen" : "Fullscreen editor"}
+            />
+            <SquareIconButton
+              icon={<Columns className="size-4" />}
+              onClick={() => setInspectorView(inspectorView === "columns" ? "none" : "columns")}
+              title="Column finder"
+              active={inspectorView === "columns"}
+            />
+            <SquareIconButton
+              icon={<Copy className="size-4" />}
+              onClick={() => void onCopy(source, "Copied editor content")}
+              title="Copy editor content"
+            />
+            <SquareIconButton
+              icon={<XCircle className="size-4" />}
+              onClick={onClear}
+              title="Clear editor"
+            />
+          </div>
         </div>
       </div>
 
@@ -290,7 +450,7 @@ export function EditorWorkspace({
         />
       </div>
 
-      <div className="flex flex-col gap-2 border-t-[0.5px] border-ui-border bg-surface-elevated px-4 py-3 font-mono text-[11px] font-normal text-outline-variant sm:flex-row sm:items-center sm:justify-between sm:px-5">
+      <div className="flex flex-col gap-2 border-t-[0.5px] border-ui-border bg-surface-elevated px-4 py-2 font-mono text-[11px] text-outline-variant sm:flex-row sm:items-center sm:justify-between sm:px-5">
         <div className="flex flex-wrap items-center gap-3 sm:gap-5">
           <span>UTF-8</span>
           <span>JSON</span>
@@ -307,10 +467,10 @@ export function EditorWorkspace({
       </div>
 
       {selectedNode ? (
-        <div className="flex flex-col gap-3 border-t-[0.5px] border-ui-border bg-surface-elevated px-4 py-3 sm:px-5 lg:flex-row lg:items-center lg:justify-between">
+        <div className="flex flex-col gap-2 border-t-[0.5px] border-ui-border bg-surface-elevated px-4 py-2 sm:px-5 lg:flex-row lg:items-center lg:justify-between">
           <div>
             <p className="text-[11px] font-medium tracking-[0.5px] text-outline-variant">Selected</p>
-            <p className="mt-1 font-mono text-[13px] font-normal text-copper-accent">
+            <p className="mt-0.5 font-mono text-[13px] text-copper-accent">
               {selectedNode.path}
             </p>
           </div>
@@ -338,8 +498,91 @@ export function EditorWorkspace({
   const inspectorPane =
     inspectorView !== "none" ? (
       <aside className="flex min-h-[320px] flex-col overflow-y-auto border-t-[0.5px] border-ui-border bg-surface xl:min-h-0 xl:border-t-0">
-        <div className="flex items-center justify-between border-b-[0.5px] border-ui-border bg-surface-elevated px-4 py-3">
-          <p className="text-[11px] font-medium tracking-[0.5px] text-outline-variant">
+        <div className="border-b-[0.5px] border-ui-border bg-surface-elevated">
+          <div className="flex items-center border-b-[0.5px] border-ui-border px-4">
+            <button
+              type="button"
+              onClick={() => {
+                setInspectorView("status");
+                setShowStats(false);
+              }}
+              className={cn(
+                "border-b-2 px-5 py-3 text-[13px] font-medium transition-colors",
+                inspectorView === "status" && !showStats
+                  ? "border-copper-accent text-copper-accent"
+                  : "border-transparent text-text-secondary hover:text-text-primary",
+              )}
+            >
+              Status
+            </button>
+            <button
+              type="button"
+              onClick={() => setInspectorView("tree")}
+              className={cn(
+                "border-b-2 px-5 py-3 text-[13px] font-medium transition-colors",
+                inspectorView === "tree"
+                  ? "border-copper-accent text-copper-accent"
+                  : "border-transparent text-text-secondary hover:text-text-primary",
+              )}
+            >
+              Tree
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setInspectorView("status");
+                setShowStats(true);
+              }}
+              className={cn(
+                "border-b-2 px-5 py-3 text-[13px] font-medium transition-colors",
+                inspectorView === "status" && showStats
+                  ? "border-copper-accent text-copper-accent"
+                  : "border-transparent text-text-secondary hover:text-text-primary",
+              )}
+            >
+              Stats
+            </button>
+            <div className="ml-auto flex items-center gap-1 py-2">
+              <IconButton
+                active={inspectorView === "formatted"}
+                icon={<List className="size-4" />}
+                onClick={() => setInspectorView("formatted")}
+                title="Formatted view"
+              />
+              <IconButton
+                active={inspectorView === "search"}
+                icon={<Search className="size-4" />}
+                onClick={() => setInspectorView("search")}
+                title="Search inspector"
+              />
+              <IconButton
+                active={inspectorView === "graph"}
+                icon={<GitBranch className="size-4" />}
+                onClick={() => setInspectorView("graph")}
+                title="Graph view"
+              />
+              <IconButton
+                active={inspectorView === "columns"}
+                icon={<Columns className="size-4" />}
+                onClick={() => setInspectorView("columns")}
+                title="Column finder"
+              />
+              <IconButton
+                active={inspectorView === "jsonpath"}
+                icon={<Waypoints className="size-4" />}
+                onClick={() => setInspectorView("jsonpath")}
+                title="JSONPath"
+              />
+              <IconButton
+                active={false}
+                icon={<X className="size-4" />}
+                onClick={() => setInspectorView("none")}
+                title="Close inspector"
+              />
+            </div>
+          </div>
+          <div className="flex items-center justify-between px-4 py-3">
+            <p className="text-[11px] font-medium tracking-[0.5px] text-outline-variant">
             {inspectorView === "status"
               ? "Status"
               : inspectorView === "formatted"
@@ -353,14 +596,8 @@ export function EditorWorkspace({
               : inspectorView === "columns"
               ? "Column Finder"
               : "JSONPath"}
-          </p>
-          <button
-            type="button"
-            onClick={() => setInspectorView("none")}
-            className="rounded-sm border-[0.5px] border-ui-border bg-obsidian-base px-2 py-1 text-[11px] font-semibold text-on-surface-variant transition-colors hover:border-ui-border-hover hover:text-text-primary focus-visible:border-copper-accent focus-visible:outline-none"
-          >
-            Close
-          </button>
+            </p>
+          </div>
         </div>
         {!source.trim() ? (
           <div className="flex min-h-[420px] flex-1 items-center justify-center p-6">
@@ -401,18 +638,21 @@ export function EditorWorkspace({
             <SidebarSection title="Status">
               <div
                 className={cn(
-                  "flex items-center gap-3 rounded-sm border px-4 py-4",
+                  "flex items-center gap-2.5 rounded-[8px] border-[0.5px] px-4.5 py-3.5 transition-colors text-left",
                   parseResult?.valid
-                    ? "border-emerald-500/20 dark:border-emerald-900/30 bg-emerald-50 dark:bg-emerald-950/20 text-emerald-600 dark:text-emerald-400"
-                    : "border-red-500/20 dark:border-red-900/30 bg-red-50 dark:bg-red-950/20 text-red-600 dark:text-red-400",
+                    ? "border-[#1D4D35] bg-[#0D2E23] text-[#3DD68C]"
+                    : "border-[#4A1520] bg-[#2A0D10] text-[#FF5C6C]",
                 )}
               >
-                {parseResult?.valid ? (
-                  <CheckCircle2 className="size-5" />
-                ) : (
-                  <XCircle className="size-5" />
-                )}
-                <span className="text-[14px] font-semibold">
+                <span 
+                  className={cn(
+                    "h-2 w-2 rounded-full shrink-0",
+                    parseResult?.valid 
+                      ? "bg-[#3DD68C] shadow-[0_0_8px_#3DD68C]" 
+                      : "bg-[#FF5C6C] shadow-[0_0_8px_#FF5C6C]"
+                  )} 
+                />
+                <span className="text-[13.5px] font-bold tracking-tight">
                   {parseResult?.valid ? "Valid JSON" : "Invalid JSON"}
                 </span>
               </div>

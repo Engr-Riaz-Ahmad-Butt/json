@@ -6,9 +6,8 @@ import { FileDiff } from "lucide-react";
 
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { useTheme } from "@/hooks/use-theme";
-import { cn } from "@/lib/utils";
 
-import { SidebarEmpty, SidebarSection, SmallAction } from "../shared";
+import { SidebarEmpty, SidebarSection, SmallAction, ToggleButton } from "../shared";
 import type { DiffPaneEditor } from "../core/types";
 import { buildDiffSummary, buildLineDiff } from "../shared/utils";
 import type { DiffChangedEntry, DiffTypeChangeEntry } from "./diff-utils";
@@ -221,30 +220,8 @@ export function DiffWorkspace({
           </div>
           <div className="hidden h-5 w-px bg-ui-border lg:block" />
           <div className="flex flex-wrap items-center gap-2">
-            <button
-              type="button"
-              onClick={() => setSyncScrolling((current) => !current)}
-              className={cn(
-                "h-9 rounded-sm border-[0.5px] px-3 text-xs font-semibold transition-colors focus-visible:outline-none",
-                syncScrolling
-                  ? "border-copper-accent bg-copper-accent/10 text-copper-accent"
-                  : "border-ui-border bg-surface-elevated text-text-secondary hover:border-ui-border-hover hover:text-text-primary",
-              )}
-            >
-              Sync Scrolling
-            </button>
-            <button
-              type="button"
-              onClick={() => setIgnoreWhitespace((current) => !current)}
-              className={cn(
-                "h-9 rounded-sm border-[0.5px] px-3 text-xs font-semibold transition-colors focus-visible:outline-none",
-                ignoreWhitespace
-                  ? "border-copper-accent bg-copper-accent/10 text-copper-accent"
-                  : "border-ui-border bg-surface-elevated text-text-secondary hover:border-ui-border-hover hover:text-text-primary",
-              )}
-            >
-              Ignore Whitespace
-            </button>
+            <ToggleButton label="Sync Scrolling" active={syncScrolling} onClick={() => setSyncScrolling((c) => !c)} />
+            <ToggleButton label="Ignore Whitespace" active={ignoreWhitespace} onClick={() => setIgnoreWhitespace((c) => !c)} />
             <button
               type="button"
               onClick={() => {
@@ -382,7 +359,7 @@ export function DiffWorkspace({
               <div className="border-b-[0.5px] border-ui-border bg-surface-elevated px-4 py-3 font-mono text-[13px] font-normal text-on-surface-variant">
                 Original JSON (prod-config-v1.json)
               </div>
-              <div className="h-[260px]">
+              <div className="h-65">
                 <MonacoEditor
                   height="100%"
                   language="json"
@@ -409,7 +386,7 @@ export function DiffWorkspace({
               <div className="border-b-[0.5px] border-ui-border bg-surface-elevated px-4 py-3 font-mono text-[13px] font-normal text-on-surface-variant">
                 Modified JSON (prod-config-v2.json)
               </div>
-              <div className="h-[260px]">
+              <div className="h-65">
                 <MonacoEditor
                   height="100%"
                   language="json"
@@ -457,10 +434,10 @@ function DiffStatCard({
 }) {
   return (
     <div
-      className="rounded-[8px] border-[0.5px] px-4 py-4"
+      className="rounded-xl border-[0.5px] px-4 py-4"
       style={{ backgroundColor: background, borderColor: border }}
     >
-      <p className="text-[10px] font-normal tracking-[0.05em]" style={{ color: text }}>
+      <p className="text-[10px] font-normal tracking-wider" style={{ color: text }}>
         {label}
       </p>
       <p className="mt-2 text-[36px] font-semibold leading-none" style={{ color: text }}>
@@ -473,7 +450,7 @@ function DiffStatCard({
 function DiffDetailItem({ item }: { item: DiffDetailItemData }) {
   if (item.kind === "added") {
     return (
-      <div className="rounded-[8px] border-[0.5px] border-emerald-500/20 bg-emerald-50 px-4 py-3 dark:border-emerald-900/30 dark:bg-emerald-950/20">
+      <div className="rounded-xl border-[0.5px] border-emerald-500/20 bg-emerald-50 px-4 py-3 dark:border-emerald-900/30 dark:bg-emerald-950/20">
         <div className="flex items-start gap-3">
           <span className="text-[12px] leading-none text-emerald-600 dark:text-[#3DD68C]">+</span>
           <div className="min-w-0">
@@ -487,7 +464,7 @@ function DiffDetailItem({ item }: { item: DiffDetailItemData }) {
 
   if (item.kind === "removed") {
     return (
-      <div className="rounded-[8px] border-[0.5px] border-red-500/20 bg-red-50 px-4 py-3 dark:border-red-900/30 dark:bg-red-950/20">
+      <div className="rounded-xl border-[0.5px] border-red-500/20 bg-red-50 px-4 py-3 dark:border-red-900/30 dark:bg-red-950/20">
         <div className="flex items-start gap-3">
           <span className="text-[12px] leading-none text-red-600 dark:text-[#FF5C6C]">&#x2715;</span>
           <div className="min-w-0">
@@ -501,7 +478,7 @@ function DiffDetailItem({ item }: { item: DiffDetailItemData }) {
 
   if (item.kind === "type") {
     return (
-      <div className="rounded-[8px] border-[0.5px] border-blue-500/20 bg-blue-50 px-4 py-3 dark:border-blue-900/30 dark:bg-blue-950/20">
+      <div className="rounded-xl border-[0.5px] border-blue-500/20 bg-blue-50 px-4 py-3 dark:border-blue-900/30 dark:bg-blue-950/20">
         <div className="flex items-start gap-3">
           <span className="text-[12px] leading-none text-blue-600 dark:text-[#79C0FF]">&#9432;</span>
           <div className="min-w-0">
@@ -519,7 +496,7 @@ function DiffDetailItem({ item }: { item: DiffDetailItemData }) {
   }
 
   return (
-    <div className="rounded-[8px] border-[0.5px] border-amber-500/20 bg-amber-50 px-4 py-3 dark:border-amber-900/30 dark:bg-amber-950/20">
+    <div className="rounded-xl border-[0.5px] border-amber-500/20 bg-amber-50 px-4 py-3 dark:border-amber-900/30 dark:bg-amber-950/20">
       <div className="flex items-start gap-3">
         <span className="text-[12px] leading-none text-amber-600 dark:text-[#F5A623]">&#8635;</span>
         <div className="min-w-0">

@@ -13,8 +13,6 @@ import { JwtWorkspace } from "./workspace/jwt/jwt-workspace";
 import { AiWorkspace } from "./workspace/ai/ai-workspace";
 import { TableWorkspace } from "./workspace/table/table-workspace";
 import { MockWorkspace } from "./workspace/mock/mock-workspace";
-import { WorkspaceActionToolbar } from "./workspace/editor/workspace-action-toolbar";
-import { WorkspaceModeStrip } from "./workspace/editor/workspace-mode-strip";
 import { WorkspaceSidebar } from "./workspace/editor/workspace-sidebar";
 import { WorkspaceTopbar } from "./workspace/editor/workspace-topbar";
 import { useLiveJsonWorkspace } from "./workspace/core/use-live-json-workspace";
@@ -109,7 +107,6 @@ export function LiveJsonWorkspace({
     clearEditor,
     loadSampleJson,
     activateSearch,
-    activateTreeInspector,
     handleNewDocument,
   } = actions;
 
@@ -142,50 +139,6 @@ export function LiveJsonWorkspace({
           />
 
           <div className="flex min-h-0 flex-1 flex-col bg-surface">
-            {workspaceView === "editor" ? (
-              <WorkspaceModeStrip
-                roleMode={roleMode}
-                setRoleMode={setRoleMode}
-                inspectorView={inspectorView}
-                setInspectorView={setInspectorView}
-                onDownload={() => handleDownload(formattedOutput || source, "payloada-output.txt")}
-              />
-            ) : null}
-
-            {workspaceView === "editor" ? (
-              <WorkspaceActionToolbar
-                fileInputRef={fileInputRef}
-                onPaste={handlePaste}
-                onUploadClick={() => fileInputRef.current?.click()}
-                onLoadUrlToggle={() => setShowUrlInput((value) => !value)}
-                onTrySample={loadSampleJson}
-                onUpload={handleUpload}
-                onFormat={handleFormat}
-                onMinify={handleMinify}
-                onRepair={handleRepair}
-                onSort={handleSortKeys}
-                onOpenConverters={() => openConverterWorkspace()}
-                onJsonPath={activateTreeInspector}
-              />
-            ) : null}
-
-            {workspaceView === "editor" && showUrlInput ? (
-              <div className="flex flex-col gap-3 border-b-[0.5px] border-ui-border bg-surface-elevated px-4 py-3 sm:flex-row sm:items-center sm:px-5">
-                <input
-                  value={urlValue}
-                  onChange={(event) => setUrlValue(event.target.value)}
-                  placeholder="https://api.example.com/users"
-                  className="h-10 w-full flex-1 rounded-sm border-[0.5px] border-ui-border bg-obsidian-base px-3 text-sm text-text-primary outline-none placeholder:text-outline-variant focus-visible:border-[#C07040]"
-                />
-                <button
-                  className="rounded-sm border-[0.5px] border-ui-border bg-[#c77742] px-4 py-2 text-sm font-semibold text-black transition-colors hover:border-[#2A2F42] focus-visible:border-[#C07040] focus-visible:outline-none sm:shrink-0"
-                  onClick={handleLoadUrl}
-                >
-                  Fetch JSON
-                </button>
-              </div>
-            ) : null}
-
             <div className="min-h-0 flex-1">
               {workspaceView === "editor" ? (
                 <EditorWorkspace
@@ -207,8 +160,22 @@ export function LiveJsonWorkspace({
                   setLinePosition={setLinePosition}
                   onClear={clearEditor}
                   onPaste={handlePaste}
+                  fileInputRef={fileInputRef}
+                  onUpload={handleUpload}
+                  onFormat={handleFormat}
+                  onMinify={handleMinify}
+                  onRepair={handleRepair}
+                  onSort={handleSortKeys}
+                  onOpenConverters={openConverterWorkspace}
+                  roleMode={roleMode}
+                  setRoleMode={setRoleMode}
                   onLoadSample={loadSampleJson}
                   onFetchFromUrl={() => setShowUrlInput(true)}
+                  showUrlInput={showUrlInput}
+                  urlValue={urlValue}
+                  setUrlValue={setUrlValue}
+                  onLoadUrlToggle={() => setShowUrlInput((value) => !value)}
+                  onLoadUrl={handleLoadUrl}
                   isParsing={isParsing}
                   workerParseMs={workerParseMs}
                 />

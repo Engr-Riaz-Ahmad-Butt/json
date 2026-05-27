@@ -103,8 +103,8 @@ export function WorkspaceTopbar({
       </div>
 
       {workspaceView === "editor" ? (
-        <div className="flex min-w-0 items-center gap-3 rounded-sm border-[0.5px] border-ui-border bg-surface-elevated px-3 py-3 sm:gap-4">
-          <Search className="size-5 shrink-0 text-text-secondary" />
+        <div className="flex h-10 min-w-0 items-center gap-2.5 rounded-[6px] border-[0.5px] border-ui-border bg-[#0B0F14]/60 px-3.5 sm:gap-3">
+          <Search className="size-4 shrink-0 text-text-secondary" />
           <input
             value={searchTerm}
             onChange={(event) => {
@@ -113,8 +113,11 @@ export function WorkspaceTopbar({
             }}
             onFocus={activateSearch}
             placeholder="Search files, actions, or data..."
-            className="w-full bg-transparent text-[15px] text-text-primary outline-none placeholder:text-outline-variant"
+            className="w-full bg-transparent text-[13px] text-text-primary outline-none placeholder:text-outline-variant"
           />
+          <span className="hidden sm:inline-flex items-center rounded border-[0.5px] border-ui-border bg-surface px-1.5 py-0.5 text-[9.5px] font-bold text-text-secondary/70 font-mono tracking-wide leading-none select-none">
+            SDK
+          </span>
         </div>
       ) : null}
     </header>

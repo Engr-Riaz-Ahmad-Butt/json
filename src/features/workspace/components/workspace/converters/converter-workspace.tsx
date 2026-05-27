@@ -8,7 +8,7 @@ import { useTheme } from "@/hooks/use-theme";
 import { cn } from "@/lib/utils";
 
 import type { ConverterTab, JsonValue } from "../core/types";
-import { SidebarEmpty, SmallAction } from "../shared";
+import { SidebarEmpty, SmallAction, ToggleButton } from "../shared";
 import { CSV_ERROR_PREFIX } from "./converter-utils";
 import { XMLParser } from "fast-xml-parser";
 
@@ -132,30 +132,8 @@ export function ConverterWorkspace({
 
           {converterTab === "XML" && (
             <div className="mt-3 flex gap-2">
-              <button
-                type="button"
-                onClick={() => setXmlDirection("json-to-xml")}
-                className={cn(
-                  "h-7 rounded-md border-[0.5px] px-3 text-[11px] font-medium transition-colors",
-                  xmlDirection === "json-to-xml"
-                    ? "border-copper-accent bg-copper-accent/10 text-copper-accent"
-                    : "border-ui-border bg-surface-elevated text-text-secondary hover:border-ui-border-hover hover:text-text-primary"
-                )}
-              >
-                JSON to XML
-              </button>
-              <button
-                type="button"
-                onClick={() => setXmlDirection("xml-to-json")}
-                className={cn(
-                  "h-7 rounded-md border-[0.5px] px-3 text-[11px] font-medium transition-colors",
-                  xmlDirection === "xml-to-json"
-                    ? "border-copper-accent bg-copper-accent/10 text-copper-accent"
-                    : "border-ui-border bg-surface-elevated text-text-secondary hover:border-ui-border-hover hover:text-text-primary"
-                )}
-              >
-                XML to JSON (Bidirectional)
-              </button>
+              <ToggleButton size="sm" label="JSON to XML" active={xmlDirection === "json-to-xml"} onClick={() => setXmlDirection("json-to-xml")} />
+              <ToggleButton size="sm" label="XML to JSON (Bidirectional)" active={xmlDirection === "xml-to-json"} onClick={() => setXmlDirection("xml-to-json")} />
             </div>
           )}
         </div>

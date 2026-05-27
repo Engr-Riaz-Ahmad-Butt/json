@@ -121,38 +121,40 @@ export function AiWorkspace({
   const lastUser = [...msgs].reverse().find((message): message is Extract<ChatMsg, { role: "user" }> => message.role === "user");
 
   useEffect(() => {
-    try {
-      const raw = window.sessionStorage.getItem(AI_WORKSPACE_SESSION_KEY);
-      if (!raw) return;
+    setTimeout(() => {
+      try {
+        const raw = window.sessionStorage.getItem(AI_WORKSPACE_SESSION_KEY);
+        if (!raw) return;
 
-      const saved = JSON.parse(raw) as {
-        msgs?: ChatMsg[];
-        task?: AiTask;
-        input?: string;
-        remaining?: number | null;
-        countdown?: number;
-      };
+        const saved = JSON.parse(raw) as {
+          msgs?: ChatMsg[];
+          task?: AiTask;
+          input?: string;
+          remaining?: number | null;
+          countdown?: number;
+        };
 
-      if (Array.isArray(saved.msgs)) {
-        setMsgs(saved.msgs);
+        if (Array.isArray(saved.msgs)) {
+          setMsgs(saved.msgs);
+        }
+        if (saved.task && TASKS.includes(saved.task)) {
+          setTask(saved.task);
+        }
+        if (typeof saved.input === "string") {
+          setInput(saved.input);
+        }
+        if (typeof saved.remaining === "number" || saved.remaining === null) {
+          setRemaining(saved.remaining ?? null);
+        }
+        if (typeof saved.countdown === "number" && saved.countdown > 0) {
+          setCountdown(saved.countdown);
+        }
+      } catch {
+        window.sessionStorage.removeItem(AI_WORKSPACE_SESSION_KEY);
+      } finally {
+        hasRestoredSessionRef.current = true;
       }
-      if (saved.task && TASKS.includes(saved.task)) {
-        setTask(saved.task);
-      }
-      if (typeof saved.input === "string") {
-        setInput(saved.input);
-      }
-      if (typeof saved.remaining === "number" || saved.remaining === null) {
-        setRemaining(saved.remaining ?? null);
-      }
-      if (typeof saved.countdown === "number" && saved.countdown > 0) {
-        setCountdown(saved.countdown);
-      }
-    } catch {
-      window.sessionStorage.removeItem(AI_WORKSPACE_SESSION_KEY);
-    } finally {
-      hasRestoredSessionRef.current = true;
-    }
+    }, 0);
   }, []);
 
   useEffect(() => {

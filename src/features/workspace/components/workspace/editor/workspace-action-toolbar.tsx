@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDown, ClipboardPaste, Link2, Sparkles, Upload } from "lucide-react";
+import { ArrowUpDown, ChevronDown, ClipboardPaste, Link2, Play, Plus, Sparkles, Upload, Zap } from "lucide-react";
 
 import { ToolbarButton } from "../shared";
 
@@ -63,43 +63,74 @@ export function WorkspaceActionToolbar({
         />
       </div>
 
-      <div className="flex flex-wrap items-center gap-2 text-[13px] font-semibold sm:gap-3 sm:text-[14px] xl:shrink-0">
-        <span className="text-outline-variant">Transform:</span>
-        <button className="text-copper-accent transition-colors hover:text-text-primary" onClick={onFormat}>
-          Format
+      <div className="flex flex-wrap items-center gap-2.5 text-[12px] xl:shrink-0">
+        {/* General Mode Dropdown */}
+        <div className="relative inline-flex items-center gap-1 rounded-[6px] border-[0.5px] border-ui-border bg-surface-elevated/40 px-3 py-1.5 font-medium text-text-secondary transition-all hover:border-ui-border-hover">
+          <span className="text-[11.5px] font-semibold text-text-secondary">General mode</span>
+          <ChevronDown className="size-3.5 text-text-tertiary" />
+        </div>
+
+        {/* Action Button: Parse */}
+        <button 
+          onClick={onFormat} // In general mode parse acts as formatting/verifying
+          className="inline-flex items-center gap-1.5 rounded-[6px] border-[0.5px] border-ui-border bg-surface-elevated/40 px-3 py-1.5 font-semibold text-text-secondary transition-all hover:border-ui-border-hover hover:text-text-primary active:scale-95"
+        >
+          <Play className="size-3 text-[#3DD68C] fill-[#3DD68C]/20" />
+          <span>Parse</span>
         </button>
-        <span className="text-outline-variant">•</span>
-        <button
-          className="text-on-surface-variant transition-colors hover:text-text-primary"
+
+        {/* Action Button: Format (Glowing Copper Active) */}
+        <button 
+          onClick={onFormat}
+          className="inline-flex items-center gap-1.5 rounded-[6px] border-[0.5px] border-[#C07040]/30 bg-[#C07040]/10 px-3 py-1.5 font-semibold text-[#C07040] transition-all hover:border-[#C07040]/60 active:scale-95 shadow-[0_0_12px_rgba(192,112,64,0.06)]"
+        >
+          <Sparkles className="size-3 text-[#C07040]" />
+          <span>Format</span>
+        </button>
+
+        {/* Action Button: Minify */}
+        <button 
           onClick={onMinify}
+          className="inline-flex items-center gap-1.5 rounded-[6px] border-[0.5px] border-ui-border bg-surface-elevated/40 px-3 py-1.5 font-semibold text-text-secondary transition-all hover:border-ui-border-hover hover:text-text-primary active:scale-95"
         >
-          Minify
+          <span className="flex h-3 w-3 items-center justify-center rounded-full border-[1.5px] border-text-tertiary group-hover:border-text-secondary" />
+          <span>Minify</span>
         </button>
-        <span className="text-outline-variant">•</span>
-        <button
-          className="text-on-surface-variant transition-colors hover:text-text-primary"
+
+        {/* Action Button: Repair */}
+        <button 
           onClick={onRepair}
+          className="inline-flex items-center gap-1.5 rounded-[6px] border-[0.5px] border-ui-border bg-surface-elevated/40 px-3 py-1.5 font-semibold text-text-secondary transition-all hover:border-ui-border-hover hover:text-text-primary active:scale-95"
         >
-          Repair
+          <Zap className="size-3 text-[#F5A623] fill-[#F5A623]/10" />
+          <span>Repair</span>
         </button>
-        <span className="text-outline-variant">•</span>
-        <button className="text-on-surface-variant transition-colors hover:text-text-primary" onClick={onSort}>
-          Sort
+
+        {/* Action Button: Sort */}
+        <button 
+          onClick={onSort}
+          className="inline-flex items-center gap-1.5 rounded-[6px] border-[0.5px] border-ui-border bg-surface-elevated/40 px-3 py-1.5 font-semibold text-text-secondary transition-all hover:border-ui-border-hover hover:text-text-primary active:scale-95"
+        >
+          <ArrowUpDown className="size-3 text-text-tertiary" />
+          <span>Sort</span>
         </button>
-        <span className="text-outline-variant">•</span>
-        <button
-          className="inline-flex items-center gap-1 text-on-surface-variant transition-colors hover:text-text-primary"
+
+        {/* Convert To Dropdown */}
+        <button 
           onClick={onOpenConverters}
+          className="inline-flex items-center gap-1.5 rounded-[6px] border-[0.5px] border-ui-border bg-surface-elevated/40 px-3 py-1.5 font-semibold text-text-secondary transition-all hover:border-ui-border-hover hover:text-text-primary active:scale-95"
         >
-          Convert to
-          <ChevronDown className="size-4" />
+          <span>Convert to</span>
+          <ChevronDown className="size-3.5 text-text-tertiary" />
         </button>
-        <span className="text-outline-variant">•</span>
-        <button
-          className="text-on-surface-variant transition-colors hover:text-text-primary"
+
+        {/* Action Button: JSONPath */}
+        <button 
           onClick={onJsonPath}
+          className="inline-flex items-center gap-1.5 rounded-[6px] border-[0.5px] border-ui-border bg-surface-elevated/40 px-3 py-1.5 font-semibold text-text-secondary transition-all hover:border-ui-border-hover hover:text-text-primary active:scale-95"
         >
-          JSONPath
+          <Plus className="size-3 text-text-tertiary" />
+          <span>JSONPath</span>
         </button>
       </div>
     </div>
